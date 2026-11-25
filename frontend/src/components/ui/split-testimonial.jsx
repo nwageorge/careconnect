@@ -26,7 +26,7 @@ const testimonials = [
     quote: "Voallen completely changed how we manage accountability. We can now see caregiver punctuality, task completion, and patterns over time. It's helped us improve quality, reduce complaints, and retain our best caregivers.",
     name: "Michael R.",
     role: "Agency Director",
-    company: "Newark, NJ",
+    company: "Philadelphia, PA",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop",
   },
   {

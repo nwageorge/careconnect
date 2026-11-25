@@ -10,7 +10,6 @@ import { HeroSection as NewHeroSection } from "@/components/ui/hero-section";
 import { TestimonialsSplit } from "@/components/ui/split-testimonial";
 import { CareSearchSpotlight } from "@/components/ui/apple-spotlight";
 import { AuthComponent } from "@/components/ui/sign-up";
-import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
@@ -531,64 +530,6 @@ const HomePage = () => {
   // Every city that has at least one agency, in the order they first appear
   const cities = [...new Set(agencies.map((a) => a.city).filter(Boolean))];
 
-  // Rewards/Cashback Offers - Fun images for elderly (cruises, travel, family activities)
-  const rewardsOffers = [
-    {
-      id: 1,
-      imageSrc: "https://images.unsplash.com/photo-1548574505-5e239809ee19?q=80&w=2064&auto=format&fit=crop",
-      imageAlt: "Cruise ship at sunset",
-      tag: "Cashback",
-      title: "5% Cashback",
-      description: "Earn 5% back on your first month of care payments.",
-      href: "#rewards",
-    },
-    {
-      id: 2,
-      imageSrc: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2074&auto=format&fit=crop",
-      imageAlt: "Airplane flying in sky",
-      tag: "Points",
-      title: "2X Points Week",
-      description: "Earn double points on all care bookings this week.",
-      href: "#points",
-    },
-    {
-      id: 3,
-      imageSrc: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop",
-      imageAlt: "Beautiful tropical beach",
-      tag: "Credit Builder",
-      title: "Build Your Credit",
-      description: "On-time care payments reported to all 3 credit bureaus.",
-      href: "#credit",
-    },
-    {
-      id: 4,
-      imageSrc: "https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2070&auto=format&fit=crop",
-      imageAlt: "Happy family at airport",
-      tag: "Family Plan",
-      title: "Up to $200 OFF",
-      description: "Save on multi-family member care packages.",
-      href: "#family",
-    },
-    {
-      id: 5,
-      imageSrc: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop",
-      imageAlt: "Road trip adventure",
-      tag: "Referral",
-      title: "$100 Referral Bonus",
-      description: "Refer a friend and both get $100 care credit.",
-      href: "#referral",
-    },
-    {
-      id: 6,
-      imageSrc: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop",
-      imageAlt: "Mountain lake paradise",
-      tag: "Loyalty",
-      title: "Free Month Reward",
-      description: "12 months on-time? Get your 13th month free!",
-      href: "#loyalty",
-    },
-  ];
-
   return (
     <PageBackground>
       {/* New Hero Section with integrated header */}
@@ -621,15 +562,6 @@ const HomePage = () => {
             );
           })
         )}
-
-        {/* Rewards Section - Airbnb style */}
-        <section className="py-6 sm:py-8">
-          <div className="flex items-center justify-between mb-4 sm:mb-5">
-            <h2 className="text-[22px] sm:text-2xl font-semibold text-stone-900">Deals of the Day</h2>
-          </div>
-          <p className="text-sm text-stone-500 mb-4">Earn cashback, points & build credit when you pay for care on time</p>
-          <OfferCarousel offers={rewardsOffers} />
-        </section>
 
         {/* Companionship sections, in the same order as the Voallen companionship website */}
         <OurServicesSection />
@@ -1409,7 +1341,7 @@ const AgencyProfileForm = ({ onCreated }) => {
     <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
       <div className="md:col-span-2"><h2 className="text-xl font-bold text-stone-800">Create your agency profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
       <input required placeholder="Agency name" value={form.name} onChange={set("name")} className={input} />
-      <input required placeholder="City, e.g. Newark, NJ" value={form.city} onChange={set("city")} className={input} />
+      <input required placeholder="City, e.g. Philadelphia, PA" value={form.city} onChange={set("city")} className={input} />
       <input required placeholder="Street address" value={form.location} onChange={set("location")} className={`${input} md:col-span-2`} />
       <input required placeholder="One-line summary" value={form.bio} onChange={set("bio")} className={`${input} md:col-span-2`} />
       <textarea placeholder="About your agency" rows={3} value={form.description} onChange={set("description")} className={`${input} md:col-span-2`} />
@@ -1655,7 +1587,7 @@ const FAQPage = () => {
     { question: "Can I meet the caregiver before booking?", answer: "Yes! We encourage families to schedule an initial consultation to meet the caregiver, discuss care needs, and ensure a good match before committing to ongoing care." },
     { question: "What if I need to cancel or reschedule?", answer: "We understand plans change. You can cancel or reschedule up to 24 hours before your appointment without any fees. Last-minute changes may incur a small cancellation fee." },
     { question: "Is care covered by insurance?", answer: "Many insurance plans, including Medicare and Medicaid, may cover certain home healthcare services. We recommend checking with your insurance provider. Many of our agencies also assist with insurance coordination." },
-    { question: "What areas do you serve?", answer: "We currently serve Philadelphia, PA; Washington, D.C.; Pittsburgh, PA; and Newark, NJ. We're actively expanding to new areas." },
+    { question: "What areas do you serve?", answer: "We currently serve Philadelphia, PA. We're actively expanding to new areas." },
     { question: "How do I pay for services?", answer: "Payment is processed securely through our platform. We accept all major credit cards and can work with insurance providers for covered services." },
   ];
 

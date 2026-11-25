@@ -53,8 +53,8 @@ def test_root_uses_voallen_name(client):
 
 def test_sample_agencies_seeded_on_startup(client):
     agencies = client.get("/api/agencies").json()
-    assert len(agencies) == 22
-    assert "Newark, NJ" in {a["city"] for a in agencies}
+    assert len(agencies) == 7
+    assert {a["city"] for a in agencies} == {"Philadelphia, PA"}
 
 
 def test_cannot_self_assign_admin(client):
@@ -171,7 +171,7 @@ def test_admin_dashboard_endpoints(client):
     assert client.post("/api/auth/login", json={"email": "boss@example.com", "password": "pw123456"}).json()["user"]["is_admin"] is True
 
     overview = client.get("/api/admin/overview", headers=auth(boss)).json()
-    assert overview["agencies"] == 22 and overview["clients"] == 1
+    assert overview["agencies"] == 7 and overview["clients"] == 1
 
     owner = signup(client, "own@example.com", role="agency", name="Owner").json()["access_token"]
     new = client.post("/api/agencies", headers=auth(owner), json={
@@ -249,3 +249,22 @@ def test_agency_approval_availability_history_and_override(client):
     client.patch(f"/api/admin/agencies/{agency['id']}", headers=auth(admin), json={"status": "unavailable"})
     assert agency["id"] not in {a["id"] for a in client.get("/api/agencies").json()}
     assert client.post("/api/bookings", headers=auth(fam), json=booking_body).status_code == 400
+
+
+def test_startup_removes_retired_sample_agencies_but_keeps_real_ones(client):
+    import asyncio
+    server = sys.modules["voallen_server"]
+
+    async def scenario():
+        await server.db.agencies.insert_many([
+            {"id": "old-sample", "name": "Brick City Caregivers", "city": "Newark, NJ"},
+            {"id": "real-agency", "name": "Brick City Caregivers", "city": "Newark, NJ", "user_id": "someone"},
+            {"id": "philly", "name": "Caring Hearts Home Care", "city": "Philadelphia, PA"},
+        ])
+        removed = await server.remove_retired_sample_agencies()
+        left = {a["id"] async for a in server.db.agencies.find({"id": {"$in": ["old-sample", "real-agency", "philly"]}})}
+        return removed, left
+
+    removed, left = asyncio.run(scenario())
+    assert removed == 1
+    assert left == {"real-agency", "philly"}
