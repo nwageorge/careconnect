@@ -63,7 +63,7 @@ def test_cannot_self_assign_admin(client):
 
 def test_admin_comes_from_admin_emails(client):
     r = signup(client, "boss@example.com")
-    assert r.json()["user"]["role"] == "admin"
+    assert r.json()["user"]["is_admin"] is True and r.json()["user"]["role"] == "client"
 
 
 def test_seed_requires_admin(client):
@@ -83,6 +83,10 @@ def test_booking_lifecycle_and_review(client):
     }).json()
     # Self-reported ratings and verification are ignored
     assert agency["review_count"] == 0 and agency["is_verified"] is False
+    assert agency["status"] == "pending_approval"
+    admin = signup(client, "boss@example.com").json()["access_token"]
+    assert client.patch(f"/api/admin/agencies/{agency['id']}", headers=auth(admin), json={"status": "available"}).status_code == 200
+    client.sent_emails.clear()
 
     client_token = signup(client, "fam@example.com", name="Fam").json()["access_token"]
     booking = client.post("/api/bookings", headers=auth(client_token), json={
@@ -151,3 +155,97 @@ def test_serves_frontend_build_with_spa_fallback(tmp_path, monkeypatch):
         assert c.get("/static/app.js").text == "console.log(1)"
         assert "app shell" in c.get("/dashboard").text
         assert c.get("/api/not-a-route").status_code == 404
+
+
+def test_admin_dashboard_endpoints(client):
+    # A non-admin can't use any admin route
+    fam = signup(client, "fam3@example.com").json()["access_token"]
+    for path in ("/api/admin/overview", "/api/admin/agencies", "/api/admin/bookings", "/api/admin/users", "/api/contact/messages"):
+        assert client.get(path, headers=auth(fam)).status_code == 403
+
+    # An agency account whose email is in ADMIN_EMAILS keeps its agency role but is also an admin
+    r = signup(client, "boss@example.com", role="agency", name="Boss")
+    assert r.json()["user"]["is_admin"] is True
+    boss = r.json()["access_token"]
+    assert client.get("/api/auth/me", headers=auth(boss)).json()["is_admin"] is True
+    assert client.post("/api/auth/login", json={"email": "boss@example.com", "password": "pw123456"}).json()["user"]["is_admin"] is True
+
+    overview = client.get("/api/admin/overview", headers=auth(boss)).json()
+    assert overview["agencies"] == 22 and overview["clients"] == 1
+
+    owner = signup(client, "own@example.com", role="agency", name="Owner").json()["access_token"]
+    new = client.post("/api/agencies", headers=auth(owner), json={
+        "name": "Fresh Care", "bio": "b", "location": "x", "city": "Newark, NJ",
+        "experience_years": 1, "price_per_hour": 15, "image_url": "https://example.com/a.jpg",
+    }).json()
+    agencies = client.get("/api/admin/agencies", headers=auth(boss)).json()
+    assert agencies[0]["id"] == new["id"]  # newest self-registered agency first
+    assert agencies[0]["owner"]["email"] == "own@example.com"
+    assert agencies[0]["is_verified"] is False
+
+    assert agencies[0]["status"] == "pending_approval"
+    r = client.patch(f"/api/admin/agencies/{new['id']}", headers=auth(boss), json={"is_verified": True, "status": "available"})
+    assert r.status_code == 200 and r.json()["is_verified"] is True
+    assert client.patch(f"/api/admin/agencies/{new['id']}", headers=auth(owner), json={"is_verified": True}).status_code == 403
+
+    client.post("/api/bookings", headers=auth(fam), json={
+        "agency_id": new["id"], "service_type": "Elderly Care", "date": "2026-12-01",
+        "time_slot": "9:00 AM", "patient_name": "Pop",
+    })
+    bookings = client.get("/api/admin/bookings", headers=auth(boss)).json()
+    assert bookings[0]["agency_name"] == "Fresh Care" and bookings[0]["client"]["email"] == "fam3@example.com"
+
+    client.post("/api/contact", json={"name": "A", "email": "a@x.com", "subject": "Hi", "message": "Hello"})
+    assert client.get("/api/contact/messages", headers=auth(boss)).json()[0]["subject"] == "Hi"
+    users = client.get("/api/admin/users", headers=auth(boss)).json()
+    assert all("password" not in u for u in users)
+
+
+def test_agency_approval_availability_history_and_override(client):
+    admin = signup(client, "boss@example.com").json()["access_token"]
+    owner = signup(client, "o2@example.com", role="agency", name="Owner Two").json()["access_token"]
+    fam = signup(client, "f2@example.com", name="Fam Two").json()["access_token"]
+    agency = client.post("/api/agencies", headers=auth(owner), json={
+        "name": "Hidden Care", "bio": "b", "location": "x", "city": "Newark, NJ",
+        "experience_years": 1, "price_per_hour": 15, "image_url": "https://example.com/a.jpg",
+    }).json()
+    booking_body = {"agency_id": agency["id"], "service_type": "Elderly Care", "date": "2026-12-01",
+                    "time_slot": "9:00 AM", "patient_name": "Pop"}
+
+    # Pending approval: hidden from families, visible to owner and admin, not bookable
+    assert agency["id"] not in {a["id"] for a in client.get("/api/agencies").json()}
+    assert client.get(f"/api/agencies/{agency['id']}").status_code == 404
+    assert client.get(f"/api/agencies/{agency['id']}", headers=auth(owner)).status_code == 200
+    assert client.get(f"/api/agencies/{agency['id']}", headers=auth(admin)).status_code == 200
+    assert client.post("/api/bookings", headers=auth(fam), json=booking_body).status_code == 400
+    assert client.patch(f"/api/admin/agencies/{agency['id']}", headers=auth(owner), json={"status": "available"}).status_code == 403
+
+    client.sent_emails.clear()
+    client.patch(f"/api/admin/agencies/{agency['id']}", headers=auth(admin), json={"status": "available"})
+    assert ("o2@example.com", "Your Voallen listing was updated") in client.sent_emails
+    assert agency["id"] in {a["id"] for a in client.get("/api/agencies").json()}
+    booking = client.post("/api/bookings", headers=auth(fam), json=booking_body).json()
+    client.patch(f"/api/bookings/{booking['id']}/status", headers=auth(owner), json={"status": "declined"})
+
+    # Admin sees the agency page with every booking and who decided what
+    detail = client.get(f"/api/admin/agencies/{agency['id']}", headers=auth(admin)).json()
+    assert detail["owner"]["email"] == "o2@example.com"
+    assert detail["booking_counts"] == {"declined": 1}
+    history = detail["bookings"][0]["history"]
+    assert [(h["status"], h["by_role"], h["by_name"]) for h in history] == [
+        ("pending", "client", "Fam Two"), ("declined", "agency", "Owner Two")]
+    assert detail["bookings"][0]["client"]["email"] == "f2@example.com"
+    assert client.get(f"/api/admin/agencies/{agency['id']}", headers=auth(owner)).status_code == 403
+
+    # Admin override is recorded with a note
+    r = client.patch(f"/api/admin/bookings/{booking['id']}/status", headers=auth(admin),
+                     json={"status": "confirmed", "note": "Agency confirmed by phone"})
+    assert r.status_code == 200
+    last = r.json()["history"][-1]
+    assert last["by_role"] == "admin" and last["note"] == "Agency confirmed by phone"
+    assert client.patch(f"/api/admin/bookings/{booking['id']}/status", headers=auth(owner), json={"status": "cancelled"}).status_code == 403
+
+    # Unavailable: hidden again and not bookable
+    client.patch(f"/api/admin/agencies/{agency['id']}", headers=auth(admin), json={"status": "unavailable"})
+    assert agency["id"] not in {a["id"] for a in client.get("/api/agencies").json()}
+    assert client.post("/api/bookings", headers=auth(fam), json=booking_body).status_code == 400

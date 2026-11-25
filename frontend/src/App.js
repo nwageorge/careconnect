@@ -13,6 +13,7 @@ import { AuthComponent } from "@/components/ui/sign-up";
 import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
 
 // Empty means the API is served from the same site as the app (production build)
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
@@ -34,6 +35,24 @@ const AuthProvider = ({ children }) => {
     }
   });
   const loading = false;
+
+  // Refresh the saved user from the server (picks up role or admin changes, drops expired sessions)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    axios.get(`${API}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        setUser(res.data);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+        }
+      });
+  }, []);
 
   const login = (token, userData) => {
     localStorage.setItem("token", token);
@@ -809,7 +828,9 @@ const AgencyDetailPage = () => {
   useEffect(() => {
     const fetchAgency = async () => {
       try {
-        const response = await axios.get(`${API}/agencies/${id}`);
+        // Send the session too, so owners and admins can preview a listing that isn't public yet
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${API}/agencies/${id}`, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
         setAgency(response.data);
       } catch (error) {
         console.error("Error fetching agency:", error);
@@ -1439,6 +1460,16 @@ const AgencyDashboard = ({ user }) => {
       <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage consultation requests for <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Set up your agency to start receiving requests"}</p></div>
       {!agency ? <AgencyProfileForm onCreated={load} /> : (
         <>
+          {agency.status === "pending_approval" && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-100 text-amber-700 text-sm" data-testid="agency-pending-banner">
+              Your profile is waiting for approval from the Voallen team. Families will be able to find and book you once it's approved. We'll email you.
+            </div>
+          )}
+          {agency.status === "unavailable" && (
+            <div className="mb-6 p-4 rounded-xl bg-red-100 text-red-700 text-sm">
+              Your listing is currently set to unavailable by the Voallen team, so families can't see or book you. Contact us if you have questions.
+            </div>
+          )}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Awaiting your answer" value={bookings.filter(b => b.status === "pending").length} />
             <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
@@ -1482,6 +1513,7 @@ const AgencyDashboard = ({ user }) => {
 const DashboardPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [view, setView] = useState("admin");
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -1493,8 +1525,39 @@ const DashboardPage = () => {
       <Navigation />
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6">
-          {user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
+          {user.is_admin && user.role !== "admin" && (
+            <div className="grid grid-cols-2 gap-2 p-2 mb-8 bg-stone-100 rounded-2xl max-w-md" role="tablist" aria-label="Which dashboard">
+              {[["admin", "Admin"], ["own", user.role === "agency" ? "My agency" : "My bookings"]].map(([id, label]) => (
+                <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)}
+                  className={`min-h-[52px] px-4 rounded-xl text-lg font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-stone-400 ${view === id ? "bg-stone-900 text-white" : "text-stone-800 hover:bg-white"}`}
+                  data-testid={`dashboard-view-${id}`}>{label}</button>
+              ))}
+            </div>
+          )}
+          {user.is_admin && (user.role === "admin" || view === "admin")
+            ? <AdminDashboard />
+            : user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
         </div>
+      </div>
+    </PageBackground>
+  );
+};
+
+// Admin view of a single agency: profile, listing controls and every booking with its history
+const AdminAgencyPage = () => {
+  const { user } = useAuth();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) navigate("/login");
+    else if (!user.is_admin) navigate("/dashboard");
+  }, [user, navigate]);
+  if (!user?.is_admin) return null;
+  return (
+    <PageBackground>
+      <Navigation />
+      <div className="pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6"><AdminAgencyDetail agencyId={id} /></div>
       </div>
     </PageBackground>
   );
@@ -1637,6 +1700,7 @@ function App() {
             <Route path="/agencies" element={<AgenciesPage />} />
             <Route path="/agencies/:id" element={<AgencyDetailPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/admin/agencies/:id" element={<AdminAgencyPage />} />
             <Route path="/booking-success" element={<BookingSuccessPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
