@@ -1123,8 +1123,28 @@ async def seed_data(user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Admin access required")
     return await seed_agencies()
 
+@api_router.get("/health", include_in_schema=False)
+async def health():
+    return {"status": "ok"}
+
 # Include the router in the main app
 app.include_router(api_router)
+
+# Serve the built React app from the same service when it's present (production).
+# FRONTEND_BUILD_DIR defaults to ../frontend/build next to this file.
+FRONTEND_BUILD_DIR = Path(os.environ.get('FRONTEND_BUILD_DIR', ROOT_DIR.parent / 'frontend' / 'build')).resolve()
+if (FRONTEND_BUILD_DIR / 'index.html').is_file():
+    from fastapi.responses import FileResponse
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_frontend(full_path: str):
+        if full_path.startswith("api/") or full_path == "api":
+            raise HTTPException(status_code=404, detail="Not found")
+        candidate = (FRONTEND_BUILD_DIR / full_path).resolve()
+        if full_path and candidate.is_file() and candidate.is_relative_to(FRONTEND_BUILD_DIR):
+            return FileResponse(candidate)
+        # Client-side routes (/agencies, /dashboard, ...) all load the app shell
+        return FileResponse(FRONTEND_BUILD_DIR / 'index.html')
 
 app.add_middleware(
     CORSMiddleware,

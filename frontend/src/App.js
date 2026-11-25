@@ -14,7 +14,8 @@ import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+// Empty means the API is served from the same site as the app (production build)
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
 const API = `${BACKEND_URL}/api`;
 
 // Auth Context
