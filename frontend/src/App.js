@@ -13,7 +13,7 @@ import { AuthComponent } from "@/components/ui/sign-up";
 import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { AdminDashboard } from "@/components/admin-dashboard";
+import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
 
 // Empty means the API is served from the same site as the app (production build)
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
@@ -828,7 +828,9 @@ const AgencyDetailPage = () => {
   useEffect(() => {
     const fetchAgency = async () => {
       try {
-        const response = await axios.get(`${API}/agencies/${id}`);
+        // Send the session too, so owners and admins can preview a listing that isn't public yet
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${API}/agencies/${id}`, token ? { headers: { Authorization: `Bearer ${token}` } } : undefined);
         setAgency(response.data);
       } catch (error) {
         console.error("Error fetching agency:", error);
@@ -1458,6 +1460,16 @@ const AgencyDashboard = ({ user }) => {
       <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage consultation requests for <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Set up your agency to start receiving requests"}</p></div>
       {!agency ? <AgencyProfileForm onCreated={load} /> : (
         <>
+          {agency.status === "pending_approval" && (
+            <div className="mb-6 p-4 rounded-xl bg-amber-100 text-amber-700 text-sm" data-testid="agency-pending-banner">
+              Your profile is waiting for approval from the Voallen team. Families will be able to find and book you once it's approved. We'll email you.
+            </div>
+          )}
+          {agency.status === "unavailable" && (
+            <div className="mb-6 p-4 rounded-xl bg-red-100 text-red-700 text-sm">
+              Your listing is currently set to unavailable by the Voallen team, so families can't see or book you. Contact us if you have questions.
+            </div>
+          )}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Awaiting your answer" value={bookings.filter(b => b.status === "pending").length} />
             <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
@@ -1526,6 +1538,26 @@ const DashboardPage = () => {
             ? <AdminDashboard />
             : user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
         </div>
+      </div>
+    </PageBackground>
+  );
+};
+
+// Admin view of a single agency: profile, listing controls and every booking with its history
+const AdminAgencyPage = () => {
+  const { user } = useAuth();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!user) navigate("/login");
+    else if (!user.is_admin) navigate("/dashboard");
+  }, [user, navigate]);
+  if (!user?.is_admin) return null;
+  return (
+    <PageBackground>
+      <Navigation />
+      <div className="pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6"><AdminAgencyDetail agencyId={id} /></div>
       </div>
     </PageBackground>
   );
@@ -1668,6 +1700,7 @@ function App() {
             <Route path="/agencies" element={<AgenciesPage />} />
             <Route path="/agencies/:id" element={<AgencyDetailPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/admin/agencies/:id" element={<AdminAgencyPage />} />
             <Route path="/booking-success" element={<BookingSuccessPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />

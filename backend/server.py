@@ -236,6 +236,31 @@ async def require_admin(user: dict = Depends(get_current_user)) -> dict:
         raise HTTPException(status_code=403, detail="Admin access required")
     return user
 
+async def optional_user(authorization: Optional[str] = Header(None)) -> Optional[dict]:
+    if not authorization:
+        return None
+    try:
+        return await get_current_user(authorization)
+    except HTTPException:
+        return None
+
+# Agency listing status. Sample agencies have no status field and count as available.
+AGENCY_STATUSES = ["pending_approval", "available", "unavailable"]
+HIDDEN_AGENCY_STATUSES = ["pending_approval", "unavailable"]
+
+def agency_is_public(agency: dict) -> bool:
+    return agency.get('status', 'available') not in HIDDEN_AGENCY_STATUSES
+
+def history_entry(status: str, user: dict, actor_role: str, note: Optional[str] = None) -> dict:
+    return {
+        "status": status,
+        "by_id": user.get('id'),
+        "by_name": user.get('name'),
+        "by_role": actor_role,  # client, agency or admin
+        "note": note,
+        "at": datetime.now(timezone.utc).isoformat(),
+    }
+
 # ===== ROUTES =====
 @api_router.get("/")
 async def root():
@@ -282,7 +307,8 @@ async def get_me(user: dict = Depends(get_current_user)):
 # Agency Routes
 @api_router.get("/agencies")
 async def get_agencies(city: Optional[str] = None, specialty: Optional[str] = None):
-    query = {}
+    # Only approved, available agencies are listed
+    query = {"status": {"$nin": HIDDEN_AGENCY_STATUSES}}
     if city:
         query["city"] = city
     if specialty:
@@ -292,9 +318,12 @@ async def get_agencies(city: Optional[str] = None, specialty: Optional[str] = No
     return agencies
 
 @api_router.get("/agencies/{agency_id}")
-async def get_agency(agency_id: str):
+async def get_agency(agency_id: str, viewer: Optional[dict] = Depends(optional_user)):
     agency = await db.agencies.find_one({"id": agency_id}, {"_id": 0})
     if not agency:
+        raise HTTPException(status_code=404, detail="Agency not found")
+    # Hidden agencies are only visible to their owner and admins
+    if not agency_is_public(agency) and not (viewer and (is_admin(viewer) or viewer['id'] == agency.get('user_id'))):
         raise HTTPException(status_code=404, detail="Agency not found")
     
     # Reviews are embedded in the agency document
@@ -311,7 +340,8 @@ async def create_agency(agency_data: AgencyBase, user: dict = Depends(get_curren
     agency_id = str(uuid.uuid4())
     data = agency_data.model_dump()
     # Ratings, reviews and verification are earned, not self-reported
-    data.update({"rating": 0, "review_count": 0, "reviews": [], "is_verified": False, "is_new": True})
+    data.update({"rating": 0, "review_count": 0, "reviews": [], "is_verified": False, "is_new": True,
+                 "status": "pending_approval"})  # hidden until an admin approves it
     agency_doc = {
         "id": agency_id,
         "user_id": user['id'],
@@ -350,6 +380,8 @@ async def create_booking(booking_data: BookingCreate, background: BackgroundTask
     agency = await db.agencies.find_one({"id": booking_data.agency_id}, {"_id": 0})
     if not agency:
         raise HTTPException(status_code=404, detail="Agency not found")
+    if not agency_is_public(agency):
+        raise HTTPException(status_code=400, detail="This agency isn't taking bookings right now")
     
     booking_id = str(uuid.uuid4())
     booking_doc = {
@@ -365,6 +397,7 @@ async def create_booking(booking_data: BookingCreate, background: BackgroundTask
         "care_needs": booking_data.care_needs,
         "total_price": agency.get('price_per_hour', 50),
         "status": "pending",
+        "history": [history_entry("pending", user, "client")],
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.bookings.insert_one(booking_doc)
@@ -425,9 +458,11 @@ async def update_booking_status(booking_id: str, update: BookingStatusUpdate, ba
     if update.status not in allowed:
         raise HTTPException(status_code=400, detail=f"Cannot change a {booking['status']} booking to {update.status}")
 
-    now = datetime.now(timezone.utc).isoformat()
-    await db.bookings.update_one({"id": booking_id}, {"$set": {"status": update.status, "updated_at": now}})
-    booking.update({"status": update.status, "updated_at": now})
+    entry = history_entry(update.status, user, "agency" if is_owner_agency else "client")
+    await db.bookings.update_one({"id": booking_id}, {"$set": {"status": update.status, "updated_at": entry['at']},
+                                                      "$push": {"history": entry}})
+    booking.update({"status": update.status, "updated_at": entry['at']})
+    booking.setdefault("history", []).append(entry)
 
     agency_name = agency['name'] if agency else "the agency"
     when = f"{booking['date']} at {booking['time_slot']}"
@@ -512,11 +547,17 @@ async def get_contact_messages(user: dict = Depends(require_admin)):
 # ===== ADMIN =====
 class AgencyAdminUpdate(BaseModel):
     is_verified: Optional[bool] = None
+    status: Optional[Literal["available", "unavailable"]] = None
+
+class AdminBookingStatusUpdate(BaseModel):
+    status: Literal["pending", "confirmed", "declined", "completed", "cancelled"]
+    note: Optional[str] = Field(default=None, max_length=500)
 
 @api_router.get("/admin/overview")
 async def admin_overview(user: dict = Depends(require_admin)):
     return {
         "agencies": await db.agencies.count_documents({}),
+        "awaiting_approval": await db.agencies.count_documents({"status": "pending_approval"}),
         "unverified_agencies": await db.agencies.count_documents({"is_verified": {"$ne": True}}),
         "clients": await db.users.count_documents({"role": "client"}),
         "agency_accounts": await db.users.count_documents({"role": "agency"}),
@@ -537,19 +578,86 @@ async def admin_agencies(user: dict = Depends(require_admin)):
         a['owner'] = {"name": owner.get('name'), "email": owner.get('email')} if owner else None
         a['booking_count'] = counts.get(a['id'], 0)
     # Newest self-registered agencies first, sample agencies after
+    for a in agencies:
+        a.setdefault('status', 'available')
     agencies.sort(key=lambda a: str(a.get('created_at', '')), reverse=True)
     agencies.sort(key=lambda a: a.get('user_id') is None)
+    # Agencies waiting for approval go to the top
+    agencies.sort(key=lambda a: a['status'] != 'pending_approval')
     return agencies
 
 @api_router.patch("/admin/agencies/{agency_id}")
-async def admin_update_agency(agency_id: str, update: AgencyAdminUpdate, user: dict = Depends(require_admin)):
+async def admin_update_agency(agency_id: str, update: AgencyAdminUpdate, background: BackgroundTasks,
+                              user: dict = Depends(require_admin)):
     changes = {k: v for k, v in update.model_dump().items() if v is not None}
     if not changes:
         raise HTTPException(status_code=400, detail="Nothing to update")
-    result = await db.agencies.update_one({"id": agency_id}, {"$set": changes})
-    if result.matched_count == 0:
+    before = await db.agencies.find_one({"id": agency_id}, {"_id": 0, "reviews": 0})
+    if not before:
         raise HTTPException(status_code=404, detail="Agency not found")
-    return await db.agencies.find_one({"id": agency_id}, {"_id": 0, "reviews": 0})
+    await db.agencies.update_one({"id": agency_id}, {"$set": changes})
+    agency = await db.agencies.find_one({"id": agency_id}, {"_id": 0, "reviews": 0})
+    agency.setdefault('status', 'available')
+
+    old_status = before.get('status', 'available')
+    if 'status' in changes and changes['status'] != old_status and agency.get('user_id'):
+        owner = await db.users.find_one({"id": agency['user_id']}, {"_id": 0})
+        if owner:
+            if old_status == 'pending_approval' and changes['status'] == 'available':
+                msg = f"{agency['name']} is approved and now listed on Voallen. Families can find and book you."
+            elif changes['status'] == 'available':
+                msg = f"{agency['name']} is listed on Voallen again and can receive bookings."
+            else:
+                msg = f"{agency['name']} has been set to unavailable on Voallen and is hidden from families for now."
+            queue_email(background, owner.get('email'), "Your Voallen listing was updated", msg)
+    return agency
+
+@api_router.get("/admin/agencies/{agency_id}")
+async def admin_agency_detail(agency_id: str, user: dict = Depends(require_admin)):
+    agency = await db.agencies.find_one({"id": agency_id}, {"_id": 0})
+    if not agency:
+        raise HTTPException(status_code=404, detail="Agency not found")
+    agency.setdefault('status', 'available')
+    owner = await db.users.find_one({"id": agency.get('user_id')}, {"_id": 0, "password": 0}) if agency.get('user_id') else None
+    agency['owner'] = {"name": owner.get('name'), "email": owner.get('email'), "phone": owner.get('phone')} if owner else None
+    bookings = await db.bookings.find({"agency_id": agency_id}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    users = {u['id']: u for u in await db.users.find({"id": {"$in": list({b['user_id'] for b in bookings})}},
+                                                       {"_id": 0, "id": 1, "name": 1, "email": 1, "phone": 1}).to_list(5000)}
+    counts = {}
+    for b in bookings:
+        c = users.get(b['user_id'])
+        b['client'] = {"name": c.get('name'), "email": c.get('email'), "phone": c.get('phone')} if c else None
+        counts[b['status']] = counts.get(b['status'], 0) + 1
+    agency['bookings'] = bookings
+    agency['booking_counts'] = counts
+    return agency
+
+@api_router.patch("/admin/bookings/{booking_id}/status")
+async def admin_update_booking_status(booking_id: str, update: AdminBookingStatusUpdate, background: BackgroundTasks,
+                                      user: dict = Depends(require_admin)):
+    booking = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if update.status == booking['status']:
+        raise HTTPException(status_code=400, detail=f"Booking is already {update.status}")
+    entry = history_entry(update.status, user, "admin", update.note)
+    await db.bookings.update_one({"id": booking_id}, {"$set": {"status": update.status, "updated_at": entry['at']},
+                                                      "$push": {"history": entry}})
+    booking.update({"status": update.status, "updated_at": entry['at']})
+    booking.setdefault("history", []).append(entry)
+
+    agency = await db.agencies.find_one({"id": booking['agency_id']}, {"_id": 0})
+    agency_name = agency['name'] if agency else "the agency"
+    body = (f"Voallen updated your booking with {agency_name} on {booking['date']} at {booking['time_slot']} "
+            f"to: {update.status}." + (f"\n\nNote: {update.note}" if update.note else ""))
+    client = await db.users.find_one({"id": booking['user_id']}, {"_id": 0})
+    if client:
+        queue_email(background, client.get('email'), f"Your Voallen booking is {update.status}", body)
+    if agency and agency.get('user_id'):
+        owner = await db.users.find_one({"id": agency['user_id']}, {"_id": 0})
+        if owner:
+            queue_email(background, owner.get('email'), f"Voallen changed a booking to {update.status}", body)
+    return booking
 
 @api_router.get("/admin/bookings")
 async def admin_bookings(user: dict = Depends(require_admin)):

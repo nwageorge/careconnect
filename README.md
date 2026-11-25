@@ -12,7 +12,9 @@ Agencies accept or decline requests, mark visits complete, and collect reviews f
 - Book a consultation; the client and the agency both get an email
 - Agency dashboard: create a profile, then accept, decline or complete visits
 - Client dashboard: track bookings, cancel, and leave a review after a completed visit
-- Admin dashboard: every agency (with a verify button for the badge), booking, user and contact message
+- Admin dashboard: approve new agencies, switch any agency between available and unavailable, verify badges,
+  and open any agency to see all its bookings with a full history of who accepted, declined or cancelled what
+  (admins can override a booking's status; the change is logged and both sides are emailed)
 - Light and dark mode (follows the system setting, with a toggle in the header)
 
 ## Tech stack
@@ -93,10 +95,13 @@ All backend settings live in `backend/.env` (see `backend/.env.example`).
 
 ## Booking flow
 
+0. A new agency profile is **awaiting approval** and hidden from families until an admin approves it.
 1. A client requests a consultation → status **pending**. Client and agency are emailed.
 2. The agency **accepts** (confirmed) or **declines** it. The client is emailed.
 3. After the visit the agency marks it **completed**. The client is emailed and can leave one review.
 4. A client can **cancel** a pending or confirmed booking. The agency is emailed.
+
+Every status change is recorded in the booking's history (who, which role, when), and admins can override any status.
 
 Reviews are stored on the agency, and each new review is averaged into the existing rating.
 
@@ -119,5 +124,7 @@ pytest tests
 | PATCH | `/api/bookings/{id}/status` | The booking's agency or client |
 | POST | `/api/reviews` | Client, after a completed visit |
 | GET | `/api/admin/overview`, `/api/admin/agencies`, `/api/admin/bookings`, `/api/admin/users`, `/api/contact/messages` | Admins |
-| PATCH | `/api/admin/agencies/{id}` (verify badge) | Admins |
+| GET | `/api/admin/agencies/{id}` (profile, owner, all bookings with history) | Admins |
+| PATCH | `/api/admin/agencies/{id}` (approve, available/unavailable, verify badge) | Admins |
+| PATCH | `/api/admin/bookings/{id}/status` (override, with optional note) | Admins |
 | POST | `/api/seed` | Admins |
