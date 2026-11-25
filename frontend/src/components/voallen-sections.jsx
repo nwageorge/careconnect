@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, Phone, Mail, Plus, Minus, Signal, BatteryFull } from "lucide-react";
+import { ChevronDown, Phone, Mail, Plus, Minus } from "lucide-react";
 
 // Home page sections adapted from the Voallen companionship website:
 // Our Services, Thoughtful visits, Simple ways to stay connected, and Your questions answered.
@@ -171,31 +171,6 @@ export const OurServicesSection = () => {
   );
 };
 
-/* ------------------------------------------------------- Phone mockup (shared) */
-
-const PhoneMockup = ({ children, className = "" }) => (
-  <div
-    className={`relative w-[260px] sm:w-[290px] rounded-[2.75rem] border-[10px] border-stone-800 bg-white shadow-2xl overflow-hidden ${className}`}
-    aria-hidden="true"
-  >
-    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-6 rounded-full bg-stone-800" />
-    <div className="flex items-center justify-between px-6 pt-3 pb-2 text-xs font-semibold text-stone-800">
-      <span>9:41</span>
-      <span className="flex items-center gap-1">
-        <Signal className="w-3.5 h-3.5" />
-        <BatteryFull className="w-4 h-4" />
-      </span>
-    </div>
-    <div className="px-6 pb-8 pt-3">
-      <div className="pb-3 mb-4 border-b border-stone-200">
-        <p className="text-2xl font-bold text-stone-800 leading-none">Voallen</p>
-        <p className="text-[10px] font-semibold tracking-widest text-stone-500 mt-1">ELDERLY CONCIERGE</p>
-      </div>
-      {children}
-    </div>
-  </div>
-);
-
 /* --------------------------------------------- Thoughtful visits section */
 
 export const ThoughtfulVisitsSection = () => (
@@ -219,20 +194,16 @@ export const ThoughtfulVisitsSection = () => (
         </a>
       </motion.div>
 
-      <motion.figure {...reveal} className="flex flex-col items-center">
-        <div className="w-full rounded-3xl bg-stone-100 py-10 flex justify-center">
-          <PhoneMockup>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-2">Example visit overview</p>
-            <p className="text-2xl font-bold text-stone-800 leading-tight mb-3">
-              Companionship. Connection. Peace of mind.
-            </p>
-            <p className="text-sm text-stone-500 mb-5">Personalized companionship visits for your loved ones.</p>
-            <div className="w-full py-3 rounded-xl bg-stone-800 text-white text-center text-sm font-semibold mb-4">Contact Voallen</div>
-            <p className="text-sm font-semibold text-stone-800">{CONTACT_PHONE}</p>
-            <p className="text-xs text-stone-500">{CONTACT_EMAIL}</p>
-          </PhoneMockup>
+      <motion.figure {...reveal} className="flex flex-col">
+        <div className="rounded-3xl overflow-hidden bg-stone-100 aspect-[3/4] max-h-[640px] shadow-lg">
+          <img
+            src="/voallen/stairs.jpg"
+            alt="A young man walking an older woman up the stairs, carrying her groceries."
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
         </div>
-        <figcaption className="mt-4 text-sm text-stone-500">Illustrative example · Nonmedical companionship</figcaption>
+        <figcaption className="mt-4 text-sm text-stone-500 text-center">A helping hand, at their pace.</figcaption>
       </motion.figure>
     </div>
   </section>
@@ -244,81 +215,53 @@ const connectionItems = [
   {
     title: "Companionship",
     body: "Personalized visits and meaningful time together.",
-    screen: {
-      label: "Example visit update",
-      heading: "Good company. Meaningful time.",
-      intro: "A friendly visit can include:",
-      list: ["Conversation", "Reading together", "Games & social time"],
-      footer: "Visit updates for authorized family members.",
-    },
+    image: "/voallen/breakfast.jpg",
+    alt: "An older woman and a younger woman sharing breakfast at the kitchen table.",
   },
   {
     title: "Shared activities",
     body: "Reading, games, and social engagement shaped around familiar interests.",
-    screen: {
-      label: "Today’s visit",
-      heading: "Time for shared interests.",
-      intro: "Planned around what they enjoy:",
-      list: ["A favorite book", "Cards & board games", "Stories and conversation"],
-      footer: "Every visit is personal.",
-    },
+    image: "/voallen/breakfast.jpg",
+    alt: "An older woman and a younger woman sharing breakfast at the kitchen table.",
   },
   {
     title: "Family video calls",
     body: "Assistance connecting your loved one with family through a video call.",
-    screen: {
-      label: "Family video call",
-      heading: "A familiar voice, a little closer.",
-      intro: "We help with:",
-      list: ["Setting up the call", "Holding the device", "Staying for the chat"],
-      footer: "Connect with family and friends.",
-    },
+    image: "/voallen/window.jpg",
+    alt: "An older woman holding hands with a companion while looking out a window.",
   },
   {
     title: "Family updates",
     body: "Visit updates to authorized family members help you stay connected.",
-    screen: {
-      label: "Message to family",
-      heading: "Today’s visit went well.",
-      intro: "Your loved one enjoyed:",
-      list: ["A walk and a chat", "Reading the paper", "Looking at old photos"],
-      footer: "Shared with authorized family only.",
-    },
+    image: "/voallen/window.jpg",
+    alt: "An older woman holding hands with a companion while looking out a window.",
   },
 ];
 
 export const StayConnectedSection = () => {
   const [open, setOpen] = useState(0);
-  const screen = connectionItems[open].screen;
+  const item = connectionItems[open];
 
   return (
     <section id="stay-connected" className="py-16 sm:py-24 scroll-mt-24" data-testid="stay-connected-section">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <motion.div {...reveal} className="order-2 lg:order-1 rounded-3xl bg-stone-100 pt-10 flex justify-center overflow-hidden h-[460px] sm:h-[520px]">
-          <PhoneMockup>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={open}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
-              >
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-stone-500 mb-2">{screen.label}</p>
-                <p className="text-2xl font-bold text-stone-800 leading-tight mb-4">{screen.heading}</p>
-                <p className="text-sm text-stone-600 mb-3">{screen.intro}</p>
-                <ul className="space-y-2 mb-5">
-                  {screen.list.map((item) => (
-                    <li key={item} className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-stone-100 text-sm font-medium text-stone-800">
-                      <span className="w-2 h-2 rounded-full bg-stone-800" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-sm text-stone-500">{screen.footer}</p>
-              </motion.div>
-            </AnimatePresence>
-          </PhoneMockup>
+        <motion.div {...reveal} className="order-2 lg:order-1 relative rounded-3xl overflow-hidden bg-stone-100 aspect-[4/5] max-h-[620px] shadow-lg">
+          <AnimatePresence initial={false}>
+            <motion.img
+              key={item.image}
+              src={item.image}
+              alt={item.alt}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+          </AnimatePresence>
+          <span className="absolute left-4 bottom-4 px-4 py-2 rounded-full bg-white/95 text-sm font-medium text-stone-800 shadow-sm">
+            {item.title}
+          </span>
         </motion.div>
 
         <motion.div {...reveal} className="order-1 lg:order-2">
