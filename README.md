@@ -57,6 +57,26 @@ yarn install
 yarn start                    # http://localhost:3000
 ```
 
+## Deploying (Render + MongoDB Atlas)
+
+The `Dockerfile` builds the React app and serves it from the FastAPI backend, so the
+whole site runs as one service. `render.yaml` sets that service up on Render.
+
+1. **Database:** create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register).
+   Add a database user, allow access from anywhere (`0.0.0.0/0`) under Network Access,
+   and copy the connection string (`mongodb+srv://...`).
+2. **Deploy:** open [Deploy to Render](https://render.com/deploy?repo=https://github.com/nwageorge/careconnect),
+   sign in with GitHub and give Render access to this repository.
+3. When asked, paste the Atlas string into `MONGO_URL` and your email into `ADMIN_EMAILS`.
+   Leave the SMTP fields blank unless you have an email server.
+4. Click **Apply**. The first build takes about 5–10 minutes, then the site is live at
+   `https://voallen-xxxx.onrender.com`. Every push to `main` redeploys it.
+
+On Render's free plan the site sleeps after 15 minutes without visits, so the first
+load after that takes about a minute.
+
+To run the same container yourself: `docker build -t voallen . && docker run -p 8000:8000 -e MONGO_URL=... voallen`.
+
 ## Configuration
 
 All backend settings live in `backend/.env` (see `backend/.env.example`).

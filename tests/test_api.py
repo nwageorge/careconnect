@@ -135,3 +135,19 @@ def test_review_blends_into_seeded_rating(client):
     assert after["review_count"] == seeded["review_count"] + 1
     assert after["rating"] == expected
     assert after["rating"] > 4  # one low review doesn't wipe out 100+ seeded ones
+
+
+def test_serves_frontend_build_with_spa_fallback(tmp_path, monkeypatch):
+    (tmp_path / "index.html").write_text("<html>app shell</html>")
+    (tmp_path / "static").mkdir()
+    (tmp_path / "static" / "app.js").write_text("console.log(1)")
+    monkeypatch.setenv("FRONTEND_BUILD_DIR", str(tmp_path))
+    path = Path(__file__).resolve().parent.parent / "backend" / "server.py"
+    spec = importlib.util.spec_from_file_location("voallen_server_static", path)
+    server = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(server)
+    with TestClient(server.app) as c:
+        assert c.get("/api/health").json() == {"status": "ok"}
+        assert c.get("/static/app.js").text == "console.log(1)"
+        assert "app shell" in c.get("/dashboard").text
+        assert c.get("/api/not-a-route").status_code == 404

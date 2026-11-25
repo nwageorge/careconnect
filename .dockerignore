@@ -1,0 +1,9 @@
+**/node_modules
+**/build
+**/.env
+**/.env.*
+.git
+.emergent
+tests
+test_result.md
+backend_test.py

@@ -1,0 +1,31 @@
+# One-click deploy on Render: https://render.com/deploy?repo=https://github.com/nwageorge/careconnect
+# Runs the whole app (React frontend + FastAPI API) as one web service.
+services:
+  - type: web
+    name: voallen
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: MONGO_URL
+        sync: false # paste your MongoDB Atlas connection string when prompted
+      - key: DB_NAME
+        value: voallen
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAILS
+        sync: false # your email, so your account becomes an admin
+      - key: SEED_SAMPLE_DATA
+        value: "true"
+      - key: SMTP_HOST
+        sync: false # optional; leave blank to log emails instead of sending
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        value: Voallen <no-reply@voallen.com>
