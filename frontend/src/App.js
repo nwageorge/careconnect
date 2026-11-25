@@ -11,6 +11,8 @@ import { TestimonialsSplit } from "@/components/ui/split-testimonial";
 import { CareSearchSpotlight } from "@/components/ui/apple-spotlight";
 import { AuthComponent } from "@/components/ui/sign-up";
 import { OfferCarousel } from "@/components/ui/offer-carousel";
+import { ThemeProvider } from "next-themes";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -20,17 +22,17 @@ const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
-    if (token && savedUser) {
-      setUser(JSON.parse(savedUser));
+  // Read the saved session synchronously so pages don't redirect to login on a refresh
+  const [user, setUser] = useState(() => {
+    try {
+      const token = localStorage.getItem("token");
+      const savedUser = localStorage.getItem("user");
+      return token && savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
     }
-    setLoading(false);
-  }, []);
+  });
+  const loading = false;
 
   const login = (token, userData) => {
     localStorage.setItem("token", token);
@@ -85,12 +87,7 @@ const PageBackground = ({ children, className = "" }) => {
   return (
     <div className={`min-h-screen w-full relative ${className}`}>
       {/* Airbnb-style clean bright white background */}
-      <div
-        className="fixed inset-0 z-0"
-        style={{
-          background: "#FFFFFF",
-        }}
-      />
+      <div className="fixed inset-0 z-0 bg-white dark:bg-[#0f0d0c]" />
       {/* Content */}
       <div className="relative z-10">{children}</div>
     </div>
@@ -123,7 +120,7 @@ const Navigation = () => {
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-stone-700 rounded-xl flex items-center justify-center">
               <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <span className="text-lg sm:text-xl font-semibold text-stone-800">Adltrack</span>
+            <span className="text-lg sm:text-xl font-semibold text-stone-800">Voallen</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -140,6 +137,7 @@ const Navigation = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle className="text-stone-600 hover:bg-stone-100" />
             {user ? (
               <>
                 <Link to="/dashboard" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-dashboard">
@@ -171,9 +169,12 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden p-2 hover:bg-stone-100 rounded-full transition" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="w-5 h-5 text-stone-700" /> : <Menu className="w-5 h-5 text-stone-700" />}
-          </button>
+          <div className="md:hidden flex items-center gap-1">
+            <ThemeToggle className="text-stone-700 hover:bg-stone-100" />
+            <button className="p-2 hover:bg-stone-100 rounded-full transition" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="w-5 h-5 text-stone-700" /> : <Menu className="w-5 h-5 text-stone-700" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu - Full Screen Overlay */}
@@ -368,7 +369,7 @@ const TestimonialsSection = () => {
     <section className="py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-12">
         <p className="text-stone-500 text-center max-w-2xl mx-auto mb-12">
-          Join thousands of families and Agencies who trust Adltrack for their in-home care services
+          Join thousands of families and Agencies who trust Voallen for their in-home care services
         </p>
       </div>
       <TestimonialsSplit />
@@ -495,7 +496,6 @@ const HomePage = () => {
   useEffect(() => {
     const fetchAgencies = async () => {
       try {
-        await axios.post(`${API}/seed`);
         const response = await axios.get(`${API}/agencies`);
         setAgencies(response.data);
       } catch (error) {
@@ -507,7 +507,8 @@ const HomePage = () => {
     fetchAgencies();
   }, []);
 
-  const cities = ["Philadelphia, PA", "Washington, D.C.", "Pittsburgh, PA"];
+  // Every city that has at least one agency, in the order they first appear
+  const cities = [...new Set(agencies.map((a) => a.city).filter(Boolean))];
 
   // Rewards/Cashback Offers - Fun images for elderly (cruises, travel, family activities)
   const rewardsOffers = [
@@ -621,7 +622,7 @@ const HomePage = () => {
                 <div className="w-8 h-8 bg-stone-700 rounded-lg flex items-center justify-center">
                   <Activity className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-base font-semibold text-stone-900">Adltrack</span>
+                <span className="text-base font-semibold text-stone-900">Voallen</span>
               </div>
               <p className="text-sm text-stone-500 leading-relaxed">
                 Connecting families with compassionate, professional in-home caregivers.
@@ -648,12 +649,12 @@ const HomePage = () => {
               <h4 className="text-sm font-semibold text-stone-900 mb-3">Contact</h4>
               <ul className="space-y-2">
                 <li className="flex items-center gap-2 text-sm text-stone-500"><Phone className="w-4 h-4" /> 1-800-ADL-TRACK</li>
-                <li className="flex items-center gap-2 text-sm text-stone-500"><Mail className="w-4 h-4" /> support@adltrack.com</li>
+                <li className="flex items-center gap-2 text-sm text-stone-500"><Mail className="w-4 h-4" /> support@voallen.com</li>
               </ul>
             </div>
           </div>
           <div className="border-t border-stone-200 pt-6 text-center">
-            <p className="text-xs text-stone-500">© 2025 Adltrack. All rights reserved.</p>
+            <p className="text-xs text-stone-500">© 2025 Voallen. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -681,7 +682,7 @@ const AgenciesPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
 
-  const cities = ["Philadelphia, PA", "Washington, D.C.", "Pittsburgh, PA"];
+  const cities = [...new Set(allAgencies.map((a) => a.city).filter(Boolean))].sort();
   const specialties = ["Elderly Care", "Pediatric Care", "Post-Surgery Recovery", "24-Hour Care", "Dementia Care", "Skilled Nursing"];
 
   useEffect(() => {
@@ -961,7 +962,7 @@ const AgencyDetailPage = () => {
                       <Star className="w-4 h-4 fill-white" />
                       <span className="font-bold">{agency.rating}</span>
                     </div>
-                    <p className="text-sm text-stone-500 mt-1">{agency.review_count} reviews</p>
+                    <p className="text-sm text-stone-500 mt-1">{agency.review_count} {agency.review_count === 1 ? "review" : "reviews"}</p>
                   </div>
                 </div>
 
@@ -1048,7 +1049,7 @@ const AgencyDetailPage = () => {
                       ))}
                     </div>
                     <span className="font-bold text-stone-800">{agency.rating}</span>
-                    <span className="text-stone-500">({agency.review_count} reviews)</span>
+                    <span className="text-stone-500">({agency.review_count} {agency.review_count === 1 ? "review" : "reviews"})</span>
                   </div>
                 </div>
 
@@ -1215,57 +1216,283 @@ const AgencyDetailPage = () => {
   );
 };
 
-// Dashboard Page - Warm Nature Theme
-const DashboardPage = () => {
-  const { user } = useAuth();
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+// Dashboard Page - clients see their bookings, agencies manage incoming requests
+const authHeaders = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
 
-  useEffect(() => {
-    if (!user) { navigate("/login"); return; }
-    const fetchBookings = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${API}/bookings`, { headers: { Authorization: `Bearer ${token}` } });
-        setBookings(response.data);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
-  }, [user, navigate]);
+const statusColors = {
+  pending: "bg-amber-100 text-amber-700",
+  confirmed: "bg-green-100 text-green-700",
+  completed: "bg-stone-100 text-stone-700",
+  declined: "bg-red-100 text-red-700",
+  cancelled: "bg-red-100 text-red-700",
+};
 
-  const statusColors = { pending: "bg-amber-100 text-amber-700", confirmed: "bg-green-100 text-green-700", completed: "bg-stone-100 text-stone-700", cancelled: "bg-red-100 text-red-700" };
+const StatusBadge = ({ status }) => (
+  <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[status] || statusColors.completed}`} data-testid="booking-status">
+    {status.charAt(0).toUpperCase() + status.slice(1)}
+  </span>
+);
+
+const StatCard = ({ icon: Icon, iconBg, iconColor, label, value }) => (
+  <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
+    <div className="flex items-center gap-4">
+      <div className={`w-12 h-12 ${iconBg} rounded-xl flex items-center justify-center`}><Icon className={`w-6 h-6 ${iconColor}`} /></div>
+      <div><p className="text-sm text-stone-500">{label}</p><p className="text-2xl font-bold text-stone-800">{value}</p></div>
+    </div>
+  </div>
+);
+
+const ReviewForm = ({ booking, onDone }) => {
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    try {
+      await axios.post(`${API}/reviews`, { booking_id: booking.id, rating, comment }, authHeaders());
+      onDone();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Could not save your review");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <PageBackground>
-      <Navigation />
-      <div className="pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">Manage your care bookings and account</p></div>
+    <form onSubmit={submit} className="mt-4 p-4 rounded-xl bg-stone-50 border border-stone-100" data-testid="review-form">
+      <p className="text-sm font-semibold text-stone-800 mb-2">How was your visit with {booking.agency?.name || "this agency"}?</p>
+      <div className="flex gap-1 mb-3" role="radiogroup" aria-label="Rating">
+        {[1, 2, 3, 4, 5].map((n) => (
+          <button type="button" key={n} onClick={() => setRating(n)} aria-label={`${n} star${n > 1 ? "s" : ""}`} data-testid={`review-star-${n}`}>
+            <Star className={`w-6 h-6 ${n <= rating ? "fill-amber-400 text-amber-400" : "text-stone-300"}`} />
+          </button>
+        ))}
+      </div>
+      <textarea required value={comment} onChange={(e) => setComment(e.target.value)} rows={3} maxLength={2000}
+        placeholder="Share what went well and what could be better"
+        className="w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm" data-testid="review-comment" />
+      {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+      <button type="submit" disabled={saving} className="mt-3 px-5 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition disabled:opacity-50" data-testid="review-submit">
+        {saving ? "Saving..." : "Post review"}
+      </button>
+    </form>
+  );
+};
+
+const ClientDashboard = ({ user }) => {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [reviewing, setReviewing] = useState(null);
+
+  const load = async () => {
+    try {
+      const response = await axios.get(`${API}/bookings`, authHeaders());
+      setBookings(response.data);
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, []);
+
+  const cancel = async (booking) => {
+    try {
+      await axios.patch(`${API}/bookings/${booking.id}/status`, { status: "cancelled" }, authHeaders());
+      load();
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+    }
+  };
+
+  return (
+    <>
+      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">Manage your care bookings and account</p></div>
+      <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <StatCard icon={Calendar} iconBg="bg-stone-100" iconColor="text-stone-800" label="Total Bookings" value={bookings.length} />
+        <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
+        <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Pending" value={bookings.filter(b => b.status === "pending").length} />
+      </div>
+      <div className="bg-white rounded-2xl shadow-sm border border-stone-100">
+        <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-bold text-stone-800">Your Bookings</h2></div>
+        {loading ? (<div className="p-12 text-center"><div className="animate-spin w-8 h-8 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" /></div>) : bookings.length === 0 ? (
+          <div className="p-12 text-center"><p className="text-stone-500 mb-4">You haven't made any bookings yet.</p><Link to="/agencies" className="inline-flex items-center gap-2 px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition">Find Care<ChevronRight className="w-4 h-4" /></Link></div>
+        ) : (
+          <div className="divide-y divide-stone-100">{bookings.map((booking) => (
+            <div key={booking.id} className="p-6" data-testid="client-booking">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex gap-4">{booking.agency && <img src={booking.agency.image_url} alt={booking.agency.name} className="w-16 h-16 rounded-xl object-cover" />}<div><h3 className="font-semibold text-stone-800">{booking.agency?.name || "Care Agency"}</h3><p className="text-sm text-stone-500">{booking.service_type}</p><div className="flex items-center gap-4 mt-2 text-sm text-stone-500"><span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{booking.date}</span><span className="flex items-center gap-1"><Clock className="w-4 h-4" />{booking.time_slot}</span></div></div></div>
+                <div className="text-right shrink-0">
+                  <StatusBadge status={booking.status} />
+                  <p className="mt-2 font-semibold text-stone-800">${booking.total_price}/hr</p>
+                  {["pending", "confirmed"].includes(booking.status) && (
+                    <button onClick={() => cancel(booking)} className="mt-2 text-sm text-red-600 hover:underline" data-testid="cancel-booking">Cancel</button>
+                  )}
+                  {booking.status === "completed" && !booking.review_id && reviewing !== booking.id && (
+                    <button onClick={() => setReviewing(booking.id)} className="mt-2 block ml-auto text-sm font-medium text-stone-800 underline" data-testid="leave-review">Leave a review</button>
+                  )}
+                  {booking.review_id && <p className="mt-2 text-sm text-green-700">Reviewed, thank you</p>}
+                </div>
+              </div>
+              {reviewing === booking.id && <ReviewForm booking={booking} onDone={() => { setReviewing(null); load(); }} />}
+            </div>
+          ))}</div>
+        )}
+      </div>
+    </>
+  );
+};
+
+const AgencyProfileForm = ({ onCreated }) => {
+  const [form, setForm] = useState({ name: "", bio: "", description: "", location: "", city: "", price_per_hour: "", experience_years: "", specialties: "", image_url: "" });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError("");
+    try {
+      const years = parseInt(form.experience_years || "0", 10);
+      await axios.post(`${API}/agencies`, {
+        ...form,
+        price_per_hour: parseFloat(form.price_per_hour),
+        experience_years: years,
+        years_in_business: years,
+        specialties: form.specialties.split(",").map((s) => s.trim()).filter(Boolean),
+        image_url: form.image_url || "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=450&fit=crop&q=80",
+      }, authHeaders());
+      onCreated();
+    } catch (err) {
+      setError(err.response?.data?.detail?.toString() || "Could not create your profile");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const input = "w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm";
+  return (
+    <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
+      <div className="md:col-span-2"><h2 className="text-xl font-bold text-stone-800">Create your agency profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
+      <input required placeholder="Agency name" value={form.name} onChange={set("name")} className={input} />
+      <input required placeholder="City, e.g. Newark, NJ" value={form.city} onChange={set("city")} className={input} />
+      <input required placeholder="Street address" value={form.location} onChange={set("location")} className={`${input} md:col-span-2`} />
+      <input required placeholder="One-line summary" value={form.bio} onChange={set("bio")} className={`${input} md:col-span-2`} />
+      <textarea placeholder="About your agency" rows={3} value={form.description} onChange={set("description")} className={`${input} md:col-span-2`} />
+      <input required type="number" min="1" step="0.5" placeholder="Price per hour ($)" value={form.price_per_hour} onChange={set("price_per_hour")} className={input} />
+      <input required type="number" min="0" placeholder="Years in business" value={form.experience_years} onChange={set("experience_years")} className={input} />
+      <input placeholder="Specialties, comma separated" value={form.specialties} onChange={set("specialties")} className={input} />
+      <input placeholder="Photo URL (optional)" value={form.image_url} onChange={set("image_url")} className={input} />
+      {error && <p className="text-sm text-red-600 md:col-span-2">{error}</p>}
+      <div className="md:col-span-2"><button type="submit" disabled={saving} className="px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition disabled:opacity-50">{saving ? "Saving..." : "Publish profile"}</button></div>
+    </form>
+  );
+};
+
+const AgencyDashboard = ({ user }) => {
+  const [agency, setAgency] = useState(null);
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(null);
+
+  const load = async () => {
+    try {
+      const me = await axios.get(`${API}/agency/me`, authHeaders()).catch((err) => {
+        if (err.response?.status === 404) return { data: null };
+        throw err;
+      });
+      setAgency(me.data);
+      if (me.data) {
+        const response = await axios.get(`${API}/agency/bookings`, authHeaders());
+        setBookings(response.data);
+      }
+    } catch (error) {
+      console.error("Error loading agency dashboard:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, []);
+
+  const setStatus = async (booking, status) => {
+    setBusy(booking.id);
+    try {
+      await axios.patch(`${API}/bookings/${booking.id}/status`, { status }, authHeaders());
+      await load();
+    } catch (error) {
+      console.error("Error updating booking:", error);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  if (loading) return <div className="p-12 text-center"><div className="animate-spin w-8 h-8 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" /></div>;
+
+  return (
+    <>
+      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage consultation requests for <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Set up your agency to start receiving requests"}</p></div>
+      {!agency ? <AgencyProfileForm onCreated={load} /> : (
+        <>
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100"><div className="flex items-center gap-4"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center"><Calendar className="w-6 h-6 text-stone-800" /></div><div><p className="text-sm text-stone-500">Total Bookings</p><p className="text-2xl font-bold text-stone-800">{bookings.length}</p></div></div></div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100"><div className="flex items-center gap-4"><div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center"><CheckCircle className="w-6 h-6 text-green-600" /></div><div><p className="text-sm text-stone-500">Confirmed</p><p className="text-2xl font-bold text-stone-800">{bookings.filter(b => b.status === "confirmed").length}</p></div></div></div>
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100"><div className="flex items-center gap-4"><div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center"><Clock className="w-6 h-6 text-amber-600" /></div><div><p className="text-sm text-stone-500">Pending</p><p className="text-2xl font-bold text-stone-800">{bookings.filter(b => b.status === "pending").length}</p></div></div></div>
+            <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Awaiting your answer" value={bookings.filter(b => b.status === "pending").length} />
+            <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
+            <StatCard icon={Star} iconBg="bg-stone-100" iconColor="text-stone-800" label="Rating" value={agency.review_count ? `${agency.rating} (${agency.review_count})` : "No reviews yet"} />
           </div>
           <div className="bg-white rounded-2xl shadow-sm border border-stone-100">
-            <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-bold text-stone-800">Your Bookings</h2></div>
-            {loading ? (<div className="p-12 text-center"><div className="animate-spin w-8 h-8 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" /></div>) : bookings.length === 0 ? (
-              <div className="p-12 text-center"><p className="text-stone-500 mb-4">You haven't made any bookings yet.</p><Link to="/agencies" className="inline-flex items-center gap-2 px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition">Find Care<ChevronRight className="w-4 h-4" /></Link></div>
-            ) : (
+            <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-bold text-stone-800">Consultation requests</h2></div>
+            {bookings.length === 0 ? <div className="p-12 text-center text-stone-500">No requests yet.</div> : (
               <div className="divide-y divide-stone-100">{bookings.map((booking) => (
-                <div key={booking.id} className="p-6 hover:bg-stone-50 transition">
-                  <div className="flex items-start justify-between">
-                    <div className="flex gap-4">{booking.agency && <img src={booking.agency.image_url} alt={booking.agency.name} className="w-16 h-16 rounded-xl object-cover" />}<div><h3 className="font-semibold text-stone-800">{booking.agency?.name || "Care Agency"}</h3><p className="text-sm text-stone-500">{booking.service_type}</p><div className="flex items-center gap-4 mt-2 text-sm text-stone-500"><span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{booking.date}</span><span className="flex items-center gap-1"><Clock className="w-4 h-4" />{booking.time_slot}</span></div></div></div>
-                    <div className="text-right"><span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[booking.status]}`}>{booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span><p className="mt-2 font-semibold text-stone-800">${booking.total_price}/hr</p></div>
+                <div key={booking.id} className="p-6 flex flex-col md:flex-row md:items-start justify-between gap-4" data-testid="agency-booking">
+                  <div>
+                    <h3 className="font-semibold text-stone-800">{booking.patient_name}{booking.patient_age ? `, ${booking.patient_age}` : ""}</h3>
+                    <p className="text-sm text-stone-500">{booking.service_type}</p>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-stone-500"><span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{booking.date}</span><span className="flex items-center gap-1"><Clock className="w-4 h-4" />{booking.time_slot}</span></div>
+                    {booking.client && <p className="text-sm text-stone-500 mt-2">Requested by {booking.client.name} · {booking.client.email}{booking.client.phone ? ` · ${booking.client.phone}` : ""}</p>}
+                    {booking.care_needs && <p className="text-sm text-stone-600 mt-2">Care needs: {booking.care_needs}</p>}
+                    {booking.notes && <p className="text-sm text-stone-600 mt-1">Notes: {booking.notes}</p>}
+                  </div>
+                  <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
+                    <StatusBadge status={booking.status} />
+                    <div className="flex gap-2">
+                      {booking.status === "pending" && (<>
+                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "confirmed")} className="px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 disabled:opacity-50" data-testid="accept-booking">Accept</button>
+                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "declined")} className="px-4 py-2 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium hover:bg-stone-200 disabled:opacity-50" data-testid="decline-booking">Decline</button>
+                      </>)}
+                      {booking.status === "confirmed" && (
+                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "completed")} className="px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 disabled:opacity-50" data-testid="complete-booking">Mark visit complete</button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}</div>
             )}
           </div>
+        </>
+      )}
+    </>
+  );
+};
+
+const DashboardPage = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) navigate("/login");
+  }, [user, navigate]);
+
+  if (!user) return null;
+  return (
+    <PageBackground>
+      <Navigation />
+      <div className="pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6">
+          {user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
         </div>
       </div>
     </PageBackground>
@@ -1279,8 +1506,8 @@ const BookingSuccessPage = () => {
     <PageBackground className="flex items-center justify-center p-6">
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-md border border-stone-100">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle className="w-10 h-10 text-green-500" /></div>
-        <h1 className="text-3xl font-bold text-stone-800 mb-4">Booking Confirmed!</h1>
-        <p className="text-stone-500 mb-8">Your care consultation has been successfully booked. The agency will contact you shortly to confirm details.</p>
+        <h1 className="text-3xl font-bold text-stone-800 mb-4">Request Sent!</h1>
+        <p className="text-stone-500 mb-8">We sent your consultation request to the agency and emailed you a copy. You'll get an email as soon as they accept it.</p>
         <div className="flex flex-col gap-3">
           <Link to="/dashboard" className="px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition">View My Bookings</Link>
           <Link to="/" className="px-6 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition">Back to Home</Link>
@@ -1338,7 +1565,7 @@ const ContactPage = () => {
           )}
           <div className="grid md:grid-cols-3 gap-6 mt-12">
             <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">1-800-ADL-TRACK</p></div>
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500">support@adltrack.com</p></div>
+            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500">support@voallen.com</p></div>
             <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Clock className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Hours</h3><p className="text-stone-500">24/7 Support</p></div>
           </div>
         </div>
@@ -1398,6 +1625,7 @@ const FAQPage = () => {
 // Main App Component
 function App() {
   return (
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
     <AuthProvider>
       <WishlistProvider>
         <BrowserRouter>
@@ -1415,6 +1643,7 @@ function App() {
         </BrowserRouter>
       </WishlistProvider>
     </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 // SVG icons as components
 const SearchIcon = () => (
@@ -146,9 +147,10 @@ export default function HeroSection3({
           
           {/* Desktop Auth Buttons */}
           <div className="hidden sm:flex items-center space-x-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
-            <button type="button" aria-label="Search" className="p-1.5 hover:bg-white/20 rounded-full transition-colors">
+            <Link to="/agencies" aria-label="Search agencies" className="p-1.5 hover:bg-white/20 rounded-full transition-colors">
               <SearchIcon />
-            </button>
+            </Link>
+            <ThemeToggle className="text-white hover:bg-white/20" />
             {user ? (
               <>
                 <Link to="/dashboard" className="px-3 py-1.5 text-white font-medium text-sm hover:bg-white/20 rounded-full transition-colors">
@@ -177,13 +179,16 @@ export default function HeroSection3({
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="sm:hidden p-2 bg-black/40 backdrop-blur-md rounded-full"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
+          <div className="sm:hidden flex items-center gap-2">
+            <ThemeToggle className="text-white bg-black/40 backdrop-blur-md hover:bg-black/60" />
+            <button 
+              className="p-2 bg-black/40 backdrop-blur-md rounded-full"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Dropdown */}
@@ -268,7 +273,7 @@ export default function HeroSection3({
 
             {/* Gradient overlays */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/95" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/95 dark:to-[#0f0d0c]" />
 
             {/* Text content */}
             <div className="absolute inset-0 flex items-center z-10">
@@ -353,7 +358,7 @@ HeroSection3.propTypes = {
 };
 
 HeroSection3.defaultProps = {
-  logoText: "Adltrack",
+  logoText: "Voallen",
   navLinks: [],
   user: null,
   onLogout: null,

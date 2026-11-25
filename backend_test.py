@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Backend Authentication Testing for Adltrack
+Backend Authentication Testing for Voallen
 Tests signup, login, and dashboard access flows
 """
 
@@ -151,7 +151,7 @@ def test_agency_signup():
 
 def main():
     """Run all authentication tests"""
-    print("🚀 Starting Adltrack Authentication Testing")
+    print("🚀 Starting Voallen Authentication Testing")
     print(f"Backend URL: {BACKEND_URL}")
     
     results = {
