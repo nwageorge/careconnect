@@ -221,6 +221,21 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
     except InvalidTokenError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+def is_admin(user: dict) -> bool:
+    """Admins are users with the admin role, or whose email is listed in ADMIN_EMAILS.
+    The email check means an existing agency or client account can also be an admin."""
+    return user.get('role') == 'admin' or (user.get('email') or '').strip().lower() in ADMIN_EMAILS
+
+def public_user(user: dict) -> dict:
+    data = {k: v for k, v in user.items() if k not in ('password', '_id')}
+    data['is_admin'] = is_admin(user)
+    return data
+
+async def require_admin(user: dict = Depends(get_current_user)) -> dict:
+    if not is_admin(user):
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
 # ===== ROUTES =====
 @api_router.get("/")
 async def root():
@@ -238,7 +253,8 @@ async def signup(user_data: UserCreate):
         "id": user_id,
         "email": user_data.email,
         "name": user_data.name,
-        "role": "admin" if user_data.email.strip().lower() in ADMIN_EMAILS else user_data.role,
+        # Admin access comes from ADMIN_EMAILS (see is_admin), so admins keep their own client/agency role
+        "role": user_data.role,
         "phone": user_data.phone,
         "password": hash_password(user_data.password),
         "created_at": datetime.now(timezone.utc).isoformat()
@@ -246,7 +262,7 @@ async def signup(user_data: UserCreate):
     await db.users.insert_one(user_doc)
     
     token = create_token(user_id, user_data.email)
-    user_response = {k: v for k, v in user_doc.items() if k not in ['password', '_id']}
+    user_response = public_user(user_doc)
     return {"access_token": token, "token_type": "bearer", "user": user_response}
 
 @api_router.post("/auth/login")
@@ -256,12 +272,12 @@ async def login(credentials: UserLogin):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     token = create_token(user['id'], user['email'])
-    user_response = {k: v for k, v in user.items() if k not in ['password', '_id']}
+    user_response = public_user(user)
     return {"access_token": token, "token_type": "bearer", "user": user_response}
 
 @api_router.get("/auth/me")
 async def get_me(user: dict = Depends(get_current_user)):
-    return {k: v for k, v in user.items() if k != 'password'}
+    return public_user(user)
 
 # Agency Routes
 @api_router.get("/agencies")
@@ -490,11 +506,66 @@ async def submit_contact(contact_data: ContactCreate):
     return {"message": "Thank you for your message. We will get back to you soon!"}
 
 @api_router.get("/contact/messages")
-async def get_contact_messages(user: dict = Depends(get_current_user)):
-    if user.get('role') != 'admin':
-        raise HTTPException(status_code=403, detail="Admin access required")
-    messages = await db.contact_messages.find({}, {"_id": 0}).to_list(100)
-    return messages
+async def get_contact_messages(user: dict = Depends(require_admin)):
+    return await db.contact_messages.find({}, {"_id": 0}).sort("created_at", -1).to_list(500)
+
+# ===== ADMIN =====
+class AgencyAdminUpdate(BaseModel):
+    is_verified: Optional[bool] = None
+
+@api_router.get("/admin/overview")
+async def admin_overview(user: dict = Depends(require_admin)):
+    return {
+        "agencies": await db.agencies.count_documents({}),
+        "unverified_agencies": await db.agencies.count_documents({"is_verified": {"$ne": True}}),
+        "clients": await db.users.count_documents({"role": "client"}),
+        "agency_accounts": await db.users.count_documents({"role": "agency"}),
+        "bookings": await db.bookings.count_documents({}),
+        "pending_bookings": await db.bookings.count_documents({"status": "pending"}),
+        "messages": await db.contact_messages.count_documents({}),
+    }
+
+@api_router.get("/admin/agencies")
+async def admin_agencies(user: dict = Depends(require_admin)):
+    agencies = await db.agencies.find({}, {"_id": 0, "reviews": 0, "gallery_images": 0}).to_list(1000)
+    owners = {u['id']: u for u in await db.users.find({"role": "agency"}, {"_id": 0, "password": 0}).to_list(5000)}
+    counts = {}
+    for b in await db.bookings.find({}, {"_id": 0, "agency_id": 1}).to_list(10000):
+        counts[b['agency_id']] = counts.get(b['agency_id'], 0) + 1
+    for a in agencies:
+        owner = owners.get(a.get('user_id'))
+        a['owner'] = {"name": owner.get('name'), "email": owner.get('email')} if owner else None
+        a['booking_count'] = counts.get(a['id'], 0)
+    # Newest self-registered agencies first, sample agencies after
+    agencies.sort(key=lambda a: str(a.get('created_at', '')), reverse=True)
+    agencies.sort(key=lambda a: a.get('user_id') is None)
+    return agencies
+
+@api_router.patch("/admin/agencies/{agency_id}")
+async def admin_update_agency(agency_id: str, update: AgencyAdminUpdate, user: dict = Depends(require_admin)):
+    changes = {k: v for k, v in update.model_dump().items() if v is not None}
+    if not changes:
+        raise HTTPException(status_code=400, detail="Nothing to update")
+    result = await db.agencies.update_one({"id": agency_id}, {"$set": changes})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Agency not found")
+    return await db.agencies.find_one({"id": agency_id}, {"_id": 0, "reviews": 0})
+
+@api_router.get("/admin/bookings")
+async def admin_bookings(user: dict = Depends(require_admin)):
+    bookings = await db.bookings.find({}, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    agencies = {a['id']: a['name'] for a in await db.agencies.find({}, {"_id": 0, "id": 1, "name": 1}).to_list(5000)}
+    users = {u['id']: u for u in await db.users.find({}, {"_id": 0, "id": 1, "name": 1, "email": 1}).to_list(10000)}
+    for b in bookings:
+        b['agency_name'] = agencies.get(b['agency_id'])
+        client = users.get(b['user_id'])
+        b['client'] = {"name": client.get('name'), "email": client.get('email')} if client else None
+    return bookings
+
+@api_router.get("/admin/users")
+async def admin_users(user: dict = Depends(require_admin)):
+    users = await db.users.find({}, {"_id": 0, "password": 0}).sort("created_at", -1).to_list(5000)
+    return [public_user(u) for u in users]
 
 # Seed data - sample agencies, loaded at startup when the database is empty
 async def seed_agencies():
@@ -1118,9 +1189,7 @@ async def seed_agencies():
     return {"message": "Data seeded successfully", "count": len(agencies_data)}
 
 @api_router.post("/seed")
-async def seed_data(user: dict = Depends(get_current_user)):
-    if user.get('role') != 'admin':
-        raise HTTPException(status_code=403, detail="Admin access required")
+async def seed_data(user: dict = Depends(require_admin)):
     return await seed_agencies()
 
 @api_router.get("/health", include_in_schema=False)

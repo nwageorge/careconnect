@@ -12,6 +12,7 @@ Agencies accept or decline requests, mark visits complete, and collect reviews f
 - Book a consultation; the client and the agency both get an email
 - Agency dashboard: create a profile, then accept, decline or complete visits
 - Client dashboard: track bookings, cancel, and leave a review after a completed visit
+- Admin dashboard: every agency (with a verify button for the badge), booking, user and contact message
 - Light and dark mode (follows the system setting, with a toggle in the header)
 
 ## Tech stack
@@ -85,7 +86,7 @@ All backend settings live in `backend/.env` (see `backend/.env.example`).
 | --- | --- |
 | `MONGO_URL`, `DB_NAME` | MongoDB connection |
 | `JWT_SECRET` | Signs login tokens. **Required in production.** If missing, a random one is used and logins reset on restart. |
-| `ADMIN_EMAILS` | Comma-separated emails that become admins when they sign up. Nobody can choose the admin role themselves. |
+| `ADMIN_EMAILS` | Comma-separated emails with admin access. These accounts get an **Admin** tab on their dashboard next to their own family or agency view. Nobody can make themselves an admin. |
 | `CORS_ORIGINS` | Comma-separated frontend URLs allowed to call the API |
 | `SEED_SAMPLE_DATA` | `true` to load sample agencies into an empty database |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_USE_TLS`, `EMAIL_FROM` | Booking emails. Leave `SMTP_HOST` empty to log emails instead. |
@@ -117,4 +118,6 @@ pytest tests
 | POST / GET | `/api/bookings` | Signed-in users |
 | PATCH | `/api/bookings/{id}/status` | The booking's agency or client |
 | POST | `/api/reviews` | Client, after a completed visit |
-| POST | `/api/seed`, GET `/api/contact/messages` | Admins |
+| GET | `/api/admin/overview`, `/api/admin/agencies`, `/api/admin/bookings`, `/api/admin/users`, `/api/contact/messages` | Admins |
+| PATCH | `/api/admin/agencies/{id}` (verify badge) | Admins |
+| POST | `/api/seed` | Admins |

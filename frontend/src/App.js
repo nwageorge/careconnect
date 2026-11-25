@@ -13,6 +13,7 @@ import { AuthComponent } from "@/components/ui/sign-up";
 import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AdminDashboard } from "@/components/admin-dashboard";
 
 // Empty means the API is served from the same site as the app (production build)
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
@@ -34,6 +35,24 @@ const AuthProvider = ({ children }) => {
     }
   });
   const loading = false;
+
+  // Refresh the saved user from the server (picks up role or admin changes, drops expired sessions)
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    axios.get(`${API}/auth/me`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        localStorage.setItem("user", JSON.stringify(res.data));
+        setUser(res.data);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+        }
+      });
+  }, []);
 
   const login = (token, userData) => {
     localStorage.setItem("token", token);
@@ -1482,6 +1501,7 @@ const AgencyDashboard = ({ user }) => {
 const DashboardPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [view, setView] = useState("admin");
 
   useEffect(() => {
     if (!user) navigate("/login");
@@ -1493,7 +1513,18 @@ const DashboardPage = () => {
       <Navigation />
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6">
-          {user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
+          {user.is_admin && user.role !== "admin" && (
+            <div className="inline-flex gap-1 p-1 mb-6 bg-stone-100 rounded-xl" role="tablist">
+              {[["admin", "Admin"], ["own", user.role === "agency" ? "My agency" : "My bookings"]].map(([id, label]) => (
+                <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${view === id ? "bg-white text-stone-800 shadow-sm" : "text-stone-600 hover:text-stone-800"}`}
+                  data-testid={`dashboard-view-${id}`}>{label}</button>
+              ))}
+            </div>
+          )}
+          {user.is_admin && (user.role === "admin" || view === "admin")
+            ? <AdminDashboard />
+            : user.role === "agency" ? <AgencyDashboard user={user} /> : <ClientDashboard user={user} />}
         </div>
       </div>
     </PageBackground>
