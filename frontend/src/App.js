@@ -1526,10 +1526,10 @@ const DashboardPage = () => {
       <div className="pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-6">
           {user.is_admin && user.role !== "admin" && (
-            <div className="inline-flex gap-1 p-1 mb-6 bg-stone-100 rounded-xl" role="tablist">
+            <div className="grid grid-cols-2 gap-2 p-2 mb-8 bg-stone-100 rounded-2xl max-w-md" role="tablist" aria-label="Which dashboard">
               {[["admin", "Admin"], ["own", user.role === "agency" ? "My agency" : "My bookings"]].map(([id, label]) => (
                 <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition ${view === id ? "bg-white text-stone-800 shadow-sm" : "text-stone-600 hover:text-stone-800"}`}
+                  className={`min-h-[52px] px-4 rounded-xl text-lg font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-stone-400 ${view === id ? "bg-stone-900 text-white" : "text-stone-800 hover:bg-white"}`}
                   data-testid={`dashboard-view-${id}`}>{label}</button>
               ))}
             </div>

@@ -241,3 +241,18 @@ code {
 .dark .text-green-700, .dark .text-green-600 { color: rgb(134 239 172); }
 .dark .bg-red-100 { background-color: rgb(127 29 29 / 0.4); }
 .dark .text-red-700 { color: rgb(252 165 165); }
+.dark .bg-amber-50 { background-color: rgb(120 53 15 / 0.25); }
+.dark .bg-green-50 { background-color: rgb(20 83 45 / 0.25); }
+.dark .text-amber-800 { color: rgb(252 211 77); }
+.dark .text-green-800 { color: rgb(134 239 172); }
+.dark .text-red-800 { color: rgb(252 165 165); }
+.dark .border-amber-300 { border-color: rgb(180 83 9 / 0.6); }
+.dark .border-green-300 { border-color: rgb(21 128 61 / 0.6); }
+.dark .border-red-300 { border-color: rgb(185 28 28 / 0.6); }
+.dark :is(.bg-green-700, .bg-red-700).text-white { color: #fff; }
+
+/* Admin screens: headings and paragraphs take the strong text colour of their
+   container (which flips in dark mode) instead of the faded global defaults.
+   :where() keeps specificity at a bare element so text-* utilities still win. */
+:where(.admin-ui) :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; }
+:where(.admin-ui) :is(h1, h2, h3, h4) { line-height: 1.2; }
