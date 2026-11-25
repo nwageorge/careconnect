@@ -14,6 +14,7 @@ import { OfferCarousel } from "@/components/ui/offer-carousel";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
+import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection } from "@/components/voallen-sections";
 
 // Empty means the API is served from the same site as the app (production build)
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
@@ -629,6 +630,12 @@ const HomePage = () => {
           <p className="text-sm text-stone-500 mb-4">Earn cashback, points & build credit when you pay for care on time</p>
           <OfferCarousel offers={rewardsOffers} />
         </section>
+
+        {/* Companionship sections, in the same order as the Voallen companionship website */}
+        <OurServicesSection />
+        <ThoughtfulVisitsSection />
+        <StayConnectedSection />
+        <QuestionsAnsweredSection />
       </div>
 
       <TestimonialsSection />
