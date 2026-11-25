@@ -1,18 +1,18 @@
 <analysis>**original_problem_statement:**
-The user initially wanted to convert a pre-existing Airbnb-style marketplace for driving instructors into an in-Home care agencies marketplace. Throughout the project, the user has provided extensive, iterative feedback, guiding the development of a completely new full-stack application from the ground up. The application is now called Adltrack.
+The user initially wanted to convert a pre-existing Airbnb-style marketplace for driving instructors into an in-Home care agencies marketplace. Throughout the project, the user has provided extensive, iterative feedback, guiding the development of a completely new full-stack application from the ground up. The application is now called Voallen.
 
 The most recent user requests have focused on refining the UI/UX, particularly the homepage hero section and the display of agency profiles, providing specific components and design changes.
 
 **PRODUCT REQUIREMENTS:**
 1.  **Core Functionality Pivot:** The application is a marketplace connecting users with in-home care agencies. Key features include user authentication, agency browsing with advanced card designs, enhanced agency detail pages (with image galleries and reviews), and a booking consultation flow.
-2.  **Branding:** The website has been rebranded to Adltrack.
-3.  **Content & Imagery:** All content is tailored to the in-home care industry, using realistic photos and detailed agency profiles. Pricing is set in the 5-8/hour range.
+2.  **Branding:** The website has been rebranded to Voallen.
+3.  **Content & Imagery:** All content is tailored to the in-home care industry, using realistic photos and detailed agency profiles. Pricing is set in the $15-18/hour range.
 4.  **UI & Theme:** The UI has gone through multiple major iterations based on user-provided code and feedback, including a video hero, a shuffling image grid, and finally settling on a full-screen hero with a static background image. Agency listings are displayed using a premium GlareCard component.
 
 **User's preferred language**: English
 
 **what currently exists?**
-A complete full-stack marketplace named Adltrack has been built. It uses a React frontend, a FastAPI backend, and a MongoDB database. All core features requested by the user are implemented, including user authentication, agency browsing with interactive GlareCards, comprehensive agency detail pages featuring a multi-image gallery and embedded reviews, and a Book Consultation UI. The backend is seeded with realistic static data for 44 care agencies. The homepage currently features a full-screen hero section with a static background image.
+A complete full-stack marketplace named Voallen has been built. It uses a React frontend, a FastAPI backend, and a MongoDB database. All core features requested by the user are implemented, including user authentication, agency browsing with interactive GlareCards, comprehensive agency detail pages featuring a multi-image gallery and embedded reviews, and a Book Consultation UI. The backend is seeded with realistic static data for 22 care agencies (Philadelphia, Pittsburgh, Washington D.C. and Newark). The homepage currently features a full-screen hero section with a static background image.
 
 **Last working item**:
 -   **Last item agent was working:** The user requested to change the homepage hero section's background image to a specific one used in the Georgetown Care Specialists profile.
@@ -51,7 +51,7 @@ These tasks were acknowledged after the user's request to enhance the agency pro
     -   Implemented the final full-screen hero section () and updated its background image based on user feedback.
 -   **Enhanced Agency Profiles:**
     -   Updated the backend  model in  to support an array of images () and an embedded array of .
-    -   Overhauled the seed data in  with 44 realistic agencies, including multiple photos, detailed reviews, and pricing updated to the 5-8/hr range.
+    -   Overhauled the seed data in  with 22 realistic agencies, including multiple photos, detailed reviews, and pricing in the $15-18/hr range.
     -   Completely redesigned the frontend  in  to feature a Booking.com-style image gallery, detailed statistics, and a rich reviews section.
     -   Fixed a backend bug in the  endpoint to correctly return embedded reviews.
 -   **GlareCard Agency Display:**
@@ -59,8 +59,8 @@ These tasks were acknowledged after the user's request to enhance the agency pro
     -   Replaced the standard  with the  for a premium, interactive 3D-tilt effect on the agency listing page.
     -   Fixed a click-interception bug on the  to ensure navigation works correctly.
 -   **Major Refactoring and Rebranding:**
-    -   Rebranded the entire application from NurseNow to Adltrack, updating all relevant text and logos in  and component files.
-    -   Removed several obsolete sections from the homepage (Why Choose NurseNow?, Ready to Find the Perfect Caregiver, Trusted by leading healthcare providers).
+    -   Rebranded the entire application from Voallen to Voallen, updating all relevant text and logos in  and component files.
+    -   Removed several obsolete sections from the homepage (Why Choose Voallen?, Ready to Find the Perfect Caregiver, Trusted by leading healthcare providers).
     -   Cleaned up and refactored the seed data function and old data remnants in .
 
 **Earlier issues found/mentioned but not fixed**

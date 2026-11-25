@@ -7,7 +7,7 @@ import { ArrowUpRight } from "lucide-react"
 const testimonials = [
   {
     id: 1,
-    quote: "Before ADLTrack, families didn't always understand how much we actually do. Now everything I complete is tracked and time-stamped. It protects caregivers like me and builds trust with families.",
+    quote: "Before Voallen, families didn't always understand how much we actually do. Now everything I complete is tracked and time-stamped. It protects caregivers like me and builds trust with families.",
     name: "Aisha K.",
     role: "Certified Caregiver",
     company: "Philadelphia, PA",
@@ -15,7 +15,7 @@ const testimonials = [
   },
   {
     id: 2,
-    quote: "Living in another state made it hard to know what was really happening day to day. With ADLTrack, I can see when my dad's meds are given and when his caregiver arrives. I finally feel involved again, without constantly calling.",
+    quote: "Living in another state made it hard to know what was really happening day to day. With Voallen, I can see when my dad's meds are given and when his caregiver arrives. I finally feel involved again, without constantly calling.",
     name: "Jasmine T.",
     role: "Daughter",
     company: "Atlanta, GA",
@@ -23,7 +23,7 @@ const testimonials = [
   },
   {
     id: 3,
-    quote: "ADLTrack completely changed how we manage accountability. We can now see caregiver punctuality, task completion, and patterns over time. It's helped us improve quality, reduce complaints, and retain our best caregivers.",
+    quote: "Voallen completely changed how we manage accountability. We can now see caregiver punctuality, task completion, and patterns over time. It's helped us improve quality, reduce complaints, and retain our best caregivers.",
     name: "Michael R.",
     role: "Agency Director",
     company: "Newark, NJ",
@@ -31,7 +31,7 @@ const testimonials = [
   },
   {
     id: 4,
-    quote: "Our son has a very structured routine, and missed steps used to cause setbacks. ADLTrack keeps everyone on the same page—therapists, caregivers, and us. The reminders and logs have been a game changer.",
+    quote: "Our son has a very structured routine, and missed steps used to cause setbacks. Voallen keeps everyone on the same page—therapists, caregivers, and us. The reminders and logs have been a game changer.",
     name: "Daniel & Maria S.",
     role: "Parents",
     company: "Houston, TX",
@@ -39,7 +39,7 @@ const testimonials = [
   },
   {
     id: 5,
-    quote: "Supervising multiple clients used to mean endless check-ins. With ADLTrack, I get clear visibility into care delivery and alerts when something needs attention. It saves time and improves outcomes.",
+    quote: "Supervising multiple clients used to mean endless check-ins. With Voallen, I get clear visibility into care delivery and alerts when something needs attention. It saves time and improves outcomes.",
     name: "Linda P.",
     role: "Care Manager",
     company: "Chicago, IL",
@@ -47,7 +47,7 @@ const testimonials = [
   },
   {
     id: 6,
-    quote: "ADLTrack gave us peace of mind during the hardest season of our lives. Knowing my mom's care was being followed exactly as planned helped me sleep again.",
+    quote: "Voallen gave us peace of mind during the hardest season of our lives. Knowing my mom's care was being followed exactly as planned helped me sleep again.",
     name: "Renee M.",
     role: "Family Caregiver",
     company: "Philadelphia, PA",

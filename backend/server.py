@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Header, BackgroundTasks
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,8 +6,11 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional
+from typing import List, Literal, Optional
 import uuid
+import secrets
+import smtplib
+from email.message import EmailMessage
 from datetime import datetime, timezone
 import bcrypt
 import jwt
@@ -21,8 +24,6 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# JWT Secret
-JWT_SECRET = os.environ.get('JWT_SECRET', 'homehealthcare2024secretkey')
 JWT_ALGORITHM = 'HS256'
 
 # Create the main app without a prefix
@@ -38,15 +39,33 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# JWT secret: must come from the environment. If it is missing (local dev),
+# use a random per-process secret so no known default can ever sign tokens.
+JWT_SECRET = os.environ.get('JWT_SECRET')
+if not JWT_SECRET:
+    JWT_SECRET = secrets.token_urlsafe(48)
+    logger.warning("JWT_SECRET is not set; using a random secret. Logins will reset when the server restarts.")
+
+# Emails listed here get the admin role when they sign up (comma separated).
+ADMIN_EMAILS = {e.strip().lower() for e in os.environ.get('ADMIN_EMAILS', '').split(',') if e.strip()}
+
+BOOKING_STATUSES = ["pending", "confirmed", "declined", "completed", "cancelled"]
+
 # ===== MODELS =====
 class UserBase(BaseModel):
     model_config = ConfigDict(extra="ignore")
     email: str
     name: str
-    role: str = "client"  # client or agency
+    role: str = "client"  # client, agency or admin
     phone: Optional[str] = None
 
-class UserCreate(UserBase):
+class UserCreate(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    email: str
+    name: str
+    # Only these roles can be chosen at signup. Admins come from ADMIN_EMAILS.
+    role: Literal["client", "agency"] = "client"
+    phone: Optional[str] = None
     password: str
 
 class UserLogin(BaseModel):
@@ -99,17 +118,6 @@ class Agency(AgencyBase):
     user_id: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class ServiceBase(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    name: str
-    description: str
-    duration_hours: int = 1
-    price: float
-
-class Service(ServiceBase):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    agency_id: str
-
 class BookingCreate(BaseModel):
     agency_id: str
     service_type: str
@@ -137,19 +145,12 @@ class Booking(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class ReviewCreate(BaseModel):
-    agency_id: str
-    rating: int
-    comment: str
+    booking_id: str
+    rating: int = Field(ge=1, le=5)
+    comment: str = Field(min_length=1, max_length=2000)
 
-class Review(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    user_id: str
-    user_name: str
-    agency_id: str
-    rating: int
-    comment: str
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+class BookingStatusUpdate(BaseModel):
+    status: Literal["confirmed", "declined", "completed", "cancelled"]
 
 class ContactMessage(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -181,6 +182,32 @@ def create_token(user_id: str, email: str) -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
+# ===== EMAIL =====
+def _send_email_sync(to: str, subject: str, body: str):
+    host = os.environ.get('SMTP_HOST')
+    if not host:
+        logger.info("Email (SMTP not configured) to=%s subject=%s\n%s", to, subject, body)
+        return
+    msg = EmailMessage()
+    msg['From'] = os.environ.get('EMAIL_FROM', 'Voallen <no-reply@voallen.com>')
+    msg['To'] = to
+    msg['Subject'] = subject
+    msg.set_content(body)
+    try:
+        with smtplib.SMTP(host, int(os.environ.get('SMTP_PORT', '587')), timeout=15) as smtp:
+            if os.environ.get('SMTP_USE_TLS', 'true').lower() != 'false':
+                smtp.starttls()
+            user = os.environ.get('SMTP_USER')
+            if user:
+                smtp.login(user, os.environ.get('SMTP_PASSWORD', ''))
+            smtp.send_message(msg)
+    except Exception:
+        logger.exception("Failed to send email to %s", to)
+
+def queue_email(background: BackgroundTasks, to: Optional[str], subject: str, body: str):
+    if to:
+        background.add_task(_send_email_sync, to, subject, body)
+
 async def get_current_user(authorization: Optional[str] = Header(None)):
     if not authorization:
         raise HTTPException(status_code=401, detail="Not authenticated")
@@ -197,7 +224,7 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
 # ===== ROUTES =====
 @api_router.get("/")
 async def root():
-    return {"message": "NurseNow - In-Home Care Marketplace API"}
+    return {"message": "Voallen - In-Home Care Marketplace API"}
 
 # Auth Routes
 @api_router.post("/auth/signup")
@@ -211,7 +238,7 @@ async def signup(user_data: UserCreate):
         "id": user_id,
         "email": user_data.email,
         "name": user_data.name,
-        "role": user_data.role,
+        "role": "admin" if user_data.email.strip().lower() in ADMIN_EMAILS else user_data.role,
         "phone": user_data.phone,
         "password": hash_password(user_data.password),
         "created_at": datetime.now(timezone.utc).isoformat()
@@ -254,14 +281,7 @@ async def get_agency(agency_id: str):
     if not agency:
         raise HTTPException(status_code=404, detail="Agency not found")
     
-    # Reviews are now embedded in the agency document
-    # No need to fetch from a separate collection
-    return agency
-    
-    # Get services
-    services = await db.services.find({"agency_id": agency_id}, {"_id": 0}).to_list(20)
-    agency["services"] = services
-    
+    # Reviews are embedded in the agency document
     return agency
 
 @api_router.post("/agencies")
@@ -269,19 +289,48 @@ async def create_agency(agency_data: AgencyBase, user: dict = Depends(get_curren
     if user.get('role') != 'agency':
         raise HTTPException(status_code=403, detail="Only agency accounts can create profiles")
     
+    if await db.agencies.find_one({"user_id": user['id']}):
+        raise HTTPException(status_code=400, detail="You already have an agency profile")
+
     agency_id = str(uuid.uuid4())
+    data = agency_data.model_dump()
+    # Ratings, reviews and verification are earned, not self-reported
+    data.update({"rating": 0, "review_count": 0, "reviews": [], "is_verified": False, "is_new": True})
     agency_doc = {
         "id": agency_id,
         "user_id": user['id'],
-        **agency_data.model_dump(),
+        **data,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.agencies.insert_one(agency_doc)
-    return {"id": agency_id, **agency_doc}
+    return {k: v for k, v in agency_doc.items() if k != '_id'}
+
+@api_router.get("/agency/me")
+async def get_my_agency(user: dict = Depends(get_current_user)):
+    if user.get('role') != 'agency':
+        raise HTTPException(status_code=403, detail="Agency account required")
+    agency = await db.agencies.find_one({"user_id": user['id']}, {"_id": 0})
+    if not agency:
+        raise HTTPException(status_code=404, detail="No agency profile yet")
+    return agency
+
+@api_router.get("/agency/bookings")
+async def get_agency_bookings(user: dict = Depends(get_current_user)):
+    if user.get('role') != 'agency':
+        raise HTTPException(status_code=403, detail="Agency account required")
+    agency = await db.agencies.find_one({"user_id": user['id']}, {"_id": 0})
+    if not agency:
+        return []
+    bookings = await db.bookings.find({"agency_id": agency['id']}, {"_id": 0}).sort("created_at", -1).to_list(500)
+    for booking in bookings:
+        client = await db.users.find_one({"id": booking.get('user_id')}, {"_id": 0, "password": 0})
+        if client:
+            booking['client'] = {"name": client.get('name'), "email": client.get('email'), "phone": client.get('phone')}
+    return bookings
 
 # Booking Routes
 @api_router.post("/bookings")
-async def create_booking(booking_data: BookingCreate, user: dict = Depends(get_current_user)):
+async def create_booking(booking_data: BookingCreate, background: BackgroundTasks, user: dict = Depends(get_current_user)):
     agency = await db.agencies.find_one({"id": booking_data.agency_id}, {"_id": 0})
     if not agency:
         raise HTTPException(status_code=404, detail="Agency not found")
@@ -303,6 +352,18 @@ async def create_booking(booking_data: BookingCreate, user: dict = Depends(get_c
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     await db.bookings.insert_one(booking_doc)
+
+    summary = (f"Agency: {agency['name']}\nService: {booking_data.service_type}\n"
+               f"Date: {booking_data.date} at {booking_data.time_slot}\nPatient: {booking_data.patient_name}")
+    queue_email(background, user.get('email'), "Your Voallen consultation request was sent",
+                f"Hi {user.get('name', '')},\n\nWe sent your consultation request. "
+                f"The agency will confirm or decline it soon.\n\n{summary}\n\nThe Voallen team")
+    if agency.get('user_id'):
+        owner = await db.users.find_one({"id": agency['user_id']}, {"_id": 0})
+        if owner:
+            queue_email(background, owner.get('email'), "New consultation request on Voallen",
+                        f"You have a new consultation request from {user.get('name', 'a client')}.\n\n{summary}\n\n"
+                        f"Log in to your Voallen dashboard to accept or decline it.")
     # Return without _id
     return {k: v for k, v in booking_doc.items() if k != '_id'}
 
@@ -325,37 +386,96 @@ async def get_booking(booking_id: str, user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=404, detail="Booking not found")
     return booking
 
+# Which status changes each side may make, keyed by current status
+AGENCY_TRANSITIONS = {"pending": {"confirmed", "declined"}, "confirmed": {"completed", "declined"}}
+CLIENT_TRANSITIONS = {"pending": {"cancelled"}, "confirmed": {"cancelled"}}
+
+@api_router.patch("/bookings/{booking_id}/status")
+async def update_booking_status(booking_id: str, update: BookingStatusUpdate, background: BackgroundTasks,
+                                user: dict = Depends(get_current_user)):
+    booking = await db.bookings.find_one({"id": booking_id}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    agency = await db.agencies.find_one({"id": booking['agency_id']}, {"_id": 0})
+
+    is_owner_agency = user.get('role') == 'agency' and agency and agency.get('user_id') == user['id']
+    is_client = booking['user_id'] == user['id']
+    if is_owner_agency:
+        allowed = AGENCY_TRANSITIONS.get(booking['status'], set())
+    elif is_client:
+        allowed = CLIENT_TRANSITIONS.get(booking['status'], set())
+    else:
+        raise HTTPException(status_code=403, detail="Not allowed to change this booking")
+    if update.status not in allowed:
+        raise HTTPException(status_code=400, detail=f"Cannot change a {booking['status']} booking to {update.status}")
+
+    now = datetime.now(timezone.utc).isoformat()
+    await db.bookings.update_one({"id": booking_id}, {"$set": {"status": update.status, "updated_at": now}})
+    booking.update({"status": update.status, "updated_at": now})
+
+    agency_name = agency['name'] if agency else "the agency"
+    when = f"{booking['date']} at {booking['time_slot']}"
+    if is_owner_agency:
+        client = await db.users.find_one({"id": booking['user_id']}, {"_id": 0})
+        messages = {
+            "confirmed": f"Good news: {agency_name} confirmed your consultation on {when}.",
+            "declined": f"{agency_name} can't take your consultation on {when}. You can book another agency on Voallen.",
+            "completed": f"Your visit with {agency_name} is marked complete. You can now leave a review from your dashboard.",
+        }
+        if client:
+            queue_email(background, client.get('email'), f"Your Voallen booking is {update.status}",
+                        f"Hi {client.get('name', '')},\n\n{messages[update.status]}\n\nThe Voallen team")
+    elif agency and agency.get('user_id'):
+        owner = await db.users.find_one({"id": agency['user_id']}, {"_id": 0})
+        if owner:
+            queue_email(background, owner.get('email'), "A Voallen booking was cancelled",
+                        f"{user.get('name', 'A client')} cancelled their consultation on {when}.")
+    return booking
+
 # Review Routes
 @api_router.post("/reviews")
 async def create_review(review_data: ReviewCreate, user: dict = Depends(get_current_user)):
-    agency = await db.agencies.find_one({"id": review_data.agency_id})
+    booking = await db.bookings.find_one({"id": review_data.booking_id, "user_id": user['id']}, {"_id": 0})
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    if booking.get('status') != 'completed':
+        raise HTTPException(status_code=400, detail="You can review an agency after your visit is completed")
+    if booking.get('review_id'):
+        raise HTTPException(status_code=400, detail="You already reviewed this visit")
+    agency = await db.agencies.find_one({"id": booking['agency_id']}, {"_id": 0})
     if not agency:
         raise HTTPException(status_code=404, detail="Agency not found")
-    
-    review_id = str(uuid.uuid4())
+
     review_doc = {
-        "id": review_id,
+        "id": str(uuid.uuid4()),
         "user_id": user['id'],
         "user_name": user.get('name', 'Anonymous'),
-        **review_data.model_dump(),
-        "created_at": datetime.now(timezone.utc).isoformat()
+        "rating": review_data.rating,
+        "comment": review_data.comment,
+        "care_type": booking.get('service_type', ''),
+        "relationship": "Verified client",
+        "booking_id": booking['id'],
+        "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     }
-    await db.reviews.insert_one(review_doc)
-    
-    # Update agency rating
-    all_reviews = await db.reviews.find({"agency_id": review_data.agency_id}).to_list(1000)
-    avg_rating = sum(r['rating'] for r in all_reviews) / len(all_reviews)
+    # Blend the new rating into the existing average instead of replacing it
+    count = int(agency.get('review_count') or 0)
+    rating = float(agency.get('rating') or 0)
+    new_count = count + 1
+    new_rating = round((rating * count + review_data.rating) / new_count, 1)
     await db.agencies.update_one(
-        {"id": review_data.agency_id},
-        {"$set": {"rating": round(avg_rating, 1), "review_count": len(all_reviews)}}
+        {"id": agency['id']},
+        {"$push": {"reviews": {"$each": [review_doc], "$position": 0}},
+         "$set": {"rating": new_rating, "review_count": new_count}}
     )
-    
+    await db.bookings.update_one({"id": booking['id']}, {"$set": {"review_id": review_doc['id']}})
     return review_doc
 
 @api_router.get("/reviews/{agency_id}")
 async def get_reviews(agency_id: str):
-    reviews = await db.reviews.find({"agency_id": agency_id}, {"_id": 0}).to_list(100)
-    return reviews
+    agency = await db.agencies.find_one({"id": agency_id}, {"_id": 0, "reviews": 1})
+    if not agency:
+        raise HTTPException(status_code=404, detail="Agency not found")
+    return agency.get('reviews', [])
 
 # Contact Routes
 @api_router.post("/contact")
@@ -376,9 +496,8 @@ async def get_contact_messages(user: dict = Depends(get_current_user)):
     messages = await db.contact_messages.find({}, {"_id": 0}).to_list(100)
     return messages
 
-# Seed Data Route - Initialize agencies with enhanced data
-@api_router.post("/seed")
-async def seed_data():
+# Seed data - sample agencies, loaded at startup when the database is empty
+async def seed_agencies():
     # Check if already seeded
     existing = await db.agencies.count_documents({})
     if existing > 0:
@@ -998,6 +1117,12 @@ async def seed_data():
     await db.agencies.insert_many(agencies_data)
     return {"message": "Data seeded successfully", "count": len(agencies_data)}
 
+@api_router.post("/seed")
+async def seed_data(user: dict = Depends(get_current_user)):
+    if user.get('role') != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return await seed_agencies()
+
 # Include the router in the main app
 app.include_router(api_router)
 
@@ -1008,6 +1133,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def seed_on_startup():
+    if os.environ.get('SEED_SAMPLE_DATA', 'true').lower() != 'false':
+        result = await seed_agencies()
+        logger.info("Sample data: %s", result['message'])
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

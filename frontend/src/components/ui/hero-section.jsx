@@ -17,7 +17,7 @@ export function HeroSection() {
   return (
     <HeroSection3
       backgroundImage="https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=1920"
-      logoText="Adltrack"
+      logoText="Voallen"
       navLinks={[
         { href: "/agencies", label: "Find Care" },
         { href: "/faq", label: "How It Works" },

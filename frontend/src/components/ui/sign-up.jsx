@@ -152,12 +152,12 @@ const modalSteps = [
   { message: 'Setting up your account...', icon: <Loader className="w-12 h-12 text-stone-600 animate-spin" /> },
   { message: 'Preparing your dashboard...', icon: <Loader className="w-12 h-12 text-stone-600 animate-spin" /> },
   { message: 'Almost there...', icon: <Loader className="w-12 h-12 text-stone-600 animate-spin" /> },
-  { message: 'Welcome to Adltrack!', icon: <PartyPopper className="w-12 h-12 text-green-500" /> }
+  { message: 'Welcome to Voallen!', icon: <PartyPopper className="w-12 h-12 text-green-500" /> }
 ];
 const TEXT_LOOP_INTERVAL = 1.5;
 
-// --- ADLTRACK LOGO ---
-const AdltrackLogo = () => (
+// --- VOALLEN LOGO ---
+const VoallenLogo = () => (
   <div className="bg-stone-800 text-white rounded-xl p-1.5">
     <Activity className="h-4 w-4" />
   </div>
@@ -410,8 +410,8 @@ export const AuthComponent = ({ mode = 'signup' }) => {
 
       {/* Header */}
       <Link to="/" className="fixed top-4 left-4 z-20 flex items-center gap-2 md:left-1/2 md:-translate-x-1/2">
-        <AdltrackLogo />
-        <h1 className="text-base font-bold text-stone-800">Adltrack</h1>
+        <VoallenLogo />
+        <h1 className="text-base font-bold text-stone-800">Voallen</h1>
       </Link>
 
       <div className="flex w-full flex-1 h-full items-center justify-center relative overflow-hidden">
@@ -423,8 +423,8 @@ export const AuthComponent = ({ mode = 'signup' }) => {
             {mode === 'signup' && authStep === 'userType' && (
               <motion.div key="userType-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0.1} className="w-full text-center">
-                  <p className="font-light text-3xl sm:text-4xl tracking-tight text-stone-800">Join Adltrack</p>
-                  <p className="text-sm text-stone-500 mt-2">Select how you'd like to use Adltrack</p>
+                  <p className="font-light text-3xl sm:text-4xl tracking-tight text-stone-800">Join Voallen</p>
+                  <p className="text-sm text-stone-500 mt-2">Select how you'd like to use Voallen</p>
                 </BlurFade>
                 <BlurFade delay={0.2} className="w-full">
                   <UserTypeSelection selectedType={userType} onSelect={setUserType} />
@@ -496,7 +496,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
                   <p className="font-light text-3xl sm:text-4xl tracking-tight text-stone-800">
                     {mode === 'login' ? 'Welcome Back' : 'Enter your email'}
                   </p>
-                  {mode === 'login' && <p className="text-sm text-stone-500 mt-2">Sign in to your Adltrack account</p>}
+                  {mode === 'login' && <p className="text-sm text-stone-500 mt-2">Sign in to your Voallen account</p>}
                 </BlurFade>
                 
                 {mode === 'login' && (
