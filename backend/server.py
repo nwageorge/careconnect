@@ -893,401 +893,6 @@ async def seed_agencies():
             "families_served": 210,
             "reviews": generate_reviews(["Mental Health"])
         },
-        # Washington, D.C. - 6 agencies
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Capitol Care Services",
-            "bio": "Premier in-home care serving distinguished clients in the nation's capital.",
-            "description": "Capitol Care Services is Washington D.C.'s most trusted name in premium home care. We serve a distinguished clientele who expect nothing but the best, and we deliver with caregivers who are not only highly skilled but also discreet and professional. Our concierge-level service includes personalized care plans, flexible scheduling, and caregivers matched not just for skills but for personality and interests. When you choose Capitol Care, you're choosing excellence.",
-            "location": "1600 K Street NW, Washington, DC 20006",
-            "city": "Washington, D.C.",
-            "experience_years": 18,
-            "certifications": ["State Licensed", "CHAP Accredited", "Bonded & Insured", "Executive Background Checked"],
-            "specialties": ["Executive Care", "Elderly Care", "Concierge Services", "Companionship"],
-            "price_per_hour": 18,
-            "rating": 4.9,
-            "review_count": 178,
-            "image_url": "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551667/pexels-photo-7551667.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 65,
-            "years_in_business": 18,
-            "families_served": 1850,
-            "reviews": generate_reviews(["Executive Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "District Home Care",
-            "bio": "Compassionate care for DC residents with multilingual caregivers.",
-            "description": "District Home Care serves Washington's diverse community with caregivers who speak over 15 languages. We understand that cultural sensitivity is crucial to providing effective care, especially for elderly clients who may feel more comfortable communicating in their native language. Our team reflects the rich diversity of our city, and we take pride in matching clients with caregivers who understand their cultural background, dietary preferences, and traditions.",
-            "location": "2020 Pennsylvania Ave NW, Washington, DC 20006",
-            "city": "Washington, D.C.",
-            "experience_years": 11,
-            "certifications": ["Multilingual Staff", "State Licensed", "Cultural Competency Certified"],
-            "specialties": ["Multilingual Care", "Cultural Care", "Elderly Care", "Personal Care"],
-            "price_per_hour": 16,
-            "rating": 4.7,
-            "review_count": 134,
-            "image_url": "https://images.unsplash.com/photo-1509909756405-be0199881695?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 42,
-            "years_in_business": 11,
-            "families_served": 980,
-            "reviews": generate_reviews(["Elderly Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Georgetown Care Specialists",
-            "bio": "Boutique care agency serving Georgetown and Northwest DC.",
-            "description": "Georgetown Care Specialists offers an intimate, boutique approach to home care. We intentionally keep our client roster small so we can provide truly personalized attention to each family we serve. Our caregivers become genuine members of the families they work with, providing not just physical care but emotional support and companionship. We specialize in long-term care relationships where consistency and trust are paramount.",
-            "location": "3200 M Street NW, Washington, DC 20007",
-            "city": "Washington, D.C.",
-            "experience_years": 9,
-            "certifications": ["State Licensed", "Geriatric Care Manager", "Bonded & Insured"],
-            "specialties": ["Long-term Care", "Companionship", "Luxury Care", "Elderly Care"],
-            "price_per_hour": 18,
-            "rating": 4.8,
-            "review_count": 67,
-            "image_url": "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 22,
-            "years_in_business": 9,
-            "families_served": 340,
-            "reviews": generate_reviews(["Companionship"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "National Health Companions",
-            "bio": "Veteran-owned agency serving military families and veterans.",
-            "description": "National Health Companions is proudly veteran-owned and operated, with a special focus on serving those who served. We understand the unique healthcare needs of veterans and military families, from managing service-connected conditions to navigating VA benefits. Many of our caregivers are veterans themselves or military spouses, creating an immediate bond of understanding with our clients. We're honored to give back to those who gave so much for our country.",
-            "location": "1775 I Street NW, Washington, DC 20006",
-            "city": "Washington, D.C.",
-            "experience_years": 13,
-            "certifications": ["VA Approved", "State Licensed", "PTSD Care Certified", "Veteran-Owned"],
-            "specialties": ["Veteran Care", "Military Families", "PTSD Support", "Disability Care"],
-            "price_per_hour": 15,
-            "rating": 4.9,
-            "review_count": 145,
-            "image_url": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/5206919/pexels-photo-5206919.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 48,
-            "years_in_business": 13,
-            "families_served": 1120,
-            "reviews": generate_reviews(["Veteran Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Potomac Pediatric Care",
-            "bio": "Specialized pediatric home care for children with complex needs.",
-            "description": "Potomac Pediatric Care provides expert nursing care for children with complex medical conditions. Our pediatric nurses are trained to handle everything from ventilator care to feeding tubes, allowing medically fragile children to thrive at home with their families. We work closely with children's hospitals throughout the DC area to ensure continuity of care, and we provide training and support to family members who want to participate in their child's care.",
-            "location": "4500 Wisconsin Ave NW, Washington, DC 20016",
-            "city": "Washington, D.C.",
-            "experience_years": 15,
-            "certifications": ["Pediatric ICU Certified", "State Licensed", "Ventilator Care Trained", "Children's Hospital Affiliated"],
-            "specialties": ["Pediatric Nursing", "Complex Medical Care", "Ventilator Care", "Special Needs"],
-            "price_per_hour": 18,
-            "rating": 4.8,
-            "review_count": 89,
-            "image_url": "https://images.unsplash.com/photo-1491013516836-7db643ee125a?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 38,
-            "years_in_business": 15,
-            "families_served": 620,
-            "reviews": generate_reviews(["Pediatric Nursing"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "DC Senior Living Support",
-            "bio": "Helping seniors age in place with dignity and independence.",
-            "description": "DC Senior Living Support is dedicated to one mission: helping seniors stay in their homes for as long as safely possible. We provide the support needed for aging in place, from help with daily activities to medication management to fall prevention. Our caregivers are trained in senior-specific techniques and understand the importance of maintaining independence and dignity. We also offer family consultations to help plan for changing care needs over time.",
-            "location": "1200 New Hampshire Ave NW, Washington, DC 20036",
-            "city": "Washington, D.C.",
-            "experience_years": 7,
-            "certifications": ["State Licensed", "Fall Prevention Certified", "Senior Care Specialist"],
-            "specialties": ["Aging in Place", "Fall Prevention", "Daily Living Support", "Medication Management"],
-            "price_per_hour": 16,
-            "rating": 4.6,
-            "review_count": 56,
-            "image_url": "https://images.unsplash.com/photo-1517732306149-e8f829eb588a?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551667/pexels-photo-7551667.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": True,
-            "total_caregivers": 25,
-            "years_in_business": 7,
-            "families_served": 380,
-            "reviews": generate_reviews(["Aging in Place"])
-        },
-        # Pittsburgh, PA - 5 agencies
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Steel City Home Care",
-            "bio": "Pittsburgh's most trusted home care agency since 2005.",
-            "description": "Steel City Home Care has been serving Pittsburgh families for nearly two decades, building a reputation for reliability and excellence. Our roots run deep in this community—many of our caregivers have been with us for over 10 years, providing consistent, familiar faces for our clients. We offer comprehensive care services from light housekeeping and companionship to complex medical support, always with the warmth and friendliness Pittsburgh is known for.",
-            "location": "600 Grant Street, Pittsburgh, PA 15219",
-            "city": "Pittsburgh, PA",
-            "experience_years": 19,
-            "certifications": ["State Licensed", "ACHC Accredited", "Community Service Award"],
-            "specialties": ["Elderly Care", "Companionship", "Light Housekeeping", "Meal Preparation"],
-            "price_per_hour": 15,
-            "rating": 4.8,
-            "review_count": 201,
-            "image_url": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 72,
-            "years_in_business": 19,
-            "families_served": 2450,
-            "reviews": generate_reviews(["Elderly Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Three Rivers Care Solutions",
-            "bio": "Comprehensive care services for the greater Pittsburgh region.",
-            "description": "Three Rivers Care Solutions serves families throughout the greater Pittsburgh area, from downtown to the surrounding suburbs. We're known for our responsive, flexible approach—when your care needs change, we adapt quickly. Our care coordinators are available 24/7 to handle emergencies, adjust schedules, or answer questions. We believe great care starts with great communication, which is why we provide regular updates to family members and work collaboratively with healthcare providers.",
-            "location": "300 Sixth Avenue, Pittsburgh, PA 15222",
-            "city": "Pittsburgh, PA",
-            "experience_years": 12,
-            "certifications": ["State Licensed", "24/7 Support", "Bonded & Insured"],
-            "specialties": ["Flexible Care", "Emergency Response", "Family Communication", "Regional Coverage"],
-            "price_per_hour": 16,
-            "rating": 4.7,
-            "review_count": 145,
-            "image_url": "https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 55,
-            "years_in_business": 12,
-            "families_served": 1340,
-            "reviews": generate_reviews(["Elderly Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "UPMC Home Health Partners",
-            "bio": "Affiliated with UPMC for seamless hospital-to-home transitions.",
-            "description": "UPMC Home Health Partners works closely with the UPMC health system to provide seamless transitions from hospital to home care. When you're discharged from a UPMC facility, our team is ready to step in immediately with care that follows your physician's orders precisely. Our electronic health records integrate with UPMC systems, so your entire care team stays informed and coordinated. This level of integration means safer, more effective care for you or your loved one.",
-            "location": "200 Lothrop Street, Pittsburgh, PA 15213",
-            "city": "Pittsburgh, PA",
-            "experience_years": 16,
-            "certifications": ["UPMC Affiliated", "Medicare Certified", "Joint Commission Accredited", "EHR Integrated"],
-            "specialties": ["Hospital Transitions", "Skilled Nursing", "Rehabilitation", "Chronic Disease Management"],
-            "price_per_hour": 17,
-            "rating": 4.9,
-            "review_count": 189,
-            "image_url": "https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 85,
-            "years_in_business": 16,
-            "families_served": 2100,
-            "reviews": generate_reviews(["Hospital Transitions"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Allegheny Senior Care",
-            "bio": "Dedicated exclusively to senior care in Allegheny County.",
-            "description": "Allegheny Senior Care focuses exclusively on elderly care, which allows us to develop deep expertise in the unique challenges seniors face. From managing multiple chronic conditions to providing dignified assistance with personal care, our caregivers are true specialists in geriatric care. We also offer specialized programs for couples, allowing both partners to receive coordinated care while staying together in their home.",
-            "location": "425 Sixth Avenue, Pittsburgh, PA 15219",
-            "city": "Pittsburgh, PA",
-            "experience_years": 14,
-            "certifications": ["Geriatric Care Certified", "State Licensed", "Couples Care Program"],
-            "specialties": ["Senior Care", "Couples Care", "Chronic Conditions", "Personal Care"],
-            "price_per_hour": 15,
-            "rating": 4.6,
-            "review_count": 112,
-            "image_url": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551667/pexels-photo-7551667.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 45,
-            "years_in_business": 14,
-            "families_served": 890,
-            "reviews": generate_reviews(["Senior Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Squirrel Hill Home Helpers",
-            "bio": "Neighborhood-focused care in Pittsburgh's East End.",
-            "description": "Squirrel Hill Home Helpers takes a neighborhood approach to home care. We hire caregivers who live in and know the East End communities, creating natural connections with clients who share their neighborhood. This means caregivers who understand local resources, know the best places for outings, and can easily handle transportation to familiar doctors and stores. It's home care that truly feels like home.",
-            "location": "5850 Forbes Avenue, Pittsburgh, PA 15217",
-            "city": "Pittsburgh, PA",
-            "experience_years": 8,
-            "certifications": ["State Licensed", "Community Focused", "Local Background Checks"],
-            "specialties": ["Neighborhood Care", "Transportation", "Community Integration", "Companionship"],
-            "price_per_hour": 15,
-            "rating": 4.7,
-            "review_count": 78,
-            "image_url": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": True,
-            "total_caregivers": 28,
-            "years_in_business": 8,
-            "families_served": 420,
-            "reviews": generate_reviews(["Companionship"])
-        },
-        # Newark, NJ - 4 agencies
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Garden State Home Care",
-            "bio": "New Jersey's affordable, quality home care solution.",
-            "description": "Garden State Home Care proves that quality care doesn't have to break the bank. We've streamlined our operations to offer competitive rates while maintaining high standards of care. Our caregivers are thoroughly vetted, properly trained, and genuinely caring—we just don't charge premium prices for premium service. Serving families throughout Newark and Northern New Jersey, we make professional home care accessible to everyone who needs it.",
-            "location": "550 Broad Street, Newark, NJ 07102",
-            "city": "Newark, NJ",
-            "experience_years": 11,
-            "certifications": ["State Licensed", "Affordable Care Program", "Bonded & Insured"],
-            "specialties": ["Affordable Care", "Elderly Care", "Daily Living", "Transportation"],
-            "price_per_hour": 15,
-            "rating": 4.5,
-            "review_count": 167,
-            "image_url": "https://images.unsplash.com/photo-1504439468489-c8920d796a29?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 62,
-            "years_in_business": 11,
-            "families_served": 1560,
-            "reviews": generate_reviews(["Affordable Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Newark Community Care",
-            "bio": "By the community, for the community—culturally competent care.",
-            "description": "Newark Community Care was founded with a simple mission: provide culturally competent care that reflects the diverse communities of Newark. Our caregivers speak Portuguese, Spanish, Haitian Creole, and many other languages. More importantly, they understand the cultural traditions, dietary preferences, and family values of the communities they serve. When care feels familiar, it's more effective—and that's what we deliver every day.",
-            "location": "60 Park Place, Newark, NJ 07102",
-            "city": "Newark, NJ",
-            "experience_years": 9,
-            "certifications": ["Cultural Competency Certified", "Multilingual Staff", "Community Partner"],
-            "specialties": ["Cultural Care", "Multilingual", "Community Health", "Family Support"],
-            "price_per_hour": 15,
-            "rating": 4.6,
-            "review_count": 98,
-            "image_url": "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 48,
-            "years_in_business": 9,
-            "families_served": 720,
-            "reviews": generate_reviews(["Cultural Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Essex County Care Services",
-            "bio": "Serving all of Essex County with dependable, professional care.",
-            "description": "Essex County Care Services provides reliable home care throughout Essex County, from Newark to the suburbs. We pride ourselves on dependability—when we say a caregiver will arrive at 9 AM, they arrive at 9 AM. Our scheduling system ensures consistent caregivers for each client, building the trust and familiarity that makes care more effective. We also offer backup coverage guarantees, so you're never left without support.",
-            "location": "1085 Raymond Boulevard, Newark, NJ 07102",
-            "city": "Newark, NJ",
-            "experience_years": 13,
-            "certifications": ["State Licensed", "Reliability Guaranteed", "Full County Coverage"],
-            "specialties": ["Reliable Scheduling", "Backup Coverage", "Personal Care", "Elderly Care"],
-            "price_per_hour": 16,
-            "rating": 4.7,
-            "review_count": 134,
-            "image_url": "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-            "gallery_images": [
-                "https://images.pexels.com/photos/5206919/pexels-photo-5206919.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 55,
-            "years_in_business": 13,
-            "families_served": 1180,
-            "reviews": generate_reviews(["Reliable Scheduling"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Brick City Caregivers",
-            "bio": "Newark's newest, most innovative home care agency.",
-            "description": "Brick City Caregivers brings fresh innovation to Newark's home care scene. We use modern technology to improve care—from our app that lets families check in on care visits in real-time, to our AI-powered matching system that pairs caregivers with clients based on personality and interests, not just skills. We're proving that home care can be both high-tech and high-touch, combining the best of both worlds for Newark families.",
-            "location": "744 Broad Street, Newark, NJ 07102",
-            "city": "Newark, NJ",
-            "experience_years": 3,
-            "certifications": ["State Licensed", "Tech-Enabled Care", "Innovation Award"],
-            "specialties": ["Tech-Enabled", "Real-time Updates", "Personalized Matching", "Modern Care"],
-            "price_per_hour": 17,
-            "rating": 4.8,
-            "review_count": 45,
-            "image_url": "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": True,
-            "total_caregivers": 22,
-            "years_in_business": 3,
-            "families_served": 180,
-            "reviews": generate_reviews(["Tech-Enabled"])
-        }
     ]
     
     for agency in agencies_data:
@@ -1331,8 +936,37 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Sample agencies that were seeded in earlier versions for Washington D.C., Pittsburgh and Newark.
+# Voallen now only lists Philadelphia, so these are removed from existing databases on startup.
+# Only these exact sample agencies (matched by name and city) are removed; agencies that signed up are kept.
+RETIRED_SAMPLE_AGENCIES = {
+    "Washington, D.C.": [
+        "Capitol Care Services", "District Home Care", "Georgetown Care Specialists",
+        "National Health Companions", "Potomac Pediatric Care", "DC Senior Living Support",
+    ],
+    "Pittsburgh, PA": [
+        "Steel City Home Care", "Three Rivers Care Solutions", "UPMC Home Health Partners",
+        "Allegheny Senior Care", "Squirrel Hill Home Helpers",
+    ],
+    "Newark, NJ": [
+        "Garden State Home Care", "Newark Community Care", "Essex County Care Services",
+        "Brick City Caregivers",
+    ],
+}
+
+async def remove_retired_sample_agencies():
+    removed = 0
+    for city, names in RETIRED_SAMPLE_AGENCIES.items():
+        # Seeded agencies have no owner account; agencies created by real users always do
+        result = await db.agencies.delete_many({"city": city, "name": {"$in": names}, "user_id": {"$exists": False}})
+        removed += result.deleted_count
+    return removed
+
 @app.on_event("startup")
 async def seed_on_startup():
+    removed = await remove_retired_sample_agencies()
+    if removed:
+        logger.info("Removed %d retired sample agencies", removed)
     if os.environ.get('SEED_SAMPLE_DATA', 'true').lower() != 'false':
         result = await seed_agencies()
         logger.info("Sample data: %s", result['message'])

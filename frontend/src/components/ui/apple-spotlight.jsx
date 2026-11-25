@@ -157,26 +157,8 @@ const CareSearchSpotlight = ({ className }) => {
     {
       icon: <MapPin />,
       label: 'Philadelphia, PA',
-      description: '14 care agencies available',
+      description: 'Care agencies available',
       city: 'Philadelphia, PA'
-    },
-    {
-      icon: <MapPin />,
-      label: 'Washington, D.C.',
-      description: '12 care agencies available',
-      city: 'Washington, D.C.'
-    },
-    {
-      icon: <MapPin />,
-      label: 'Pittsburgh, PA',
-      description: '10 care agencies available',
-      city: 'Pittsburgh, PA'
-    },
-    {
-      icon: <MapPin />,
-      label: 'Newark, NJ',
-      description: '8 care agencies available',
-      city: 'Newark, NJ'
     }
   ];
 

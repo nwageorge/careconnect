@@ -28,7 +28,7 @@ Agencies accept or decline requests, mark visits complete, and collect reviews f
 ## Project layout
 
 ```
-backend/server.py        API routes, models and the 22 sample agencies
+backend/server.py        API routes, models and the 7 sample Philadelphia agencies
 backend/.env.example     Backend settings to copy into backend/.env
 frontend/src/App.js      Pages, routing and app state
 frontend/src/components  Hero, agency cards, sign-up, theme toggle and the UI kit
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 uvicorn server:app --reload --port 8001
 ```
 
-On startup the backend loads 22 sample agencies if the database is empty.
+On startup the backend loads 7 sample Philadelphia agencies if the database is empty, and removes the old sample agencies for Washington D.C., Pittsburgh and Newark if they are still there.
 Set `SEED_SAMPLE_DATA=false` to turn that off.
 
 **Frontend**
