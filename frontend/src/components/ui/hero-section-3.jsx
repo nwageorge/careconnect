@@ -26,8 +26,8 @@ const CloseIcon = () => (
 
 // The home page hero: one photo, kept clean (no zoom, no slideshow, no fade over the picture)
 const hero = {
-  image: "/voallen/hero-window.jpg",
-  alt: "An older woman holding hands with a companion while looking out a window.",
+  image: "/voallen/hero-companion.jpg",
+  alt: "An older woman smiling at a companion who holds her hand outdoors.",
   titleLines: ["Proof of care,", "not promises."],
   subtitle: "Transparent care for your loved ones",
 };
@@ -172,8 +172,7 @@ export default function HeroSection3({
       <img
         src={hero.image}
         alt={hero.alt}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 30%" }}
+        className="absolute inset-0 w-full h-full object-cover object-[20%_30%] md:object-[center_35%]"
         fetchpriority="high"
       />
       {/* Soft shade at the bottom so the headline stays readable over the photo */}
