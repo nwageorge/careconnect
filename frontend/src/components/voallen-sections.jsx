@@ -29,24 +29,26 @@ const services = [
     label: "Friendly Companionship Visits",
     title: "A friendly face. Meaningful company.",
     description: "Personalized companionship visits for your loved ones in nursing homes, assisted living communities, and private residences.",
-    image: "/voallen/service-companionship.jpg",
-    alt: "An older woman seated comfortably with a companion nearby.",
+    image: "/voallen/groceries.jpg",
+    alt: "A young man and an older woman smiling at each other as he hands her a grocery bag.",
+    position: "center 25%",
     note: "Friendly companionship",
   },
   {
     label: "Hospice Companionship Visits",
     title: "A calm, caring presence.",
     description: "Nonmedical companionship visits for loved ones receiving hospice care, with time for gentle conversation and a reassuring presence.",
-    image: "/voallen/service-presence.jpg",
-    alt: "A close-up of older adults gently holding hands.",
+    image: "/voallen/window.jpg",
+    alt: "An older woman holding hands with a companion while looking out a window.",
+    position: "center 35%",
     note: "Hospice companionship",
   },
   {
     label: "Reading, Games & Social Engagement",
     title: "Time for shared interests.",
     description: "Reading, games, and social engagement offer simple, personal ways to spend meaningful time together.",
-    image: "/voallen/service-activities.jpg",
-    alt: "Older adults enjoying a lighthearted game together outdoors.",
+    image: "/voallen/photo-album.jpg",
+    alt: "An older woman and a companion looking through a photo album by the window.",
     note: "Reading, games & social time",
   },
   {
@@ -61,16 +63,17 @@ const services = [
     label: "Birthday & Special Occasion Visits",
     title: "Make room for special moments.",
     description: "Companionship visits for birthdays and special occasions, so there is someone to share the moment.",
-    image: "/voallen/service-celebration.jpg",
-    alt: "An older woman holding a birthday cake at an indoor celebration.",
+    image: "/voallen/celebration-gathering.jpg",
+    alt: "Family and friends laughing together at an outdoor gathering.",
     note: "Birthday & special occasion visits",
   },
   {
     label: "Visit Updates to Authorized Family Members",
     title: "Connection for them. Reassurance for you.",
     description: "Visit updates to authorized family members help you stay connected with your loved one’s companionship visits.",
-    image: "/voallen/service-updates.jpg",
-    alt: "An older woman using a tablet while seated comfortably at home.",
+    image: "/voallen/breakfast.jpg",
+    alt: "An older woman and a younger woman sharing breakfast at the kitchen table.",
+    position: "center 40%",
     note: "Updates for authorized family",
   },
 ];
@@ -141,6 +144,7 @@ export const OurServicesSection = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: service.position || "center" }}
             />
           </AnimatePresence>
           <span className="absolute left-4 bottom-4 px-4 py-2 rounded-full bg-white/95 text-sm font-medium text-stone-800 shadow-sm">
