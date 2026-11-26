@@ -13,7 +13,8 @@ import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
 import { VisitHero, VisitBenefits, VisitStatBanner, VisitFAQ } from "@/components/visit-page";
-import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection } from "@/components/voallen-sections";
+import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection, CaregiverJobsSection } from "@/components/voallen-sections";
+import { CaregiverHero, CaregiverWaysToHelp, CaregiverReasons, CaregiverSteps, CaregiverSafety, CaregiverFAQ, CaregiverCTA } from "@/components/caregiver-page";
 
 // Empty means the API is served from the same site as the app (production build)
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "";
@@ -521,6 +522,12 @@ const HomePage = () => {
         <OurServicesSection />
         <ThoughtfulVisitsSection />
         <StayConnectedSection />
+      </div>
+
+      {/* For caregivers looking for work: full-width cream band */}
+      <CaregiverJobsSection />
+
+      <div className="max-w-7xl mx-auto px-6">
         <QuestionsAnsweredSection />
       </div>
 
@@ -620,6 +627,27 @@ const VisitPage = () => {
         </div>
         <VisitStatBanner agencyCount={agencies.length} />
         <VisitFAQ />
+      </div>
+    </PageBackground>
+  );
+};
+
+// Work with us page for caregivers looking for jobs (/caregivers)
+const CaregiverPage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  return (
+    <PageBackground>
+      <Navigation />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <CaregiverHero />
+        <CaregiverWaysToHelp />
+        <CaregiverReasons />
+        <CaregiverSteps />
+        <CaregiverSafety />
+        <CaregiverFAQ />
+        <CaregiverCTA />
       </div>
     </PageBackground>
   );
@@ -1648,6 +1676,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/visits" element={<VisitPage />} />
+            <Route path="/caregivers" element={<CaregiverPage />} />
           </Routes>
         </BrowserRouter>
       </WishlistProvider>
