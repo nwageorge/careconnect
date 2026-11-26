@@ -443,3 +443,99 @@ export const QuestionsAnsweredSection = () => {
     </section>
   );
 };
+
+/* ------------------------------------------------ Caregiver recruiting */
+
+const caregiverSteps = [
+  {
+    title: "Create your profile",
+    body: "Tell us about your experience, the hours you can work and the neighborhoods you can reach. It only takes a few minutes.",
+    image: "/voallen/photo-album.jpg",
+    alt: "An older woman and a companion looking through a photo album by the window.",
+    position: "center 40%",
+  },
+  {
+    title: "Meet trusted agencies",
+    body: "Reviewed Philadelphia care agencies reach out to you. Talk with them and pick the one that fits your life.",
+    image: "/voallen/window.jpg",
+    alt: "An older woman holding hands with a companion while looking out a window.",
+    position: "center 35%",
+  },
+  {
+    title: "Start caring and get paid",
+    body: "Visit seniors close to home, keep a schedule that works for you and get paid reliably for every visit.",
+    image: "/voallen/stairs.jpg",
+    alt: "A young man walking an older woman up the stairs, carrying her groceries.",
+    position: "center 30%",
+  },
+];
+
+// Full-width cream band, three numbered steps with round photos (for caregivers looking for work)
+export const CaregiverJobsSection = () => (
+  <section
+    id="work-with-us"
+    className="bg-[#f3ece2] dark:bg-stone-100 py-16 sm:py-24 scroll-mt-24"
+    data-testid="caregiver-jobs-section"
+  >
+    <div className="max-w-7xl mx-auto px-6">
+      <motion.div {...reveal} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+        <Eyebrow>For caregivers</Eyebrow>
+        <h2 className="text-3xl sm:text-5xl font-bold text-stone-800 leading-tight mb-4">
+          Find caregiving work that feels like family
+        </h2>
+        <p className="text-lg sm:text-xl text-stone-500">
+          Put your kindness to work. Join Voallen and get matched with seniors who need a friendly face nearby.
+        </p>
+      </motion.div>
+
+      <ol className="grid gap-12 md:grid-cols-3 md:gap-8">
+        {caregiverSteps.map((step, i) => (
+          <motion.li
+            key={step.title}
+            {...reveal}
+            transition={{ duration: 0.6, delay: i * 0.12 }}
+            className="flex flex-col items-center text-center"
+          >
+            <div className="relative mb-7">
+              {/* Soft offset circle behind the photo */}
+              <span
+                aria-hidden="true"
+                className={`absolute inset-0 rounded-full bg-[#e6d9c7] dark:bg-stone-200 ${
+                  i === 1 ? "-translate-x-3 -translate-y-2" : "translate-x-3 translate-y-2"
+                }`}
+              />
+              <img
+                src={step.image}
+                alt={step.alt}
+                className="relative w-44 h-44 sm:w-48 sm:h-48 rounded-full object-cover shadow-lg"
+                style={{ objectPosition: step.position }}
+                loading="lazy"
+              />
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] flex items-center justify-center text-lg font-semibold shadow-md">
+                {i + 1}
+              </span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-semibold text-stone-800 mb-2">{step.title}</h3>
+            <p className="text-lg text-stone-600 leading-relaxed max-w-sm">{step.body}</p>
+          </motion.li>
+        ))}
+      </ol>
+
+      <motion.div {...reveal} className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <Link
+          to="/caregivers"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] text-lg font-semibold hover:opacity-90 transition-opacity"
+          data-testid="caregiver-apply-btn"
+        >
+          Learn more and apply
+        </Link>
+        <a
+          href={CONTACT_PHONE_HREF}
+          className="inline-flex items-center justify-center px-8 py-4 rounded-full border-2 border-stone-800 text-stone-800 text-lg font-semibold hover:bg-stone-50 transition-colors"
+        >
+          Questions? Call {CONTACT_PHONE}
+        </a>
+      </motion.div>
+    </div>
+  </section>
+);
