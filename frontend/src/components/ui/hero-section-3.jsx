@@ -26,8 +26,8 @@ const CloseIcon = () => (
 
 // The home page hero: one photo, kept clean (no zoom, no slideshow, no fade over the picture)
 const hero = {
-  image: "/voallen/hero.jpg",
-  alt: "An older woman and a younger woman laughing together over coffee at sunset.",
+  image: "/voallen/hero-window.jpg",
+  alt: "An older woman holding hands with a companion while looking out a window.",
   titleLines: ["Proof of care,", "not promises."],
   subtitle: "Transparent care for your loved ones",
 };
@@ -174,14 +174,16 @@ export default function HeroSection3({
         src={hero.image}
         alt={hero.alt}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 40%" }}
+        style={{ objectPosition: "center 30%" }}
         fetchpriority="high"
       />
+      {/* Soft shade at the bottom so the headline stays readable over the photo */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden="true" />
 
       <main className="relative z-10 flex-1 flex items-center py-12">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
-          {/* Headline */}
-          <div className="max-w-2xl">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center lg:self-stretch">
+          {/* Headline: sits low on large screens so it doesn't cover the faces in the photo */}
+          <div className="max-w-2xl lg:self-end">
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
