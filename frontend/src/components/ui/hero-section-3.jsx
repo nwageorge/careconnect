@@ -48,7 +48,7 @@ export default function HeroSection3({
     navigate(q ? `/agencies?search=${encodeURIComponent(q)}` : "/agencies");
   };
   return (
-    <div className="min-h-[100svh] w-full antialiased text-white relative flex flex-col">
+    <div className="min-h-[100svh] w-full antialiased text-white relative flex flex-col overflow-hidden bg-[#1c1917]">
       {/* Navigation Header */}
       <header className="absolute inset-x-0 top-0 p-4 sm:p-6 md:p-8 z-30">
         <div className="container mx-auto flex justify-between items-center">
@@ -168,26 +168,37 @@ export default function HeroSection3({
         )}
       </header>
 
-      {/* Hero photo fills the whole screen */}
+      {/* Soft blurred copy of the photo fills the whole screen behind everything */}
+      <img
+        src={hero.image}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70"
+      />
+      <div className="absolute inset-0 bg-black/45" aria-hidden="true" />
+      {/* The photo itself, shown whole and uncropped at full screen height on large screens */}
       <img
         src={hero.image}
         alt={hero.alt}
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ objectPosition: "center 30%" }}
+        className="hidden lg:block absolute right-0 top-0 h-full w-auto max-w-[58%] object-contain object-right"
         fetchpriority="high"
       />
-      {/* Soft shade at the bottom so the headline stays readable over the photo */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden="true" />
 
-      <main className="relative z-10 flex-1 flex items-center pt-28 pb-12 sm:pt-32">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center lg:self-stretch">
-          {/* Headline: sits low on large screens so it doesn't cover the faces in the photo */}
-          <div className="max-w-2xl lg:self-end">
+      <main className="relative z-10 flex-1 flex items-center pt-20 pb-12 sm:pt-28 lg:pt-28">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 flex flex-col gap-8 lg:gap-10">
+          {/* On phones and tablets the whole photo sits above the headline */}
+          <img
+            src={hero.image}
+            alt={hero.alt}
+            className="lg:hidden w-full max-w-md mx-auto rounded-3xl shadow-2xl"
+          />
+          {/* Headline */}
+          <div className="max-w-2xl">
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-[2.75rem] sm:text-7xl lg:text-[5.25rem] xl:text-8xl font-normal text-white leading-[1.02] tracking-tight whitespace-nowrap mb-6"
+              className="text-[2.75rem] sm:text-7xl lg:text-6xl xl:text-7xl font-normal text-white leading-[1.02] tracking-tight whitespace-nowrap mb-6"
               style={{ textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}
             >
               {hero.titleLines.map((line) => (
@@ -211,7 +222,7 @@ export default function HeroSection3({
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.6 }}
-            className="w-full lg:w-[440px] rounded-[2rem] bg-black/35 backdrop-blur-2xl border border-white/10 shadow-2xl px-6 py-9 sm:px-10 sm:py-11 text-center"
+            className="w-full sm:max-w-[440px] sm:mx-auto lg:mx-0 rounded-[2rem] bg-black/35 backdrop-blur-2xl border border-white/10 shadow-2xl px-6 py-9 sm:px-10 sm:py-10 lg:py-8 text-center"
             data-testid="hero-search-card"
           >
             <h2 className="text-3xl sm:text-4xl font-normal text-white mb-6">Find care near you</h2>
