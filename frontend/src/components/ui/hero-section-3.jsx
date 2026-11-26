@@ -26,8 +26,8 @@ const CloseIcon = () => (
 
 // The home page hero: one photo, kept clean (no zoom, no slideshow, no fade over the picture)
 const hero = {
-  image: "/voallen/hero-companion.jpg",
-  alt: "An older woman smiling at a companion who holds her hand outdoors.",
+  image: "/voallen/hero-walk.jpg",
+  alt: "An older woman walking arm in arm with a smiling companion in an autumn park.",
   titleLines: ["Proof of care,", "not promises."],
   subtitle: "Transparent care for your loved ones",
 };
@@ -172,21 +172,21 @@ export default function HeroSection3({
       <img
         src={hero.image}
         alt={hero.alt}
-        className="absolute inset-0 w-full h-full object-cover object-[20%_30%] md:object-[center_35%]"
+        className="absolute inset-0 w-full h-full object-cover object-[74%_center] md:object-[center_40%]"
         fetchpriority="high"
       />
       {/* Soft shade at the bottom so the headline stays readable over the photo */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden="true" />
 
       <main className="relative z-10 flex-1 flex items-center pt-28 pb-12 sm:pt-32">
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center lg:self-stretch">
-          {/* Headline: sits low on large screens so it doesn't cover the faces in the photo */}
-          <div className="max-w-2xl lg:self-end">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-stretch sm:items-start gap-8 lg:gap-10">
+          {/* Headline and search card stack on the left, over the soft trees, so the faces stay clear */}
+          <div className="max-w-2xl">
             <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-[2.75rem] sm:text-7xl lg:text-[5.25rem] xl:text-8xl font-normal text-white leading-[1.02] tracking-tight whitespace-nowrap mb-6"
+              className="text-[2.75rem] sm:text-7xl lg:text-6xl xl:text-7xl font-normal text-white leading-[1.02] tracking-tight whitespace-nowrap mb-6"
               style={{ textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}
             >
               {hero.titleLines.map((line) => (
@@ -210,7 +210,7 @@ export default function HeroSection3({
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.6 }}
-            className="w-full lg:w-[440px] rounded-[2rem] bg-black/35 backdrop-blur-2xl border border-white/10 shadow-2xl px-6 py-9 sm:px-10 sm:py-11 text-center"
+            className="w-full sm:w-[440px] rounded-[2rem] bg-black/35 backdrop-blur-2xl border border-white/10 shadow-2xl px-6 py-9 sm:px-10 sm:py-9 text-center"
             data-testid="hero-search-card"
           >
             <h2 className="text-3xl sm:text-4xl font-normal text-white mb-6">Find care near you</h2>
