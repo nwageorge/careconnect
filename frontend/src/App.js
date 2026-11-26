@@ -13,6 +13,7 @@ import { AuthComponent } from "@/components/ui/sign-up";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
+import { VisitHero, VisitBenefits, VisitStatBanner, VisitFAQ } from "@/components/visit-page";
 import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection } from "@/components/voallen-sections";
 
 // Empty means the API is served from the same site as the app (production build)
@@ -321,7 +322,7 @@ const AgencyCard = ({ agency, index }) => {
 };
 
 // Agency Carousel Component - Airbnb Style
-const AgencyCarousel = ({ title, agencies, viewAllLink }) => {
+const AgencyCarousel = ({ title, agencies, viewAllLink, large = false }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const containerRef = React.useRef(null);
 
@@ -340,7 +341,7 @@ const AgencyCarousel = ({ title, agencies, viewAllLink }) => {
   return (
     <section className="py-4 sm:py-6">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h2 className="text-lg sm:text-[22px] font-semibold text-stone-900">{title}</h2>
+        <h2 className={large ? "text-3xl sm:text-4xl font-bold text-stone-800 leading-tight pr-4" : "text-lg sm:text-[22px] font-semibold text-stone-900"}>{title}</h2>
         <div className="flex items-center gap-2">
           <Link
             to={viewAllLink}
@@ -510,26 +511,6 @@ const HeroSection = () => {
 // Features Section - Black & White Theme
 // Home Page
 const HomePage = () => {
-  const [agencies, setAgencies] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAgencies = async () => {
-      try {
-        const response = await axios.get(`${API}/agencies`);
-        setAgencies(response.data);
-      } catch (error) {
-        console.error("Error fetching agencies:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAgencies();
-  }, []);
-
-  // Every city that has at least one agency, in the order they first appear
-  const cities = [...new Set(agencies.map((a) => a.city).filter(Boolean))];
-
   return (
     <PageBackground>
       {/* New Hero Section with integrated header */}
@@ -543,26 +524,6 @@ const HomePage = () => {
       </div>
       
       <div className="max-w-7xl mx-auto px-6">
-        {loading ? (
-          <div className="py-20 text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" />
-            <p className="mt-4 text-stone-500">Loading care agencies...</p>
-          </div>
-        ) : (
-          cities.map((city) => {
-            const cityAgencies = agencies.filter((a) => a.city === city);
-            if (cityAgencies.length === 0) return null;
-            return (
-              <AgencyCarousel
-                key={city}
-                title={city}
-                agencies={cityAgencies}
-                viewAllLink={`/agencies?city=${encodeURIComponent(city)}`}
-              />
-            );
-          })
-        )}
-
         {/* Companionship sections, in the same order as the Voallen companionship website */}
         <OurServicesSection />
         <ThoughtfulVisitsSection />
@@ -617,6 +578,56 @@ const HomePage = () => {
           </div>
         </div>
       </footer>
+    </PageBackground>
+  );
+};
+
+// "Ask about a visit" page: companionship visits plus the Philadelphia agencies
+const VisitPage = () => {
+  const [agencies, setAgencies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    axios
+      .get(`${API}/agencies`, { params: { city: "Philadelphia, PA" } })
+      .then((response) => setAgencies(response.data.filter((a) => a.city === "Philadelphia, PA")))
+      .catch((error) => console.error("Error fetching agencies:", error))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <PageBackground>
+      <Navigation />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <VisitHero />
+        <VisitBenefits />
+        <div id="philadelphia-agencies" className="scroll-mt-24" data-testid="visit-agencies">
+          {loading ? (
+            <div className="py-20 text-center">
+              <div className="animate-spin w-12 h-12 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" />
+              <p className="mt-4 text-stone-500">Loading care agencies...</p>
+            </div>
+          ) : agencies.length > 0 ? (
+            <AgencyCarousel
+              large
+              title="Highly rated care in Philadelphia"
+              agencies={agencies}
+              viewAllLink={`/agencies?city=${encodeURIComponent("Philadelphia, PA")}`}
+            />
+          ) : null}
+          <div className="flex justify-center pt-6 pb-10">
+            <Link
+              to={`/agencies?city=${encodeURIComponent("Philadelphia, PA")}`}
+              className="w-full sm:w-auto sm:min-w-[360px] text-center px-8 py-4 border-2 border-stone-800 text-stone-800 rounded-2xl font-semibold hover:bg-stone-100 transition"
+            >
+              View all Philadelphia agencies
+            </Link>
+          </div>
+        </div>
+        <VisitStatBanner agencyCount={agencies.length} />
+        <VisitFAQ />
+      </div>
     </PageBackground>
   );
 };
@@ -1643,6 +1654,7 @@ function App() {
             <Route path="/booking-success" element={<BookingSuccessPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/faq" element={<FAQPage />} />
+            <Route path="/visits" element={<VisitPage />} />
           </Routes>
         </BrowserRouter>
       </WishlistProvider>

@@ -7,9 +7,9 @@ import { ChevronDown, Phone, Mail, Plus, Minus } from "lucide-react";
 // Our Services, Thoughtful visits, Simple ways to stay connected, and Your questions answered.
 // They use the app's own stone palette, rounded cards and type so they sit with the rest of the build.
 
-const CONTACT_PHONE = "(267) 710-6454";
-const CONTACT_PHONE_HREF = "tel:+12677106454";
-const CONTACT_EMAIL = "info@voallenconcierge.com";
+export const CONTACT_PHONE = "(267) 710-6454";
+export const CONTACT_PHONE_HREF = "tel:+12677106454";
+export const CONTACT_EMAIL = "info@voallenconcierge.com";
 
 const Eyebrow = ({ children }) => (
   <p className="text-sm font-medium text-stone-500 mb-3">{children}</p>
@@ -169,7 +169,8 @@ export const OurServicesSection = () => {
             <h3 className="text-3xl sm:text-4xl font-bold text-stone-800 leading-tight mb-4">{service.title}</h3>
             <p className="text-lg text-stone-600 leading-relaxed mb-8">{service.description}</p>
             <Link
-              to="/contact"
+              to="/visits"
+              data-testid="ask-about-visit"
               className="inline-block px-8 py-4 bg-stone-800 text-white rounded-2xl font-semibold hover:bg-stone-700 transition-all"
             >
               Ask about a visit
