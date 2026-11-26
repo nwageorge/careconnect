@@ -149,7 +149,7 @@ const AgencyCard = ({ agency, index }) => {
         {agency.is_verified && (
           <div className="absolute top-2 left-2 px-2.5 py-1 bg-white/95 backdrop-blur-sm rounded-full text-xs font-semibold text-stone-800 shadow-sm flex items-center gap-1">
             <Award className="w-3 h-3" />
-            Guest favorite
+            Top rated
           </div>
         )}
         
@@ -171,12 +171,14 @@ const AgencyCard = ({ agency, index }) => {
           />
         </button>
 
-        {/* Image carousel dots indicator (Airbnb style) */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-          {[0,1,2,3,4].map((dot, i) => (
-            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}`} />
-          ))}
-        </div>
+        {/* Photo dots, only when there is more than one photo */}
+        {agency.gallery_images?.length > 0 && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            {[agency.image_url, ...agency.gallery_images].slice(0, 5).map((_, i) => (
+              <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-white' : 'bg-white/50'}`} />
+            ))}
+          </div>
+        )}
       </div>
       
       {/* Content - Exact Airbnb typography */}
@@ -193,7 +195,7 @@ const AgencyCard = ({ agency, index }) => {
         </div>
         
         {/* Location - Gray text */}
-        <p className="text-[14px] text-stone-500 leading-tight">{agency.city}</p>
+        <p className="text-[14px] text-stone-500 leading-tight line-clamp-1">{(agency.location || agency.city || "").replace(/, PA$/, "")}</p>
         
         {/* Specialty - Gray text */}
         <p className="text-[14px] text-stone-500 leading-tight">
@@ -279,7 +281,7 @@ const TestimonialsSection = () => {
     <section className="py-20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 mb-12">
         <p className="text-stone-500 text-center max-w-2xl mx-auto mb-12">
-          Join thousands of families and Agencies who trust Voallen for their in-home care services
+          Families across Philadelphia trust Voallen companions to keep their loved ones company
         </p>
       </div>
       <TestimonialsSplit />
@@ -435,7 +437,7 @@ const HomePage = () => {
   );
 };
 
-// "Ask about a visit" page: companionship visits plus the Philadelphia agencies
+// "Ask about a visit" page: companionship visits plus the Philadelphia caregivers
 const VisitPage = () => {
   usePageTitle("Companionship visits");
   const [agencies, setAgencies] = useState([]);
@@ -475,7 +477,7 @@ const VisitPage = () => {
               to={`/agencies?city=${encodeURIComponent("Philadelphia, PA")}`}
               className="w-full sm:w-auto sm:min-w-[360px] text-center px-8 py-4 border-2 border-stone-800 text-stone-800 rounded-2xl font-semibold hover:bg-stone-100 transition"
             >
-              View all Philadelphia agencies
+              View all Philadelphia caregivers
             </Link>
           </div>
         </div>
@@ -534,7 +536,7 @@ const AgenciesPage = () => {
   const location = useLocation();
 
   const cities = [...new Set(allAgencies.map((a) => a.city).filter(Boolean))].sort();
-  const specialties = ["Elderly Care", "Pediatric Care", "Post-Surgery Recovery", "24-Hour Care", "Dementia Care", "Skilled Nursing"];
+  const specialties = ["Companionship", "Memory Care Companionship", "Meal Prep", "Errands & Shopping", "Light Housekeeping", "Transportation & Appointments", "Hobbies & Outings", "Video Calls & Tech Help", "Overnight Companionship", "Respite for Families"];
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -593,7 +595,7 @@ const AgenciesPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
             <h1 className="font-display font-light text-4xl sm:text-5xl text-stone-900 tracking-[-0.035em] leading-[1.05] mb-3">Find care in Philadelphia</h1>
-            <p className="text-stone-500">Browse verified care agencies in your area</p>
+            <p className="text-stone-500">Meet background-checked, non-medical companions near your loved one</p>
           </div>
 
           {/* Search Input */}
@@ -637,7 +639,7 @@ const AgenciesPage = () => {
               {agencies.map((agency, index) => (<AgencyCard key={agency.id} agency={agency} index={index} />))}
             </div>
           )}
-          {!loading && agencies.length === 0 && <div className="text-center py-20"><p className="text-stone-500">No agencies found matching your criteria.</p></div>}
+          {!loading && agencies.length === 0 && <div className="text-center py-20"><p className="text-stone-500">No caregivers match your search yet. Try another service, or call us and we will find someone.</p></div>}
         </div>
       </div>
       <SiteFooter />
@@ -653,7 +655,7 @@ const AgencyDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
   const [bookingData, setBookingData] = useState({ service_type: "", date: "", time_slot: "", patient_name: "", patient_age: "", care_needs: "", notes: "" });
-  usePageTitle(agency?.name || "Care agency");
+  usePageTitle(agency?.name || "Caregiver");
   const [bookingLoading, setBookingLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -691,7 +693,7 @@ const AgencyDetailPage = () => {
   };
 
   if (loading) return <PageBackground className="flex items-center justify-center"><div className="animate-spin w-12 h-12 border-4 border-stone-700 border-t-transparent rounded-full" /></PageBackground>;
-  if (!agency) return <PageBackground className="flex items-center justify-center"><div className="text-center"><h1 className="font-display font-light text-4xl text-stone-900 mb-3">Agency not found</h1><p className="text-stone-500 mb-6">It may have been removed or the link is out of date.</p><Link to="/agencies" className="inline-flex px-6 py-3 rounded-full font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917]">Browse agencies</Link></div></PageBackground>;
+  if (!agency) return <PageBackground className="flex items-center justify-center"><div className="text-center"><h1 className="font-display font-light text-4xl text-stone-900 mb-3">Caregiver not found</h1><p className="text-stone-500 mb-6">It may have been removed or the link is out of date.</p><Link to="/agencies" className="inline-flex px-6 py-3 rounded-full font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917]">Browse caregivers</Link></div></PageBackground>;
 
   const allImages = [agency.image_url, ...(agency.gallery_images || [])];
   const timeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
@@ -750,7 +752,30 @@ const AgencyDetailPage = () => {
       <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           
-          {/* Image Gallery Section - Booking.com Style */}
+          {/* Caregiver photo with their own words, when the profile has a single photo */}
+          {!(agency.gallery_images?.length > 0) && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8 grid md:grid-cols-[minmax(0,480px)_1fr] gap-4 sm:gap-6" data-testid="caregiver-photo">
+              <button type="button" onClick={() => setShowGallery(true)} className="block rounded-2xl overflow-hidden aspect-[4/3] bg-stone-100" aria-label={`Open ${agency.name}'s photo`}>
+                <img src={agency.image_url} alt={agency.name} className="w-full h-full object-cover" />
+              </button>
+              <div className="rounded-2xl p-7 sm:p-10 flex flex-col justify-end" style={{ backgroundColor: "#1f3039" }}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] mb-4" style={{ color: "#eaab6c" }}>Meet {agency.name?.split(" ")[0]}</p>
+                <p className="font-display font-light text-2xl sm:text-3xl leading-snug tracking-[-0.02em]" style={{ color: "#ffffff" }}>"{agency.bio}"</p>
+                {agency.certifications?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-6">
+                    {agency.certifications.slice(0, 3).map((c) => (
+                      <span key={c} className="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold" style={{ backgroundColor: "#eef5e3", color: "#3d7a5a" }}>
+                        <CheckCircle className="w-3.5 h-3.5" /> {c}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Photo gallery, for profiles that have more than one photo */}
+          {agency.gallery_images?.length > 0 && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }} 
             animate={{ opacity: 1, y: 0 }}
@@ -781,6 +806,7 @@ const AgencyDetailPage = () => {
               View all {allImages.length} photos
             </button>
           </motion.div>
+          )}
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content */}
@@ -792,12 +818,13 @@ const AgencyDetailPage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
+                <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start gap-4 sm:gap-5 min-w-0">
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-2">
                       {agency.is_verified && (
                         <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                          <BadgeCheck className="w-3 h-3" />Verified Agency
+                          <BadgeCheck className="w-3 h-3" />Background checked
                         </span>
                       )}
                       {agency.is_new && (
@@ -806,11 +833,12 @@ const AgencyDetailPage = () => {
                         </span>
                       )}
                     </div>
-                    <h1 className="text-3xl font-bold text-stone-800 mb-2">{agency.name}</h1>
+                    <h1 className="font-display text-3xl sm:text-4xl font-normal tracking-[-0.03em] text-stone-900 mb-2">{agency.name}</h1>
                     <div className="flex items-center gap-2 text-stone-500">
-                      <MapPin className="w-4 h-4" />
+                      <MapPin className="w-4 h-4 shrink-0" />
                       <span>{agency.location}</span>
                     </div>
+                  </div>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-1 bg-stone-800 text-white px-3 py-1.5 rounded-lg">
@@ -824,16 +852,16 @@ const AgencyDetailPage = () => {
                 {/* Quick Stats - TripAdvisor Style */}
                 <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-stone-100">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.years_in_business || agency.experience_years}</div>
-                    <div className="text-xs text-stone-500">Years in Business</div>
+                    <div className="text-2xl font-bold text-stone-800">{agency.experience_years || agency.years_in_business || 0}</div>
+                    <div className="text-xs text-stone-500">Years caring</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.total_caregivers || 20}+</div>
-                    <div className="text-xs text-stone-500">Caregivers</div>
+                    <div className="text-2xl font-bold text-stone-800">{agency.families_served || 0}</div>
+                    <div className="text-xs text-stone-500">Families helped</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.families_served || 500}+</div>
-                    <div className="text-xs text-stone-500">Families Served</div>
+                    <div className="text-2xl font-bold text-stone-800">{agency.review_count || 0}</div>
+                    <div className="text-xs text-stone-500">Reviews</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-amber-600">${agency.price_per_hour}</div>
@@ -865,7 +893,7 @@ const AgencyDetailPage = () => {
                 className="grid md:grid-cols-2 gap-6"
               >
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-stone-100">
-                  <h2 className="text-lg font-bold text-stone-800 mb-4">Care Services</h2>
+                  <h2 className="text-lg font-bold text-stone-800 mb-4">How I can help</h2>
                   <div className="flex flex-wrap gap-2">
                     {agency.specialties?.map((s, i) => (
                       <span key={i} className="px-3 py-2 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium">{s}</span>
@@ -958,12 +986,12 @@ const AgencyDetailPage = () => {
                     ${agency.price_per_hour}
                     <span className="text-lg font-normal text-stone-500">/hour</span>
                   </div>
-                  <p className="text-sm text-stone-500 mt-1">Per caregiver</p>
+                  <p className="text-sm text-stone-500 mt-1">Per hour</p>
                 </div>
 
                 <form onSubmit={handleBooking} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Care Service Needed</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">What would you like help with?</label>
                     <select 
                       value={bookingData.service_type} 
                       onChange={(e) => setBookingData({ ...bookingData, service_type: e.target.value })} 
@@ -971,13 +999,13 @@ const AgencyDetailPage = () => {
                       required 
                       data-testid="booking-service"
                     >
-                      <option value="">Select service type</option>
+                      <option value="">Choose a service</option>
                       {agency.specialties?.map((s) => (<option key={s} value={s}>{s}</option>))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Consultation Date</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">First meeting date</label>
                     <input 
                       type="date" 
                       value={bookingData.date} 
@@ -1004,26 +1032,26 @@ const AgencyDetailPage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Who Needs Care?</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">Who is the visit for?</label>
                     <input 
                       type="text" 
                       value={bookingData.patient_name} 
                       onChange={(e) => setBookingData({ ...bookingData, patient_name: e.target.value })} 
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-2 focus:ring-stone-100 outline-none" 
-                      placeholder="Patient's name" 
+                      placeholder="Your loved one's name" 
                       required 
                       data-testid="booking-patient" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Care Needs (Optional)</label>
+                    <label className="block text-sm font-medium text-stone-700 mb-2">Anything we should know? (optional)</label>
                     <textarea 
                       value={bookingData.care_needs} 
                       onChange={(e) => setBookingData({ ...bookingData, care_needs: e.target.value })} 
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-2 focus:ring-stone-100 outline-none resize-none" 
                       rows={3} 
-                      placeholder="Describe any specific care requirements..." 
+                      placeholder="Their routine, interests, or what a good visit looks like..." 
                       data-testid="booking-needs" 
                     />
                   </div>
@@ -1042,7 +1070,7 @@ const AgencyDetailPage = () => {
                     ) : (
                       <>
                         <Calendar className="w-5 h-5" />
-                        Book Free Consultation
+                        Book a free first meeting
                       </>
                     )}
                   </button>
@@ -1051,7 +1079,7 @@ const AgencyDetailPage = () => {
                 <div className="mt-6 pt-6 border-t border-stone-100 space-y-3">
                   <div className="flex items-center gap-2 text-sm text-stone-600">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Free consultation - no commitment</span>
+                    <span>Free first meeting, no commitment</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-stone-600">
                     <CheckCircle className="w-4 h-4 text-green-500" />
@@ -1059,7 +1087,7 @@ const AgencyDetailPage = () => {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-stone-600">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Personalized care matching</span>
+                    <span>Non-medical companionship only</span>
                   </div>
                 </div>
               </motion.div>
@@ -1120,7 +1148,7 @@ const ReviewForm = ({ booking, onDone }) => {
 
   return (
     <form onSubmit={submit} className="mt-4 p-4 rounded-xl bg-stone-50 border border-stone-100" data-testid="review-form">
-      <p className="text-sm font-semibold text-stone-800 mb-2">How was your visit with {booking.agency?.name || "this agency"}?</p>
+      <p className="text-sm font-semibold text-stone-800 mb-2">How was your visit with {booking.agency?.name || "your caregiver"}?</p>
       <div className="flex gap-1 mb-3" role="radiogroup" aria-label="Rating">
         {[1, 2, 3, 4, 5].map((n) => (
           <button type="button" key={n} onClick={() => setRating(n)} aria-label={`${n} star${n > 1 ? "s" : ""}`} data-testid={`review-star-${n}`}>
@@ -1221,7 +1249,8 @@ const AgencyProfileForm = ({ onCreated }) => {
         experience_years: years,
         years_in_business: years,
         specialties: form.specialties.split(",").map((s) => s.trim()).filter(Boolean),
-        image_url: form.image_url || "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=450&fit=crop&q=80",
+        image_url: form.image_url || "/voallen/caregivers/default.svg",
+        profile_type: "individual",
       }, authHeaders());
       onCreated();
     } catch (err) {
@@ -1234,16 +1263,16 @@ const AgencyProfileForm = ({ onCreated }) => {
   const input = "w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm";
   return (
     <form onSubmit={submit} className="bg-white rounded-2xl shadow-sm border border-stone-100 p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
-      <div className="md:col-span-2"><h2 className="text-xl font-bold text-stone-800">Create your agency profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
-      <input required placeholder="Agency name" value={form.name} onChange={set("name")} className={input} />
+      <div className="md:col-span-2"><h2 className="text-xl font-bold text-stone-800">Create your caregiver profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
+      <input required placeholder="Your name (first name and last initial)" value={form.name} onChange={set("name")} className={input} />
       <input required placeholder="City, e.g. Philadelphia, PA" value={form.city} onChange={set("city")} className={input} />
-      <input required placeholder="Street address" value={form.location} onChange={set("location")} className={`${input} md:col-span-2`} />
+      <input required placeholder="Neighborhood, e.g. Fishtown, Philadelphia, PA" value={form.location} onChange={set("location")} className={`${input} md:col-span-2`} />
       <input required placeholder="One-line summary" value={form.bio} onChange={set("bio")} className={`${input} md:col-span-2`} />
-      <textarea placeholder="About your agency" rows={3} value={form.description} onChange={set("description")} className={`${input} md:col-span-2`} />
+      <textarea placeholder="About you: what you enjoy doing with the people you visit" rows={3} value={form.description} onChange={set("description")} className={`${input} md:col-span-2`} />
       <input required type="number" min="1" step="0.5" placeholder="Price per hour ($)" value={form.price_per_hour} onChange={set("price_per_hour")} className={input} />
-      <input required type="number" min="0" placeholder="Years in business" value={form.experience_years} onChange={set("experience_years")} className={input} />
-      <input placeholder="Specialties, comma separated" value={form.specialties} onChange={set("specialties")} className={input} />
-      <input placeholder="Photo URL (optional)" value={form.image_url} onChange={set("image_url")} className={input} />
+      <input required type="number" min="0" placeholder="Years of experience" value={form.experience_years} onChange={set("experience_years")} className={input} />
+      <input placeholder="What you help with, e.g. Companionship, Meal Prep" value={form.specialties} onChange={set("specialties")} className={input} />
+      <input placeholder="Photo link (optional)" value={form.image_url} onChange={set("image_url")} className={input} />
       {error && <p className="text-sm text-red-600 md:col-span-2">{error}</p>}
       <div className="md:col-span-2"><button type="submit" disabled={saving} className="px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition disabled:opacity-50">{saving ? "Saving..." : "Publish profile"}</button></div>
     </form>
@@ -1291,7 +1320,7 @@ const AgencyDashboard = ({ user }) => {
 
   return (
     <>
-      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage consultation requests for <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Set up your agency to start receiving requests"}</p></div>
+      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage visit requests for your profile, <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Create your caregiver profile so families can find and book you"}</p></div>
       {!agency ? <AgencyProfileForm onCreated={load} /> : (
         <>
           {agency.status === "pending_approval" && (
@@ -1362,7 +1391,7 @@ const DashboardPage = () => {
         <div className="max-w-7xl mx-auto px-6">
           {user.is_admin && user.role !== "admin" && (
             <div className="grid grid-cols-2 gap-2 p-2 mb-8 bg-stone-100 rounded-2xl max-w-md" role="tablist" aria-label="Which dashboard">
-              {[["admin", "Admin"], ["own", user.role === "agency" ? "My agency" : "My bookings"]].map(([id, label]) => (
+              {[["admin", "Admin"], ["own", user.role === "agency" ? "My profile" : "My bookings"]].map(([id, label]) => (
                 <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)}
                   className={`min-h-[52px] px-4 rounded-xl text-lg font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-stone-400 ${view === id ? "bg-stone-900 text-white" : "text-stone-800 hover:bg-white"}`}
                   data-testid={`dashboard-view-${id}`}>{label}</button>
@@ -1407,7 +1436,7 @@ const BookingSuccessPage = () => {
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-3xl shadow-2xl p-12 text-center max-w-md border border-stone-100">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle className="w-10 h-10 text-green-500" /></div>
         <h1 className="text-3xl font-bold text-stone-800 mb-4">Request Sent!</h1>
-        <p className="text-stone-500 mb-8">We sent your consultation request to the agency and emailed you a copy. You'll get an email as soon as they accept it.</p>
+        <p className="text-stone-500 mb-8">We sent your visit request to the caregiver and emailed you a copy. You'll get an email as soon as they accept it.</p>
         <div className="flex flex-col gap-3">
           <Link to="/dashboard" className="px-6 py-3 bg-stone-800 text-white rounded-xl font-medium hover:bg-stone-700 transition">View My Bookings</Link>
           <Link to="/" className="px-6 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition">Back to Home</Link>
@@ -1481,14 +1510,14 @@ const FAQPage = () => {
   usePageTitle("FAQ");
   const [openIndex, setOpenIndex] = useState(null);
   const faqs = [
-    { question: "What types of in-home care services do you offer?", answer: "We connect families with caregivers offering a wide range of services including elderly care, pediatric care, post-surgery recovery, chronic disease management, dementia/Alzheimer's care, 24-hour care, respite care, and skilled nursing services." },
-    { question: "How are caregivers vetted?", answer: "All caregivers on our platform undergo comprehensive background checks, credential verification, and reference checks. We verify licenses, certifications, and work history to ensure only qualified professionals are listed." },
-    { question: "How much does in-home care cost?", answer: "Costs vary based on the type of care needed, location, and caregiver experience. Our rates typically range from $15-18 per hour. You can see exact pricing on each agency's profile." },
-    { question: "Can I meet the caregiver before booking?", answer: "Yes! We encourage families to schedule an initial consultation to meet the caregiver, discuss care needs, and ensure a good match before committing to ongoing care." },
-    { question: "What if I need to cancel or reschedule?", answer: "We understand plans change. You can cancel or reschedule up to 24 hours before your appointment without any fees. Last-minute changes may incur a small cancellation fee." },
-    { question: "Is care covered by insurance?", answer: "Many insurance plans, including Medicare and Medicaid, may cover certain home healthcare services. We recommend checking with your insurance provider. Many of our agencies also assist with insurance coordination." },
-    { question: "What areas do you serve?", answer: "We currently serve Philadelphia, PA. We're actively expanding to new areas." },
-    { question: "How do I pay for services?", answer: "Payment is processed securely through our platform. We accept all major credit cards and can work with insurance providers for covered services." },
+    { question: "What kind of help do Voallen caregivers offer?", answer: "Voallen caregivers are non-medical companions. They offer company and conversation, memory care companionship, meal prep, errands and shopping, light housekeeping, rides to appointments, walks and hobbies, help with video calls, and overnight or respite companionship so family caregivers can rest." },
+    { question: "Do caregivers provide medical care?", answer: "No. Our caregivers don't give medication, wound care or any other medical or nursing care. If your loved one needs medical help at home, please talk with their doctor about a licensed home health provider." },
+    { question: "Who are the caregivers?", answer: "Individual people from Philadelphia neighborhoods, not companies. Each one has their own profile with their experience, what they enjoy doing, their hourly rate and reviews from families. Every caregiver is background checked before they can be booked." },
+    { question: "How much does it cost?", answer: "Each caregiver sets their own hourly rate, shown on their profile. Most are between $15 and $20 an hour." },
+    { question: "Can I meet the caregiver before booking?", answer: "Yes. We encourage families to have a first call or visit to meet the caregiver, talk about your loved one's routine and interests, and make sure it feels like a good match." },
+    { question: "What if I need to cancel or reschedule?", answer: "Plans change. Let your caregiver or our team know as early as you can and we'll find a new time." },
+    { question: "What areas do you serve?", answer: "We currently serve Philadelphia, PA." },
+    { question: "How do I pay?", answer: "You pay for the hours of each visit at the caregiver's hourly rate. Call or email us if you have questions about payment." },
   ];
 
   return (

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="TH">
+<rect width="400" height="300" fill="#fbf0e2"/>
+<circle cx="340" cy="40" r="70" fill="#eaab6c" opacity="0.12"/>
+<circle cx="40" cy="280" r="90" fill="#eaab6c" opacity="0.10"/>
+<circle cx="200" cy="150" r="88" fill="#eaab6c"/>
+<text x="200" y="150" dy="0.35em" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="68" font-weight="500" letter-spacing="-2" fill="#1f3039">TH</text>
+</svg>

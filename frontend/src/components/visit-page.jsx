@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronDown, Phone, Mail, ShieldCheck } from "lucide-react";
 import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_EMAIL } from "@/components/voallen-sections";
 
-// Sections of the "Ask about a visit" page (/visits). The agency carousel between them
-// lives in App.js because it reuses the app's AgencyCarousel and live agency data.
+// Sections of the "Ask about a visit" page (/visits). The caregiver carousel between them
+// lives in App.js because it reuses the app's AgencyCarousel and live caregiver data.
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -54,7 +54,7 @@ export const VisitHero = () => (
     <div className="mt-4 rounded-2xl bg-stone-50 border border-stone-100 px-6 py-5 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center">
       <ShieldCheck className="w-5 h-5 text-stone-700 shrink-0" />
       <p className="text-stone-700">
-        Every agency is reviewed by our team before it appears on Voallen.{" "}
+        Every caregiver is background checked and reviewed by our team before they appear on Voallen.{" "}
         <Link to="/faq" className="font-semibold underline underline-offset-2 hover:text-stone-900">
           How it works
         </Link>
@@ -72,7 +72,7 @@ const benefits = [
   },
   {
     title: "Companions you can trust",
-    body: "Compare Philadelphia care agencies, read reviews from families, and choose the people your loved one will look forward to seeing.",
+    body: "Meet Philadelphia caregivers, read reviews from families, and choose the person your loved one will look forward to seeing.",
   },
   {
     title: "Updates for the family",
@@ -129,11 +129,11 @@ export const VisitStatBanner = ({ agencyCount }) => (
       <p className="px-8 py-8 text-xl sm:text-2xl text-stone-800 text-center sm:text-left leading-snug">
         {agencyCount > 0 ? (
           <>
-            <span className="font-bold bg-white rounded-lg px-2">{agencyCount} trusted care agencies</span> are ready to visit
+            <span className="font-bold bg-white rounded-lg px-2">{agencyCount} trusted caregivers</span> are ready to visit
             your loved one in Philadelphia.
           </>
         ) : (
-          <>Trusted care agencies are ready to visit your loved one in Philadelphia.</>
+          <>Trusted caregivers are ready to visit your loved one in Philadelphia.</>
         )}
       </p>
     </div>
@@ -163,8 +163,8 @@ const visitFaqs = [
     a: ["Yes. Family members you authorize can receive visit updates, and companions can help your loved one join a family video call."],
   },
   {
-    q: "How do I choose the right agency?",
-    a: ["Compare the Philadelphia agencies above. Each profile shows the agency's specialties, hourly rate and reviews from other families. You can request a consultation before booking any visits."],
+    q: "How do I choose the right caregiver?",
+    a: ["Compare the Philadelphia caregivers above. Each profile shows what they help with, their hourly rate and reviews from other families. You can ask for a first meeting before booking any visits."],
   },
   {
     q: "Can I book a visit for a birthday or special occasion?",
@@ -176,8 +176,8 @@ const visitFaqs = [
       <>
         Call us at{" "}
         <a href={CONTACT_PHONE_HREF} className="font-semibold text-stone-800 underline underline-offset-2">{CONTACT_PHONE}</a>, email{" "}
-        <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-stone-800 underline underline-offset-2">{CONTACT_EMAIL}</a>, or pick an
-        agency above and request a consultation.
+        <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-stone-800 underline underline-offset-2">{CONTACT_EMAIL}</a>, or pick a
+        caregiver above and request a first meeting.
       </>,
     ],
   },

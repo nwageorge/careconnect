@@ -55,6 +55,10 @@ def test_sample_agencies_seeded_on_startup(client):
     agencies = client.get("/api/agencies").json()
     assert len(agencies) == 7
     assert {a["city"] for a in agencies} == {"Philadelphia, PA"}
+    # Listings are individual non-medical caregivers, not companies
+    assert all(a["profile_type"] == "individual" for a in agencies)
+    medical = {"Skilled Nursing", "Wound Care", "Pediatric Care", "Mental Health", "IV Therapy"}
+    assert not any(medical & set(a["specialties"]) for a in agencies)
 
 
 def test_cannot_self_assign_admin(client):
@@ -259,12 +263,17 @@ def test_startup_removes_retired_sample_agencies_but_keeps_real_ones(client):
         await server.db.agencies.insert_many([
             {"id": "old-sample", "name": "Brick City Caregivers", "city": "Newark, NJ"},
             {"id": "real-agency", "name": "Brick City Caregivers", "city": "Newark, NJ", "user_id": "someone"},
-            {"id": "philly", "name": "Caring Hearts Home Care", "city": "Philadelphia, PA"},
+            {"id": "philly", "name": "Maria G.", "city": "Philadelphia, PA"},
+            {"id": "old-company", "name": "Caring Hearts Home Care", "city": "Philadelphia, PA"},
+            {"id": "old-booked", "name": "Liberty Home Health", "city": "Philadelphia, PA"},
         ])
+        await server.db.bookings.insert_one({"id": "b1", "agency_id": "old-booked"})
         removed = await server.remove_retired_sample_agencies()
-        left = {a["id"] async for a in server.db.agencies.find({"id": {"$in": ["old-sample", "real-agency", "philly"]}})}
+        ids = ["old-sample", "real-agency", "philly", "old-company", "old-booked"]
+        left = {a["id"]: a.get("status") async for a in server.db.agencies.find({"id": {"$in": ids}})}
         return removed, left
 
     removed, left = asyncio.run(scenario())
-    assert removed == 1
-    assert left == {"real-agency", "philly"}
+    assert removed == 2
+    # Real accounts and the new caregiver profiles stay; an old company with bookings is hidden, not deleted
+    assert left == {"real-agency": None, "philly": None, "old-booked": "unavailable"}

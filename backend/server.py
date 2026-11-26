@@ -95,6 +95,7 @@ class AgencyBase(BaseModel):
     model_config = ConfigDict(extra="ignore")
     name: str
     bio: str
+    profile_type: str = "individual"  # Voallen lists individual non-medical caregivers
     description: str = ""  # Longer description for detail page
     location: str
     city: str
@@ -402,11 +403,11 @@ async def create_booking(booking_data: BookingCreate, background: BackgroundTask
     }
     await db.bookings.insert_one(booking_doc)
 
-    summary = (f"Agency: {agency['name']}\nService: {booking_data.service_type}\n"
+    summary = (f"Caregiver: {agency['name']}\nService: {booking_data.service_type}\n"
                f"Date: {booking_data.date} at {booking_data.time_slot}\nPatient: {booking_data.patient_name}")
     queue_email(background, user.get('email'), "Your Voallen consultation request was sent",
                 f"Hi {user.get('name', '')},\n\nWe sent your consultation request. "
-                f"The agency will confirm or decline it soon.\n\n{summary}\n\nThe Voallen team")
+                f"The caregiver will confirm or decline it soon.\n\n{summary}\n\nThe Voallen team")
     if agency.get('user_id'):
         owner = await db.users.find_one({"id": agency['user_id']}, {"_id": 0})
         if owner:
@@ -464,13 +465,13 @@ async def update_booking_status(booking_id: str, update: BookingStatusUpdate, ba
     booking.update({"status": update.status, "updated_at": entry['at']})
     booking.setdefault("history", []).append(entry)
 
-    agency_name = agency['name'] if agency else "the agency"
+    agency_name = agency['name'] if agency else "your caregiver"
     when = f"{booking['date']} at {booking['time_slot']}"
     if is_owner_agency:
         client = await db.users.find_one({"id": booking['user_id']}, {"_id": 0})
         messages = {
             "confirmed": f"Good news: {agency_name} confirmed your consultation on {when}.",
-            "declined": f"{agency_name} can't take your consultation on {when}. You can book another agency on Voallen.",
+            "declined": f"{agency_name} can't take your consultation on {when}. You can book another caregiver on Voallen.",
             "completed": f"Your visit with {agency_name} is marked complete. You can now leave a review from your dashboard.",
         }
         if client:
@@ -647,7 +648,7 @@ async def admin_update_booking_status(booking_id: str, update: AdminBookingStatu
     booking.setdefault("history", []).append(entry)
 
     agency = await db.agencies.find_one({"id": booking['agency_id']}, {"_id": 0})
-    agency_name = agency['name'] if agency else "the agency"
+    agency_name = agency['name'] if agency else "your caregiver"
     body = (f"Voallen updated your booking with {agency_name} on {booking['date']} at {booking['time_slot']} "
             f"to: {update.status}." + (f"\n\nNote: {update.note}" if update.note else ""))
     client = await db.users.find_one({"id": booking['user_id']}, {"_id": 0})
@@ -676,230 +677,144 @@ async def admin_users(user: dict = Depends(require_admin)):
     return [public_user(u) for u in users]
 
 # Seed data - sample agencies, loaded at startup when the database is empty
+# Sample caregiver profiles for Philadelphia. Voallen lists individual, non-medical caregivers
+# (companions), not home health companies. These are fictional people with illustrated initial
+# avatars; real caregivers replace them by signing up and being approved.
+SAMPLE_CAREGIVERS = [
+    {
+        "name": "Maria G.",
+        "neighborhood": "Fishtown",
+        "bio": "Warm, chatty companion who loves cooking and a good story.",
+        "description": "I've spent eight years keeping older neighbors company, first with my own grandmother and then with families across Philadelphia. I'm happy to cook a favorite meal together, pick up groceries, or just sit and talk over coffee. I take my time, I listen, and I always leave a little note so the family knows how the visit went.",
+        "experience_years": 8,
+        "certifications": ["Background checked", "CPR & First Aid", "Speaks Spanish"],
+        "specialties": ["Companionship", "Meal Prep", "Errands & Shopping"],
+        "price_per_hour": 18, "rating": 4.9, "review_count": 42, "families_served": 31,
+        "avatar": "maria-g",
+    },
+    {
+        "name": "Denise W.",
+        "neighborhood": "West Philadelphia",
+        "bio": "Patient, calm companion with years of memory care experience.",
+        "description": "For twelve years I've kept company with people living with memory loss. I know how much a familiar routine, a favorite song or an old photo album can mean. I keep visits calm and gentle, and I'm always happy to talk with families about what's working.",
+        "experience_years": 12,
+        "certifications": ["Background checked", "CPR & First Aid", "Dementia care training"],
+        "specialties": ["Memory Care Companionship", "Companionship", "Hobbies & Outings"],
+        "price_per_hour": 20, "rating": 4.9, "review_count": 37, "families_served": 26,
+        "avatar": "denise-w",
+    },
+    {
+        "name": "James O.",
+        "neighborhood": "South Philadelphia",
+        "bio": "Reliable driver and friendly company for errands and appointments.",
+        "description": "I help seniors get where they need to go: doctor's appointments, the bank, the barber, or a lunch out. I wait with them, help carry the bags, and make sure everyone gets home safe. Five years in, I still look forward to every ride and every conversation.",
+        "experience_years": 5,
+        "certifications": ["Background checked", "CPR & First Aid", "Valid driver's license"],
+        "specialties": ["Transportation & Appointments", "Errands & Shopping", "Companionship"],
+        "price_per_hour": 17, "rating": 4.8, "review_count": 28, "families_served": 19,
+        "avatar": "james-o",
+    },
+    {
+        "name": "Grace L.",
+        "neighborhood": "Chinatown",
+        "bio": "Gentle companion who helps around the house and keeps things tidy.",
+        "description": "I enjoy making a home feel calm and comfortable. On visits I'll tidy up, do a load of laundry, prepare a simple meal and sit down for tea and conversation. I speak Cantonese and Mandarin, and many of my families like to chat in their first language.",
+        "experience_years": 6,
+        "certifications": ["Background checked", "CPR & First Aid", "Speaks Cantonese and Mandarin"],
+        "specialties": ["Companionship", "Light Housekeeping", "Meal Prep"],
+        "price_per_hour": 18, "rating": 4.8, "review_count": 31, "families_served": 22,
+        "avatar": "grace-l",
+    },
+    {
+        "name": "Angela R.",
+        "neighborhood": "Northern Liberties",
+        "bio": "Overnight and respite companion so family caregivers can rest.",
+        "description": "Family caregivers need a break too. I offer evening and overnight companionship so you can sleep, travel or simply take a day off, knowing someone kind is there. I keep a steady, quiet presence and send a morning update.",
+        "experience_years": 9,
+        "certifications": ["Background checked", "CPR & First Aid"],
+        "specialties": ["Overnight Companionship", "Respite for Families", "Companionship"],
+        "price_per_hour": 19, "rating": 4.7, "review_count": 22, "families_served": 17,
+        "avatar": "angela-r",
+    },
+    {
+        "name": "Tomás H.",
+        "neighborhood": "Germantown",
+        "bio": "Upbeat companion for walks, games, music and tech help.",
+        "description": "I'm a music lover and a patient teacher. I'll go for a walk in the park, play cards or chess, put on old records, or help set up video calls with the grandkids. I speak Spanish and English and I'm always up for a good laugh.",
+        "experience_years": 3,
+        "certifications": ["Background checked", "CPR & First Aid", "Speaks Spanish"],
+        "specialties": ["Hobbies & Outings", "Video Calls & Tech Help", "Companionship"],
+        "price_per_hour": 16, "rating": 4.8, "review_count": 19, "families_served": 14,
+        "avatar": "tomas-h",
+    },
+    {
+        "name": "Patricia M.",
+        "neighborhood": "Roxborough",
+        "bio": "Experienced, dependable companion for everyday help at home.",
+        "description": "After fifteen years of helping families, I know the little things matter: fresh sheets, a stocked fridge, the mail sorted and a friendly face at the door. I'm organized, punctual and always happy to sit down for a chat once the chores are done.",
+        "experience_years": 15,
+        "certifications": ["Background checked", "CPR & First Aid"],
+        "specialties": ["Light Housekeeping", "Meal Prep", "Errands & Shopping"],
+        "price_per_hour": 17, "rating": 4.6, "review_count": 26, "families_served": 34,
+        "avatar": "patricia-m",
+    },
+]
+
+SAMPLE_REVIEW_TEMPLATES = [
+    {"user_name": "Sarah M.", "rating": 5, "comment": "{first} has been wonderful with my mother. She looks forward to every visit and always has a story to tell us afterwards.", "relationship": "Daughter"},
+    {"user_name": "Michael T.", "rating": 5, "comment": "Punctual, kind and easy to talk to. The notes after each visit give us real peace of mind.", "relationship": "Son"},
+    {"user_name": "Jennifer K.", "rating": 4, "comment": "Great communication and flexible with scheduling. {first} feels like part of the family now.", "relationship": "Daughter"},
+    {"user_name": "Robert & Linda P.", "rating": 5, "comment": "We met a few companions before choosing {first}. Best decision we made. Mom is so much brighter.", "relationship": "Family"},
+    {"user_name": "David W.", "rating": 5, "comment": "Thanks to {first}, I can finally get some rest knowing my wife has good company.", "relationship": "Spouse"},
+    {"user_name": "Patricia H.", "rating": 4, "comment": "Very thoughtful. When Dad's routine changed, {first} adjusted without any fuss.", "relationship": "Daughter"},
+    {"user_name": "James L.", "rating": 5, "comment": "Patient and gentle. {first} really understands how to make Grandpa comfortable.", "relationship": "Grandson"},
+    {"user_name": "Elizabeth R.", "rating": 5, "comment": "Caring, reliable and fun. Everything you'd hope for in a companion.", "relationship": "Granddaughter"},
+]
+
+def sample_caregiver_doc(c: dict) -> dict:
+    import random
+    first = c["name"].split()[0]
+    reviews = []
+    for t in random.sample(SAMPLE_REVIEW_TEMPLATES, random.randint(4, 6)):
+        reviews.append({**t, "comment": t["comment"].format(first=first), "id": str(uuid.uuid4()),
+                        "care_type": c["specialties"][0],
+                        "date": f"202{random.randint(5, 6)}-{random.randint(1, 10):02d}-{random.randint(1, 28):02d}"})
+    return {
+        "id": str(uuid.uuid4()),
+        "name": c["name"],
+        "bio": c["bio"],
+        "description": c["description"],
+        "location": f'{c["neighborhood"]}, Philadelphia, PA',
+        "city": "Philadelphia, PA",
+        "experience_years": c["experience_years"],
+        "certifications": c["certifications"],
+        "specialties": c["specialties"],
+        "price_per_hour": c["price_per_hour"],
+        "rating": c["rating"],
+        "review_count": c["review_count"],
+        "image_url": f'/voallen/caregivers/{c["avatar"]}.svg',
+        "gallery_images": [],
+        "is_verified": True,
+        "is_new": False,
+        "profile_type": "individual",
+        "total_caregivers": 1,
+        "years_in_business": c["experience_years"],
+        "families_served": c["families_served"],
+        "reviews": reviews,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+
 async def seed_agencies():
-    # Check if already seeded
-    existing = await db.agencies.count_documents({})
-    if existing > 0:
-        return {"message": "Data already seeded", "count": existing}
-    
-    # Helper function to generate reviews for agencies
-    def generate_reviews(agency_specialties):
-        review_templates = [
-            {"user_name": "Sarah M.", "rating": 5, "comment": "The caregivers from this agency have been absolutely wonderful with my mother. They treat her with dignity and respect, and she looks forward to their visits.", "relationship": "Daughter", "care_type": "Elderly Care"},
-            {"user_name": "Michael T.", "rating": 5, "comment": "After my father's hip surgery, their team was there every step of the way. Professional, punctual, and genuinely caring.", "relationship": "Son", "care_type": "Post-Surgery"},
-            {"user_name": "Jennifer K.", "rating": 4, "comment": "Great communication and flexible scheduling. The caregiver assigned to us became like family.", "relationship": "Daughter", "care_type": "Companionship"},
-            {"user_name": "Robert & Linda P.", "rating": 5, "comment": "We interviewed several agencies before choosing this one. Best decision we made. Mom is thriving!", "relationship": "Family", "care_type": "Elderly Care"},
-            {"user_name": "David W.", "rating": 5, "comment": "The overnight care for my wife has been exceptional. I can finally get some rest knowing she's in good hands.", "relationship": "Spouse", "care_type": "24-Hour Care"},
-            {"user_name": "Patricia H.", "rating": 4, "comment": "Very responsive to our changing needs. When Dad's condition changed, they adjusted the care plan immediately.", "relationship": "Daughter", "care_type": "Chronic Conditions"},
-            {"user_name": "James L.", "rating": 5, "comment": "The dementia care specialists here truly understand the challenges. They've made such a difference for our family.", "relationship": "Son", "care_type": "Dementia Care"},
-            {"user_name": "Elizabeth R.", "rating": 5, "comment": "Compassionate, skilled, and reliable. Everything you want in a home care agency.", "relationship": "Granddaughter", "care_type": "Elderly Care"},
-        ]
-        import random
-        num_reviews = random.randint(4, 6)
-        selected = random.sample(review_templates, num_reviews)
-        for i, review in enumerate(selected):
-            review["id"] = str(uuid.uuid4())
-            review["date"] = f"202{random.randint(3,4)}-{random.randint(1,12):02d}-{random.randint(1,28):02d}"
-        return selected
-    
-    agencies_data = [
-        # Philadelphia, PA - 7 agencies
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Caring Hearts Home Care",
-            "bio": "Award-winning in-home care agency serving Philadelphia families since 2009.",
-            "description": "Caring Hearts Home Care has been a trusted partner for Philadelphia families for over 15 years. Our team of certified caregivers provides personalized, compassionate care that allows your loved ones to maintain their independence and dignity in the comfort of their own home. We specialize in elderly care, post-surgery recovery, and chronic condition management. Every caregiver undergoes rigorous background checks, ongoing training, and is matched carefully to each client's unique needs and personality.",
-            "location": "1234 Market Street, Philadelphia, PA 19107",
-            "city": "Philadelphia, PA",
-            "experience_years": 15,
-            "certifications": ["State Licensed", "Medicare Certified", "ACHC Accredited", "BBB A+ Rating"],
-            "specialties": ["Elderly Care", "Post-Surgery Recovery", "Chronic Conditions", "Companionship"],
-            "price_per_hour": 16,
-            "rating": 4.9,
-            "review_count": 124,
-            "image_url": "https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 45,
-            "years_in_business": 15,
-            "families_served": 1200,
-            "reviews": generate_reviews(["Elderly Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Gentle Touch Nursing",
-            "bio": "Specialized pediatric and family care services with registered nurses.",
-            "description": "Gentle Touch Nursing brings hospital-quality care into your home. Our team includes registered nurses and certified nursing assistants dedicated to providing the highest standard of care for children and adults alike. We understand that having a healthcare professional in your home requires trust, which is why we take extra care in selecting and training our staff. From infant care to special needs support, our nurses are equipped to handle complex medical situations with grace and expertise.",
-            "location": "567 Walnut Street, Philadelphia, PA 19106",
-            "city": "Philadelphia, PA",
-            "experience_years": 12,
-            "certifications": ["Pediatric Certified", "State Licensed", "CPR Certified", "First Aid Certified"],
-            "specialties": ["Pediatric Care", "Infant Care", "Special Needs", "Medical Support"],
-            "price_per_hour": 18,
-            "rating": 4.8,
-            "review_count": 89,
-            "image_url": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5206919/pexels-photo-5206919.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 32,
-            "years_in_business": 12,
-            "families_served": 850,
-            "reviews": generate_reviews(["Pediatric Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Philadelphia Senior Services",
-            "bio": "Dedicated to enhancing quality of life for seniors with specialized dementia care.",
-            "description": "Philadelphia Senior Services has been the city's premier provider of senior care for two decades. Our specialized programs for dementia and Alzheimer's care set us apart, with caregivers trained in the latest therapeutic approaches. We believe in treating the whole person—mind, body, and spirit—which is why our care plans include not just physical assistance, but also social engagement, mental stimulation, and emotional support. Our compassionate team becomes an extension of your family.",
-            "location": "890 Chestnut Street, Philadelphia, PA 19107",
-            "city": "Philadelphia, PA",
-            "experience_years": 20,
-            "certifications": ["Alzheimer's Certified", "State Licensed", "Bonded & Insured", "Dementia Care Specialist"],
-            "specialties": ["Dementia Care", "Alzheimer's", "Companionship", "Memory Care"],
-            "price_per_hour": 15,
-            "rating": 4.7,
-            "review_count": 156,
-            "image_url": "https://images.unsplash.com/photo-1447452001602-7090c7ab2db3?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768140/pexels-photo-3768140.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460059/pexels-photo-8460059.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 58,
-            "years_in_business": 20,
-            "families_served": 2100,
-            "reviews": generate_reviews(["Dementia Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "HomeWell Care Services",
-            "bio": "Comprehensive home healthcare including skilled nursing and physical therapy.",
-            "description": "HomeWell Care Services provides a complete spectrum of in-home healthcare services throughout greater Philadelphia. Our skilled nursing team can handle everything from medication management to wound care, while our physical and occupational therapists help clients regain mobility and independence. We coordinate closely with physicians and hospitals to ensure seamless transitions from facility to home care, making recovery smoother and more comfortable for everyone involved.",
-            "location": "123 Broad Street, Philadelphia, PA 19102",
-            "city": "Philadelphia, PA",
-            "experience_years": 8,
-            "certifications": ["Medicare Certified", "State Licensed", "Joint Commission Accredited"],
-            "specialties": ["Skilled Nursing", "Physical Therapy", "Personal Care", "Medication Management"],
-            "price_per_hour": 17,
-            "rating": 4.6,
-            "review_count": 67,
-            "image_url": "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/5206919/pexels-photo-5206919.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 28,
-            "years_in_business": 8,
-            "families_served": 520,
-            "reviews": generate_reviews(["Skilled Nursing"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Nurturing Angels Care",
-            "bio": "Round-the-clock care specialists for overnight and 24-hour support.",
-            "description": "Nurturing Angels Care specializes in providing continuous, round-the-clock care for those who need constant supervision and support. Whether you need overnight care so family caregivers can rest, or full 24-hour care for complex medical situations, our angels are there. We understand the stress that comes with caring for a loved one with high needs, and we're committed to providing peace of mind along with exceptional care. Our team works in shifts to ensure fresh, attentive caregivers at all times.",
-            "location": "456 Pine Street, Philadelphia, PA 19106",
-            "city": "Philadelphia, PA",
-            "experience_years": 10,
-            "certifications": ["24/7 Care Certified", "State Licensed", "Background Checked", "Hospice Trained"],
-            "specialties": ["24-Hour Care", "Overnight Care", "Hospice Support", "Respite Care"],
-            "price_per_hour": 15,
-            "rating": 4.8,
-            "review_count": 98,
-            "image_url": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/3768146/pexels-photo-3768146.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551667/pexels-photo-7551667.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551622/pexels-photo-7551622.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 52,
-            "years_in_business": 10,
-            "families_served": 780,
-            "reviews": generate_reviews(["24-Hour Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Liberty Home Health",
-            "bio": "Wound care specialists and post-operative care experts.",
-            "description": "Liberty Home Health brings clinical expertise to your doorstep. Our team of wound care certified nurses and post-operative care specialists helps patients recover from surgeries, manage complex wounds, and handle IV therapy in the comfort of home. We work directly with surgeons and physicians to follow care protocols precisely, reducing the risk of complications and hospital readmissions. Our goal is to get you back to your normal life as quickly and safely as possible.",
-            "location": "789 Spruce Street, Philadelphia, PA 19107",
-            "city": "Philadelphia, PA",
-            "experience_years": 14,
-            "certifications": ["Wound Care Certified", "State Licensed", "OASIS Certified", "IV Therapy Trained"],
-            "specialties": ["Wound Care", "Post-Op Care", "IV Therapy", "Surgical Recovery"],
-            "price_per_hour": 18,
-            "rating": 4.9,
-            "review_count": 112,
-            "image_url": "https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/5207100/pexels-photo-5207100.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460153/pexels-photo-8460153.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/8460072/pexels-photo-8460072.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": True,
-            "is_new": False,
-            "total_caregivers": 35,
-            "years_in_business": 14,
-            "families_served": 920,
-            "reviews": generate_reviews(["Post-Op Care"])
-        },
-        {
-            "id": str(uuid.uuid4()),
-            "name": "Keystone Care Partners",
-            "bio": "Mental health and behavioral support specialists.",
-            "description": "Keystone Care Partners provides compassionate care for individuals with psychiatric conditions and developmental disabilities. Our specially trained caregivers understand the unique challenges of mental health care and are skilled in de-escalation techniques, medication reminders, and therapeutic engagement. We believe everyone deserves to live with dignity in their own community, and we're dedicated to making that possible through personalized, supportive care that respects each individual's journey.",
-            "location": "321 Race Street, Philadelphia, PA 19106",
-            "city": "Philadelphia, PA",
-            "experience_years": 6,
-            "certifications": ["Mental Health Certified", "State Licensed", "Behavioral Specialist", "Crisis Intervention Trained"],
-            "specialties": ["Mental Health", "Behavioral Support", "Developmental Care", "Autism Support"],
-            "price_per_hour": 17,
-            "rating": 4.5,
-            "review_count": 45,
-            "image_url": "https://images.unsplash.com/photo-1543333995-a78aea2eee50?w=600&h=450&fit=crop&q=80",
-            "gallery_images": [
-                "https://images.pexels.com/photos/7551617/pexels-photo-7551617.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3768131/pexels-photo-3768131.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7551668/pexels-photo-7551668.jpeg?auto=compress&cs=tinysrgb&w=600"
-            ],
-            "is_verified": False,
-            "is_new": True,
-            "total_caregivers": 18,
-            "years_in_business": 6,
-            "families_served": 210,
-            "reviews": generate_reviews(["Mental Health"])
-        },
-    ]
-    
-    for agency in agencies_data:
-        agency["created_at"] = datetime.now(timezone.utc).isoformat()
-    
-    await db.agencies.insert_many(agencies_data)
-    return {"message": "Data seeded successfully", "count": len(agencies_data)}
+    # Add any sample caregiver that isn't there yet (matched by name, never one a real user owns)
+    added = 0
+    for c in SAMPLE_CAREGIVERS:
+        if await db.agencies.find_one({"name": c["name"], "city": "Philadelphia, PA", "user_id": {"$exists": False}}):
+            continue
+        await db.agencies.insert_one(sample_caregiver_doc(c))
+        added += 1
+    if not added:
+        return {"message": "Data already seeded", "count": await db.agencies.count_documents({})}
+    return {"message": "Data seeded successfully", "count": added}
 
 @api_router.post("/seed")
 async def seed_data(user: dict = Depends(require_admin)):
@@ -952,14 +867,25 @@ RETIRED_SAMPLE_AGENCIES = {
         "Garden State Home Care", "Newark Community Care", "Essex County Care Services",
         "Brick City Caregivers",
     ],
+    # The old Philadelphia sample companies, replaced by individual caregiver profiles
+    "Philadelphia, PA": [
+        "Caring Hearts Home Care", "Gentle Touch Nursing", "Philadelphia Senior Services",
+        "HomeWell Care Services", "Nurturing Angels Care", "Liberty Home Health", "Keystone Care Partners",
+    ],
 }
 
 async def remove_retired_sample_agencies():
     removed = 0
     for city, names in RETIRED_SAMPLE_AGENCIES.items():
         # Seeded agencies have no owner account; agencies created by real users always do
-        result = await db.agencies.delete_many({"city": city, "name": {"$in": names}, "user_id": {"$exists": False}})
-        removed += result.deleted_count
+        query = {"city": city, "name": {"$in": names}, "user_id": {"$exists": False}}
+        async for agency in db.agencies.find(query, {"_id": 0, "id": 1}):
+            if await db.bookings.find_one({"agency_id": agency["id"]}):
+                # Keep the record so past bookings still resolve, but take it off the site
+                await db.agencies.update_one({"id": agency["id"]}, {"$set": {"status": "unavailable"}})
+            else:
+                await db.agencies.delete_one({"id": agency["id"]})
+                removed += 1
     return removed
 
 @app.on_event("startup")

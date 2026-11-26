@@ -77,7 +77,7 @@ export const SiteHeader = () => {
 
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-2 xl:gap-3 shrink-0">
-          <Link to="/agencies" aria-label="Search agencies" className="p-2 text-stone-800 hover:bg-stone-100 rounded-full transition-colors">
+          <Link to="/agencies" aria-label="Search caregivers" className="p-2 text-stone-800 hover:bg-stone-100 rounded-full transition-colors">
             <Search className="w-5 h-5" />
           </Link>
           <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
