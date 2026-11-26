@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight, ArrowUpRight } from "lucide-react";
+import { VoallenLogo } from "@/components/voallen-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 // SVG icons as components
@@ -63,7 +64,7 @@ export default function HeroSection3({
         }`}
       >
         <div className="h-full mx-auto px-4 sm:px-6 lg:px-[3vw] flex justify-between items-center">
-          <Link to="/" className="text-2xl md:text-[1.75rem] font-semibold tracking-tight text-stone-900">{logoText}</Link>
+          <Link to="/" aria-label={logoText}><VoallenLogo size="lg" /></Link>
 
           {/* Desktop Nav: plain text links */}
           <nav className="hidden lg:flex items-center gap-9">
@@ -198,7 +199,7 @@ export default function HeroSection3({
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-[2.75rem] sm:text-7xl lg:text-[3.5rem] xl:text-[4rem] font-normal text-white leading-[1.02] tracking-tight whitespace-nowrap mb-6 lg:mb-3"
+              className="text-[2.75rem] sm:text-7xl lg:text-[3.5rem] xl:text-[4rem] font-display font-light text-white leading-[1.02] tracking-[-0.035em] whitespace-nowrap mb-6 lg:mb-3"
               style={{ textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}
             >
               {hero.titleLines.map((line) => (
