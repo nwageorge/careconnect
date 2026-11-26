@@ -26,6 +26,16 @@ const reveal = {
 
 const services = [
   {
+    icon: "/voallen/service-icon-4.png",
+    label: "Birthday & Special Occasion Visits",
+    title: "Make room for special moments.",
+    description: "Companionship visits for birthdays and special occasions, so there is someone to share the moment.",
+    image: "/voallen/celebration-gathering.jpg",
+    alt: "Family and friends laughing together at an outdoor gathering.",
+    note: "Birthday & special occasion visits",
+  },
+  {
+    icon: "/voallen/service-icon-0.png",
     label: "Friendly Companionship Visits",
     title: "A friendly face. Meaningful company.",
     description: "Personalized companionship visits for your loved ones in nursing homes, assisted living communities, and private residences.",
@@ -35,6 +45,7 @@ const services = [
     note: "Friendly companionship",
   },
   {
+    icon: "/voallen/service-icon-1.png",
     label: "Hospice Companionship Visits",
     title: "A calm, caring presence.",
     description: "Nonmedical companionship visits for loved ones receiving hospice care, with time for gentle conversation and a reassuring presence.",
@@ -44,6 +55,7 @@ const services = [
     note: "Hospice companionship",
   },
   {
+    icon: "/voallen/service-icon-2.png",
     label: "Reading, Games & Social Engagement",
     title: "Time for shared interests.",
     description: "Reading, games, and social engagement offer simple, personal ways to spend meaningful time together.",
@@ -52,6 +64,7 @@ const services = [
     note: "Reading, games & social time",
   },
   {
+    icon: "/voallen/service-icon-3.png",
     label: "Family Video Call Assistance",
     title: "Familiar faces, a little closer.",
     description: "Assistance with family video calls helps your loved one stay connected with family and friends.",
@@ -60,14 +73,7 @@ const services = [
     note: "Family video call assistance",
   },
   {
-    label: "Birthday & Special Occasion Visits",
-    title: "Make room for special moments.",
-    description: "Companionship visits for birthdays and special occasions, so there is someone to share the moment.",
-    image: "/voallen/celebration-gathering.jpg",
-    alt: "Family and friends laughing together at an outdoor gathering.",
-    note: "Birthday & special occasion visits",
-  },
-  {
+    icon: "/voallen/service-icon-5.png",
     label: "Visit Updates to Authorized Family Members",
     title: "Connection for them. Reassurance for you.",
     description: "Visit updates to authorized family members help you stay connected with your loved one’s companionship visits.",
@@ -117,7 +123,7 @@ export const OurServicesSection = () => {
               }`}
               data-testid={`service-tab-${i}`}
             >
-              <img src={`/voallen/service-icon-${i}.png`} alt="" className="w-20 h-20 object-contain" loading="lazy" />
+              <img src={s.icon} alt="" className="w-20 h-20 object-contain" loading="lazy" />
               <span className={`text-sm leading-snug ${selected ? "font-semibold text-stone-900" : "font-medium text-stone-600"}`}>
                 {s.label}
               </span>
