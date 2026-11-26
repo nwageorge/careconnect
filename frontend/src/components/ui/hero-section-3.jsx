@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -24,7 +24,7 @@ const CloseIcon = () => (
   </svg>
 );
 
-// The home page hero: one photo, kept clean (no zoom, no slideshow, no fade over the picture)
+// The home page hero: one photo in a rounded frame below a fixed cream header (layout modelled on the WhatsApp reference)
 const hero = {
   image: "/voallen/hero-walk.jpg",
   alt: "An older woman walking arm in arm with a smiling companion in an autumn park.",
@@ -40,6 +40,13 @@ export default function HeroSection3({
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -48,63 +55,67 @@ export default function HeroSection3({
     navigate(q ? `/agencies?search=${encodeURIComponent(q)}` : "/agencies");
   };
   return (
-    <div className="min-h-[100svh] w-full antialiased text-white relative flex flex-col">
-      {/* Navigation Header */}
-      <header className="absolute inset-x-0 top-0 p-4 sm:p-6 md:p-8 z-30">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-xl sm:text-2xl md:text-3xl font-semibold drop-shadow-lg">{logoText}</Link>
-          
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center space-x-1 bg-black/40 backdrop-blur-md rounded-full px-4 py-2">
+    <div className="w-full antialiased text-white relative pt-[72px] sm:pt-[84px]">
+      {/* Header: stays fixed at the top while the page scrolls, on the same cream as the page */}
+      <header
+        className={`fixed inset-x-0 top-0 z-40 h-[72px] sm:h-[84px] bg-[#faf6f0] dark:bg-[#0f0d0c] transition-shadow ${
+          scrolled ? "border-b border-stone-200 shadow-sm" : ""
+        }`}
+      >
+        <div className="h-full mx-auto px-4 sm:px-6 lg:px-[3vw] flex justify-between items-center">
+          <Link to="/" className="text-2xl md:text-[1.75rem] font-semibold tracking-tight text-stone-900">{logoText}</Link>
+
+          {/* Desktop Nav: plain text links */}
+          <nav className="hidden lg:flex items-center gap-9">
             {navLinks.map((link) => (
-              <Link 
-                key={link.href + link.label} 
-                to={link.href} 
-                className="px-3 py-1.5 text-white font-medium text-sm hover:bg-white/20 rounded-full transition-all duration-200"
+              <Link
+                key={link.href + link.label}
+                to={link.href}
+                className="text-[17px] font-medium text-stone-800 hover:text-stone-500 transition-colors"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          
-          {/* Desktop Auth Buttons */}
-          <div className="hidden sm:flex items-center space-x-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
-            <Link to="/agencies" aria-label="Search agencies" className="p-1.5 hover:bg-white/20 rounded-full transition-colors">
+
+          {/* Desktop actions */}
+          <div className="hidden sm:flex items-center gap-3">
+            <Link to="/agencies" aria-label="Search agencies" className="p-2 text-stone-800 hover:bg-stone-100 rounded-full transition-colors">
               <SearchIcon />
             </Link>
-            <ThemeToggle className="text-white hover:bg-white/20" />
+            <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
             {user ? (
               <>
-                <Link to="/dashboard" className="px-3 py-1.5 text-white font-medium text-sm hover:bg-white/20 rounded-full transition-colors">
-                  Dashboard
+                <Link to="/dashboard" className="inline-flex items-center gap-1.5 rounded-full border-2 border-stone-900 px-5 py-2.5 text-[17px] font-medium text-stone-900 hover:bg-stone-100 transition-colors">
+                  Dashboard <ChevronRight className="w-4 h-4" />
                 </Link>
-                <button 
+                <button
                   onClick={onLogout}
-                  className="bg-white text-stone-800 rounded-full px-4 py-1.5 text-sm font-semibold hover:bg-stone-100 transition-colors"
+                  className="rounded-full px-6 py-3 text-[17px] font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition-opacity"
                 >
                   Logout
                 </button>
               </>
             ) : (
               <>
-                <Link to="/login" className="px-3 py-1.5 text-white font-medium text-sm hover:bg-white/20 rounded-full transition-colors">
-                  Login
+                <Link to="/login" className="inline-flex items-center gap-1.5 rounded-full border-2 border-stone-900 px-5 py-2.5 text-[17px] font-medium text-stone-900 hover:bg-stone-100 transition-colors">
+                  Log In <ChevronRight className="w-4 h-4" />
                 </Link>
-                <Link 
+                <Link
                   to="/signup"
-                  className="bg-white text-stone-800 rounded-full px-4 py-1.5 text-sm font-semibold hover:bg-stone-100 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-[17px] font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition-opacity"
                 >
-                  Join
+                  Join <ArrowUpRight className="w-4 h-4" />
                 </Link>
               </>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="sm:hidden flex items-center gap-2">
-            <ThemeToggle className="text-white bg-black/40 backdrop-blur-md hover:bg-black/60" />
-            <button 
-              className="p-2 bg-black/40 backdrop-blur-md rounded-full"
+          <div className="sm:hidden flex items-center gap-1">
+            <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
+            <button
+              className="p-2 text-stone-900 rounded-full hover:bg-stone-100"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -115,51 +126,51 @@ export default function HeroSection3({
 
         {/* Mobile Menu Dropdown */}
         {mobileMenuOpen && (
-          <div className="sm:hidden mt-4 bg-black/80 backdrop-blur-lg rounded-2xl p-4 mx-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="sm:hidden mx-4 bg-[#faf6f0] dark:bg-[#0f0d0c] border border-stone-200 rounded-2xl p-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
             <nav className="flex flex-col space-y-1 mb-4">
               {navLinks.map((link) => (
-                <Link 
-                  key={link.href + link.label} 
+                <Link
+                  key={link.href + link.label}
                   to={link.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-white font-medium text-base hover:bg-white/10 rounded-xl transition-colors"
+                  className="px-4 py-3 text-stone-900 font-medium text-base hover:bg-stone-100 rounded-xl transition-colors"
                 >
                   {link.label}
                 </Link>
               ))}
             </nav>
-            <div className="border-t border-white/20 pt-4 space-y-2">
+            <div className="border-t border-stone-200 pt-4 space-y-2">
               {user ? (
                 <>
-                  <Link 
-                    to="/dashboard" 
+                  <Link
+                    to="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-white font-medium text-base hover:bg-white/10 rounded-xl transition-colors"
+                    className="block px-4 py-3 text-stone-900 font-medium text-base hover:bg-stone-100 rounded-xl transition-colors"
                   >
                     Dashboard
                   </Link>
-                  <button 
+                  <button
                     onClick={() => { onLogout(); setMobileMenuOpen(false); }}
-                    className="w-full px-4 py-3 text-red-400 font-medium text-base text-left hover:bg-white/10 rounded-xl transition-colors"
+                    className="w-full px-4 py-3 text-red-600 font-medium text-base text-left hover:bg-stone-100 rounded-xl transition-colors"
                   >
                     Logout
                   </button>
                 </>
               ) : (
                 <>
-                  <Link 
-                    to="/login" 
+                  <Link
+                    to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-white font-medium text-base hover:bg-white/10 rounded-xl transition-colors"
+                    className="block px-4 py-3 rounded-full border-2 border-stone-900 text-stone-900 font-medium text-base text-center"
                   >
-                    Sign In
+                    Log In
                   </Link>
-                  <Link 
+                  <Link
                     to="/signup"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full bg-white text-stone-800 rounded-xl px-4 py-3 text-base font-semibold text-center hover:bg-stone-100 transition-colors"
+                    className="block w-full rounded-full px-4 py-3 text-base font-medium text-center bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917]"
                   >
-                    Get Started
+                    Join Voallen
                   </Link>
                 </>
               )}
@@ -168,17 +179,18 @@ export default function HeroSection3({
         )}
       </header>
 
-      {/* Hero photo fills the whole screen */}
+      {/* Hero frame: a rounded photo card with side margins, a little shorter than the screen */}
+      <div className="relative mx-3 sm:mx-6 lg:mx-[3vw] mt-1 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col min-h-[calc(100svh-96px)] sm:min-h-[calc(100svh-120px)] lg:min-h-0 lg:h-[calc(100svh-140px)] lg:max-h-[860px] lg:min-h-[640px]">
       <img
         src={hero.image}
         alt={hero.alt}
         className="absolute inset-0 w-full h-full object-cover object-[74%_center] md:object-[center_40%]"
         fetchpriority="high"
       />
-      {/* Soft shade at the bottom so the headline stays readable over the photo */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" aria-hidden="true" />
+      {/* Soft shade on the left so the white text stays readable */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" aria-hidden="true" />
 
-      <main className="relative z-10 flex-1 flex items-center pt-28 pb-12 sm:pt-32">
+      <main className="relative z-10 flex-1 flex items-center py-10 lg:py-8">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 flex flex-col items-stretch sm:items-start gap-8 lg:gap-10">
           {/* Headline and search card stack on the left, over the soft trees, so the faces stay clear */}
           <div className="max-w-2xl">
@@ -250,6 +262,7 @@ export default function HeroSection3({
           </motion.form>
         </div>
       </main>
+      </div>
     </div>
   );
 }
