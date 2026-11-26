@@ -30,7 +30,7 @@ export const VisitHero = () => (
         transition={{ duration: 0.6 }}
         className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md bg-white rounded-3xl shadow-2xl p-7 sm:p-10"
       >
-        <h1 className="text-3xl sm:text-4xl font-bold text-stone-800 leading-tight mb-4">
+        <h1 className="text-3xl sm:text-4xl font-display font-normal tracking-[-0.03em] text-stone-800 leading-tight mb-4">
           Companionship visits near you
         </h1>
         <p className="text-lg text-stone-600 leading-relaxed mb-8">

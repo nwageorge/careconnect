@@ -78,7 +78,7 @@ export const CaregiverHero = () => (
         style={{ backgroundColor: "#ffffff" }}
       >
         <p className="text-sm font-semibold tracking-wide uppercase mb-3" style={{ color: "#78716c" }}>For caregivers</p>
-        <h1 className="text-3xl sm:text-4xl font-bold leading-tight mb-4" style={{ color: "#292524" }}>
+        <h1 className="text-3xl sm:text-4xl font-display font-normal tracking-[-0.03em] leading-tight mb-4" style={{ color: "#292524" }}>
           Find caregiving work you'll love
         </h1>
         <p className="text-lg leading-relaxed mb-8" style={{ color: "#57534e" }}>

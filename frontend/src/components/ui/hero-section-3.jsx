@@ -1,29 +1,8 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, ChevronRight, ArrowUpRight } from "lucide-react";
-import { VoallenLogo } from "@/components/voallen-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
-
-// SVG icons as components
-const SearchIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-);
-
-const MenuIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-  </svg>
-);
+import { SiteHeader } from "@/components/site-chrome";
 
 // The home page hero: one photo in a rounded frame below a fixed cream header (layout modelled on the WhatsApp reference)
 const hero = {
@@ -33,21 +12,8 @@ const hero = {
   subtitle: "Transparent care for your loved ones",
 };
 
-export default function HeroSection3({
-  logoText,
-  navLinks,
-  user,
-  onLogout,
-}) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function HeroSection3() {
   const [query, setQuery] = useState("");
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -57,128 +23,8 @@ export default function HeroSection3({
   };
   return (
     <div className="w-full antialiased text-white relative pt-[72px] sm:pt-[84px]">
-      {/* Header: stays fixed at the top while the page scrolls, on the same cream as the page */}
-      <header
-        className={`fixed inset-x-0 top-0 z-40 h-[72px] sm:h-[84px] bg-[#faf6f0] dark:bg-[#0f0d0c] transition-shadow ${
-          scrolled ? "border-b border-stone-200 shadow-sm" : ""
-        }`}
-      >
-        <div className="h-full mx-auto px-4 sm:px-6 lg:px-[3vw] flex justify-between items-center">
-          <Link to="/" aria-label={logoText}><VoallenLogo size="lg" /></Link>
-
-          {/* Desktop Nav: plain text links */}
-          <nav className="hidden lg:flex items-center gap-9">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href + link.label}
-                to={link.href}
-                className="text-[17px] font-medium text-stone-800 hover:text-stone-500 transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop actions */}
-          <div className="hidden sm:flex items-center gap-3">
-            <Link to="/agencies" aria-label="Search agencies" className="p-2 text-stone-800 hover:bg-stone-100 rounded-full transition-colors">
-              <SearchIcon />
-            </Link>
-            <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
-            {user ? (
-              <>
-                <Link to="/dashboard" className="inline-flex items-center gap-1.5 rounded-full border-2 border-stone-900 px-5 py-2.5 text-[17px] font-medium text-stone-900 hover:bg-stone-100 transition-colors">
-                  Dashboard <ChevronRight className="w-4 h-4" />
-                </Link>
-                <button
-                  onClick={onLogout}
-                  className="rounded-full px-6 py-3 text-[17px] font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition-opacity"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="inline-flex items-center gap-1.5 rounded-full border-2 border-stone-900 px-5 py-2.5 text-[17px] font-medium text-stone-900 hover:bg-stone-100 transition-colors">
-                  Log In <ChevronRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  to="/signup"
-                  className="inline-flex items-center gap-1.5 rounded-full px-6 py-3 text-[17px] font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition-opacity"
-                >
-                  Join <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="sm:hidden flex items-center gap-1">
-            <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
-            <button
-              className="p-2 text-stone-900 rounded-full hover:bg-stone-100"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu Dropdown */}
-        {mobileMenuOpen && (
-          <div className="sm:hidden mx-4 bg-[#faf6f0] dark:bg-[#0f0d0c] border border-stone-200 rounded-2xl p-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
-            <nav className="flex flex-col space-y-1 mb-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href + link.label}
-                  to={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-stone-900 font-medium text-base hover:bg-stone-100 rounded-xl transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="border-t border-stone-200 pt-4 space-y-2">
-              {user ? (
-                <>
-                  <Link
-                    to="/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-stone-900 font-medium text-base hover:bg-stone-100 rounded-xl transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={() => { onLogout(); setMobileMenuOpen(false); }}
-                    className="w-full px-4 py-3 text-red-600 font-medium text-base text-left hover:bg-stone-100 rounded-xl transition-colors"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-full border-2 border-stone-900 text-stone-900 font-medium text-base text-center"
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/signup"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block w-full rounded-full px-4 py-3 text-base font-medium text-center bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917]"
-                  >
-                    Join Voallen
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </header>
+      {/* The shared site header: fixed at the top, on the same cream as the page */}
+      <SiteHeader />
 
       {/* Hero frame: a rounded photo card with side margins, a little shorter than the screen */}
       <div className="relative mx-3 sm:mx-6 lg:mx-[3vw] mt-1 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col min-h-[calc(100svh-96px)] sm:min-h-[calc(100svh-120px)] lg:min-h-0 lg:h-[calc(100svh-140px)] lg:max-h-[860px] lg:min-h-[640px]">
@@ -267,20 +113,3 @@ export default function HeroSection3({
     </div>
   );
 }
-
-HeroSection3.propTypes = {
-  logoText: PropTypes.string,
-  navLinks: PropTypes.arrayOf(PropTypes.shape({
-    href: PropTypes.string,
-    label: PropTypes.string
-  })),
-  user: PropTypes.object,
-  onLogout: PropTypes.func,
-};
-
-HeroSection3.defaultProps = {
-  logoText: "Voallen",
-  navLinks: [],
-  user: null,
-  onLogout: null,
-};

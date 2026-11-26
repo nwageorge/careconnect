@@ -265,6 +265,7 @@ export const HomeFooter = () => (
           <p className="text-sm text-white/60 leading-relaxed max-w-xs">
             Warm companionship visits for older adults, with proof of care after every visit.
           </p>
+          <p className="text-sm text-white/60 mt-3">Serving Philadelphia, PA</p>
         </div>
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40 mb-4">Visits</h4>
@@ -278,7 +279,8 @@ export const HomeFooter = () => (
         <div>
           <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40 mb-4">Company</h4>
           <ul className="space-y-2.5">
-            <li><a href="#how-it-works" className={footerLink}>How it works</a></li>
+            <li><Link to="/about" className={footerLink}>About us</Link></li>
+            <li><Link to="/how-it-works" className={footerLink}>How it works</Link></li>
             <li><Link to="/caregivers" className={footerLink}>Caregiver jobs</Link></li>
             <li><Link to="/faq" className={footerLink}>FAQ</Link></li>
             <li><Link to="/contact" className={footerLink}>Contact us</Link></li>
@@ -292,9 +294,17 @@ export const HomeFooter = () => (
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 pt-6">
+      <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <p className="text-xs text-white/40">© {new Date().getFullYear()} Voallen. All rights reserved.</p>
+        <div className="flex gap-5">
+          <Link to="/privacy" className="text-xs text-white/50 hover:text-white transition">Privacy</Link>
+          <Link to="/terms" className="text-xs text-white/50 hover:text-white transition">Terms</Link>
+          <Link to="/contact" className="text-xs text-white/50 hover:text-white transition">Accessibility help</Link>
+        </div>
       </div>
     </div>
   </footer>
 );
+
+// The same footer is used on every page
+export const SiteFooter = HomeFooter;

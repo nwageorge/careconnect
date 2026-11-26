@@ -1,37 +1,9 @@
-'use client'
-
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/App'
 import HeroSection3 from '@/components/ui/hero-section-3'
 
+// Home page hero. The header inside it is the shared SiteHeader.
 export function HeroSection() {
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
-
-  return (
-    <HeroSection3
-      logoText="Voallen"
-      navLinks={[
-        { href: "/agencies", label: "Find Care" },
-        { href: "/faq", label: "How It Works" },
-        { href: "/agencies", label: "Agencies" },
-        { href: "/contact", label: "Contact" },
-      ]}
-      versionText="In-Home Care Marketplace"
-      title="Compassionate Care For Your Loved Ones"
-      subtitle="Connect with verified, professional in-home care agencies for elderly care, pediatric support, and specialized health services."
-      ctaText="Find Care Now"
-      ctaLink="/agencies"
-      user={user}
-      onLogout={handleLogout}
-    />
-  )
+  return <HeroSection3 />
 }
 
 export default HeroSection;
