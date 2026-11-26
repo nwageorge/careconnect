@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Kaigo-style font stack - Clean modern sans-serif */
-@import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@400,500,600,700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@300,400,500,600,700&display=swap');
 
 /* Airbnb-style clean bright white background */
 html {
@@ -256,3 +256,10 @@ code {
    :where() keeps specificity at a bare element so text-* utilities still win. */
 :where(.admin-ui) :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; }
 :where(.admin-ui) :is(h1, h2, h3, h4) { line-height: 1.2; }
+
+/* Display face for a few chosen headlines and the wordmark: a light, tightly
+   tracked grotesk (Inter Tight, self-hosted so it always loads). */
+.font-display {
+    font-family: "Inter Tight Variable", "Clash Grotesk", -apple-system, sans-serif !important;
+    font-feature-settings: "ss01", "cv11";
+}

@@ -14,6 +14,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
 import { VisitHero, VisitBenefits, VisitStatBanner, VisitFAQ } from "@/components/visit-page";
 import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection, CaregiverJobsSection } from "@/components/voallen-sections";
+import { VoallenLogo } from "@/components/voallen-logo";
+import { VisitMomentsBand, HowVoallenWorks, TwoPathsSection, ClosingCTASection, HomeFooter } from "@/components/voallen-home-extras";
 import { CaregiverHero, CaregiverWaysToHelp, CaregiverReasons, CaregiverSteps, CaregiverSafety, CaregiverFAQ, CaregiverCTA } from "@/components/caregiver-page";
 
 // Empty means the API is served from the same site as the app (production build)
@@ -137,11 +139,8 @@ const Navigation = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-stone-700 rounded-xl flex items-center justify-center">
-              <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-            </div>
-            <span className="text-lg sm:text-xl font-semibold text-stone-800">Voallen</span>
+          <Link to="/" className="flex items-center" aria-label="Voallen">
+            <VoallenLogo size="md" />
           </Link>
 
           {/* Desktop Nav */}
@@ -528,56 +527,19 @@ const HomePage = () => {
       <CaregiverJobsSection />
 
       <div className="max-w-7xl mx-auto px-6">
+        <VisitMomentsBand />
+        <HowVoallenWorks />
+        <TwoPathsSection />
         <QuestionsAnsweredSection />
       </div>
 
       <TestimonialsSection />
 
-      {/* Footer - Airbnb style */}
-      <footer className="bg-gray-50 border-t border-gray-100 py-10 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
-            <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 bg-stone-700 rounded-lg flex items-center justify-center">
-                  <Activity className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-base font-semibold text-stone-900">Voallen</span>
-              </div>
-              <p className="text-sm text-stone-500 leading-relaxed">
-                Connecting families with compassionate, professional in-home caregivers.
-              </p>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-stone-900 mb-3">Services</h4>
-              <ul className="space-y-2">
-                <li><Link to="/agencies" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">Elderly Care</Link></li>
-                <li><Link to="/agencies" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">Pediatric Care</Link></li>
-                <li><Link to="/agencies" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">Post-Surgery Care</Link></li>
-                <li><Link to="/agencies" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">24-Hour Care</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-stone-900 mb-3">Company</h4>
-              <ul className="space-y-2">
-                <li><Link to="/faq" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">How It Works</Link></li>
-                <li><Link to="/contact" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">Contact Us</Link></li>
-                <li><Link to="/agencies" className="text-sm text-stone-500 hover:text-stone-900 hover:underline transition">Find Care</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-semibold text-stone-900 mb-3">Contact</h4>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2 text-sm text-stone-500"><Phone className="w-4 h-4" /> 1-800-ADL-TRACK</li>
-                <li className="flex items-center gap-2 text-sm text-stone-500"><Mail className="w-4 h-4" /> support@voallen.com</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-stone-200 pt-6 text-center">
-            <p className="text-xs text-stone-500">© 2025 Voallen. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <div className="max-w-7xl mx-auto px-6">
+        <ClosingCTASection />
+      </div>
+
+      <HomeFooter />
     </PageBackground>
   );
 };
