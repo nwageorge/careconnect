@@ -8,7 +8,6 @@ import { Heart, Star, MapPin, Clock, Shield, Phone, Mail, ChevronLeft, ChevronRi
 import React from "react";
 import { HeroSection as NewHeroSection } from "@/components/ui/hero-section";
 import { TestimonialsSplit } from "@/components/ui/split-testimonial";
-import { CareSearchSpotlight } from "@/components/ui/apple-spotlight";
 import { AuthComponent } from "@/components/ui/sign-up";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -516,12 +515,6 @@ const HomePage = () => {
       {/* New Hero Section with integrated header */}
       <NewHeroSection />
       
-      {/* Search Spotlight Section - closer to hands on mobile */}
-      <div className="relative -mt-28 sm:-mt-20 z-20 pb-12 sm:pb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <CareSearchSpotlight />
-        </div>
-      </div>
       
       <div className="max-w-7xl mx-auto px-6">
         {/* Companionship sections, in the same order as the Voallen companionship website */}
