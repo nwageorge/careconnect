@@ -455,8 +455,8 @@ const caregiverSteps = [
     position: "center 40%",
   },
   {
-    title: "Meet trusted agencies",
-    body: "Reviewed Philadelphia care agencies reach out to you. Talk with them and pick the one that fits your life.",
+    title: "Get booked by families",
+    body: "Once your profile is approved, Philadelphia families can find you, read your reviews and book visits that fit your life.",
     image: "/voallen/window.jpg",
     alt: "An older woman holding hands with a companion while looking out a window.",
     position: "center 35%",

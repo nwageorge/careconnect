@@ -246,7 +246,7 @@ export const PrivacyPage = () => {
       </LegalSection>
       <LegalSection title="Who we share it with">
         <p>
-          Only with the people who need it to provide your visits, such as the companion or care agency you book, and with
+          Only with the people who need it to provide your visits, such as the caregiver you book, and with
           services that help us run the site, like hosting and email delivery. We don't sell your information.
         </p>
         <p>Visit photos and notes are shared only with the family account that booked the visit.</p>
@@ -275,7 +275,7 @@ export const TermsPage = () => {
     >
       <LegalSection title="What Voallen is">
         <p>
-          Voallen helps families in Philadelphia find companionship visits and care agencies for older adults, and shares
+          Voallen helps families in Philadelphia find non-medical caregivers and companionship visits for older adults, and shares
           updates after each visit.
         </p>
       </LegalSection>
@@ -291,13 +291,13 @@ export const TermsPage = () => {
       </LegalSection>
       <LegalSection title="Bookings and changes">
         <p>
-          When you request a visit or consultation, the companion or agency confirms it. If you need to change or cancel,
-          let us or the agency know as early as you can.
+          When you request a visit or consultation, the caregiver confirms it. If you need to change or cancel,
+          let us or your caregiver know as early as you can.
         </p>
       </LegalSection>
       <LegalSection title="Respectful use">
         <p>
-          Treat companions, agencies and our team with respect, and don't misuse the site or post anything harmful or
+          Treat caregivers, families and our team with respect, and don't misuse the site or post anything harmful or
           misleading.
         </p>
       </LegalSection>

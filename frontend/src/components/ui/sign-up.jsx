@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from 'react';
 import { cva } from 'class-variance-authority';
-import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Heart, Building2 } from 'lucide-react';
+import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Heart, UserRound } from 'lucide-react';
 import { VoallenLogo } from "@/components/voallen-logo";
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -197,11 +197,11 @@ const UserTypeSelection = ({ selectedType, onSelect }) => (
         'w-12 h-12 rounded-xl flex items-center justify-center transition-colors',
         selectedType === 'agency' ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'
       )}>
-        <Building2 className="w-6 h-6" />
+        <UserRound className="w-6 h-6" />
       </div>
       <div>
-        <p className="font-semibold text-stone-800">Care Agency</p>
-        <p className="text-sm text-stone-500">List your services & find clients</p>
+        <p className="font-semibold text-stone-800">Caregiver</p>
+        <p className="text-sm text-stone-500">Create your profile & meet families</p>
       </div>
     </button>
   </div>
@@ -449,7 +449,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
               <motion.div key="name-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0} className="w-full text-center">
                   <p className="font-light text-3xl sm:text-4xl tracking-tight text-stone-800">
-                    {userType === 'agency' ? "Your Agency Name" : "What's your name?"}
+                    {userType === 'agency' ? "Your name" : "What's your name?"}
                   </p>
                 </BlurFade>
                 <BlurFade delay={0.1} className="w-full">
@@ -457,12 +457,12 @@ export const AuthComponent = ({ mode = 'signup' }) => {
                     <div className="glass-input">
                       <span className="glass-input-text-area"></span>
                       <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                        {userType === 'agency' ? <Building2 className="h-5 w-5 text-stone-600" /> : <Heart className="h-5 w-5 text-stone-600" />}
+                        {userType === 'agency' ? <UserRound className="h-5 w-5 text-stone-600" /> : <Heart className="h-5 w-5 text-stone-600" />}
                       </div>
                       <input
                         ref={nameInputRef}
                         type="text"
-                        placeholder={userType === 'agency' ? "Agency name" : "Full name"}
+                        placeholder={userType === 'agency' ? "First name and last initial" : "Full name"}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onKeyDown={handleKeyDown}

@@ -82,7 +82,7 @@ export const CaregiverHero = () => (
           Find caregiving work you'll love
         </h1>
         <p className="text-lg leading-relaxed mb-8" style={{ color: "#57534e" }}>
-          Spend your days brightening someone's. Get matched with seniors near you through trusted Philadelphia care agencies.
+          Spend your days brightening someone's. Create your own profile and get booked by Philadelphia families who need a friendly face.
         </p>
         <a
           href={CAREGIVER_APPLY_HREF}
@@ -142,7 +142,7 @@ const reasons = [
   { icon: MapPin, title: "Work close to home", body: "Visits are matched to the neighborhoods you choose, so you spend less time traveling." },
   { icon: CalendarClock, title: "Hours that fit your life", body: "Full time, part time or a few visits a week. You tell us when you're free." },
   { icon: HeartHandshake, title: "Work that matters", body: "Be the friendly face a senior looks forward to, and give families real peace of mind." },
-  { icon: TrendingUp, title: "Grow your career", body: "Build reviews from families and agencies, and take on more visits as you go." },
+  { icon: TrendingUp, title: "Grow your career", body: "Build reviews from families and take on more visits as you go." },
 ];
 
 export const CaregiverReasons = () => (
@@ -179,7 +179,7 @@ export const CaregiverReasons = () => (
 const startSteps = [
   { title: "Tell us about you", body: "Share your experience, the visits you'd like to do, and the days and neighborhoods that work for you." },
   { title: "Complete a background check", body: "Every caregiver is screened before meeting a family. We'll walk you through it." },
-  { title: "Meet trusted agencies", body: "Reviewed Philadelphia agencies get in touch. Talk with them and choose the one that fits." },
+  { title: "Go live and meet families", body: "Once approved, your profile appears on Voallen. Families reach out, and you choose the visits that fit." },
   { title: "Start your first visits", body: "Get your schedule, meet the seniors you'll visit and get paid for every visit." },
 ];
 
@@ -218,8 +218,8 @@ export const CaregiverSteps = () => (
 /* ------------------------------------------------------- Safety */
 
 const safety = [
-  { icon: BadgeCheck, title: "Reviewed agencies only", body: "You only work with care agencies our team has checked and approved." },
-  { icon: ShieldCheck, title: "Screened community", body: "Caregivers and agencies are screened, so every visit starts on a foundation of trust." },
+  { icon: BadgeCheck, title: "Non-medical work only", body: "Visits are about company and everyday help. You never have to give medication or medical care." },
+  { icon: ShieldCheck, title: "Screened community", body: "Every caregiver is screened and families have accounts with us, so every visit starts on a foundation of trust." },
   { icon: Headphones, title: "Real people to help", body: `Questions or concerns? Call ${CONTACT_PHONE} or email us and a person will help.` },
 ];
 
@@ -324,7 +324,7 @@ export const CaregiverCTA = () => (
         Join Voallen and bring a little more company to seniors near you.
       </p>
       <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10" style={{ color: "#e7e5e4" }}>
-        {["Flexible hours", "Visits near home", "Reviewed agencies"].map((t) => (
+        {["Flexible hours", "Visits near home", "Your own profile"].map((t) => (
           <li key={t} className="flex items-center gap-2 text-base"><Check className="w-5 h-5" /> {t}</li>
         ))}
       </ul>

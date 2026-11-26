@@ -34,14 +34,14 @@ const AGENCY_STATUS = {
 };
 
 const BOOKING_STATUS = {
-  pending: { label: "Waiting for agency", icon: Clock, cls: "bg-amber-100 text-amber-800 border-amber-300" },
+  pending: { label: "Waiting for caregiver", icon: Clock, cls: "bg-amber-100 text-amber-800 border-amber-300" },
   confirmed: { label: "Confirmed", icon: CheckCircle2, cls: "bg-green-100 text-green-800 border-green-300" },
   completed: { label: "Visit completed", icon: BadgeCheck, cls: "bg-stone-100 text-stone-800 border-stone-300" },
   declined: { label: "Declined", icon: XCircle, cls: "bg-red-100 text-red-800 border-red-300" },
   cancelled: { label: "Cancelled by family", icon: XCircle, cls: "bg-red-100 text-red-800 border-red-300" },
 };
 const BOOKING_STATUSES = Object.keys(BOOKING_STATUS);
-const ROLE_LABEL = { client: "Family", agency: "Agency", admin: "Voallen admin" };
+const ROLE_LABEL = { client: "Family", agency: "Caregiver", admin: "Voallen admin" };
 
 const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString(undefined, { weekday: "short", month: "long", day: "numeric", year: "numeric" }) : "");
 const formatDateTime = (iso) => (iso ? new Date(iso).toLocaleString(undefined, { month: "long", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
@@ -120,7 +120,7 @@ const Stat = ({ icon: Icon, label, value, onClick }) => (
 );
 
 const TABS = [
-  { id: "agencies", label: "Agencies", icon: Building2 },
+  { id: "agencies", label: "Caregivers", icon: Building2 },
   { id: "bookings", label: "Bookings", icon: Calendar },
   { id: "users", label: "People", icon: Users },
   { id: "messages", label: "Messages", icon: Mail },
@@ -161,7 +161,7 @@ export function AdminDashboard() {
       setConfirm(null);
       await load();
     } catch (err) {
-      setError(err.response?.data?.detail || "Could not approve this agency.");
+      setError(err.response?.data?.detail || "Could not approve this caregiver.");
     } finally {
       setBusy(false);
     }
@@ -185,7 +185,7 @@ export function AdminDashboard() {
   return (
     <div className="admin-ui text-lg text-stone-900" data-testid="admin-dashboard">
       <h1 className="text-4xl font-extrabold mb-2">Admin</h1>
-      <p className="text-xl text-stone-700 mb-8">Approve agencies and keep an eye on every booking.</p>
+      <p className="text-xl text-stone-700 mb-8">Approve caregivers and keep an eye on every booking.</p>
       <ErrorBox>{error}</ErrorBox>
 
       {/* 1. Decisions waiting for the admin */}
@@ -200,7 +200,7 @@ export function AdminDashboard() {
               <Card key={a.id} className="p-5 sm:p-6 border-amber-300 bg-amber-50" data-testid="attention-approval">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div>
-                    <p className="text-base font-bold uppercase tracking-wide text-amber-800 mb-1">New agency wants to join</p>
+                    <p className="text-base font-bold uppercase tracking-wide text-amber-800 mb-1">New caregiver wants to join</p>
                     <p className="text-2xl font-extrabold">{a.name}</p>
                     <p className="text-lg text-stone-700">{a.city}{a.owner ? ` · ${a.owner.name} (${a.owner.email})` : ""}</p>
                   </div>
@@ -231,7 +231,7 @@ export function AdminDashboard() {
       {/* 2. Totals, each one opens its list */}
       <Section title="At a glance">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <Stat icon={Building2} label="Agencies" value={agencies.length} onClick={() => openTab("agencies")} />
+          <Stat icon={Building2} label="Caregivers" value={agencies.length} onClick={() => openTab("agencies")} />
           <Stat icon={Calendar} label="Bookings" value={bookings.length} onClick={() => openTab("bookings")} />
           <Stat icon={Users} label="People" value={(data.users || []).length} onClick={() => openTab("users")} />
           <Stat icon={Mail} label="Messages" value={(data.messages || []).length} onClick={() => openTab("messages")} />
@@ -289,7 +289,7 @@ export function AdminDashboard() {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <p className="text-xl font-extrabold">{b.patient_name} <span className="font-semibold text-stone-700">· {b.service_type}</span></p>
-                  <p className="text-lg text-stone-700">Agency: <strong>{b.agency_name || "Deleted agency"}</strong></p>
+                  <p className="text-lg text-stone-700">Caregiver: <strong>{b.agency_name || "Deleted profile"}</strong></p>
                   <p className="text-lg text-stone-700">Visit: {b.date} at {b.time_slot}</p>
                   {b.client && <p className="text-lg text-stone-700">Family: {b.client.name} ({b.client.email})</p>}
                   <div className="mt-2"><BookingStatusBadge status={b.status} /></div>
@@ -304,7 +304,7 @@ export function AdminDashboard() {
               <p className="text-xl font-extrabold">{u.name}</p>
               <p className="text-lg text-stone-700">{u.email}{u.phone ? ` · ${u.phone}` : ""}</p>
               <p className="text-lg text-stone-700">
-                {u.role === "client" ? "Family" : u.role === "agency" ? "Agency" : "Admin"}{u.is_admin && u.role !== "admin" ? " and admin" : ""} · joined {formatDate(u.created_at)}
+                {u.role === "client" ? "Family" : u.role === "agency" ? "Caregiver" : "Admin"}{u.is_admin && u.role !== "admin" ? " and admin" : ""} · joined {formatDate(u.created_at)}
               </p>
             </Card>
           ))}
@@ -322,7 +322,7 @@ export function AdminDashboard() {
       <ConfirmDialog
         open={!!confirm}
         title={`Approve ${confirm?.agency.name}?`}
-        body="Families will be able to find and book this agency right away. The agency will get an email. You can hide it again at any time."
+        body="Families will be able to find and book this caregiver right away. The caregiver will get an email. You can hide it again at any time."
         confirmLabel="Yes, approve"
         tone="approve"
         busy={busy}
@@ -397,7 +397,7 @@ const BookingCard = ({ booking, onChanged }) => {
           </div>
           <div className="rounded-xl border-2 border-stone-300 p-5" data-testid="admin-override">
             <h3 className="text-xl font-extrabold mb-1">Change this booking</h3>
-            <p className="text-lg text-stone-700 mb-4">Use this only to correct a mistake. The family and the agency will both get an email.</p>
+            <p className="text-lg text-stone-700 mb-4">Use this only to correct a mistake. The family and the caregiver will both get an email.</p>
             <label className="block text-lg font-bold mb-2" htmlFor={`status-${booking.id}`}>New status</label>
             <select id={`status-${booking.id}`} value={status} onChange={(e) => setStatus(e.target.value)}
               className={`w-full min-h-[52px] mb-4 px-4 bg-white rounded-xl border-2 border-stone-300 text-lg ${focusRing}`}>
@@ -419,7 +419,7 @@ const BookingCard = ({ booking, onChanged }) => {
         title="Change this booking?"
         body={<>
           <p>From <strong>{BOOKING_STATUS[booking.status]?.label}</strong> to <strong>{BOOKING_STATUS[status]?.label}</strong>.</p>
-          <p className="mt-2">The family and the agency will be emailed. This will be saved in the history with your name.</p>
+          <p className="mt-2">The family and the caregiver will be emailed. This will be saved in the history with your name.</p>
         </>}
         confirmLabel="Yes, change it"
         busy={saving}
@@ -444,7 +444,7 @@ export function AdminAgencyDetail({ agencyId }) {
       setAgency(res.data);
       setError("");
     } catch (err) {
-      setError(err.response?.data?.detail || "Could not load this agency.");
+      setError(err.response?.data?.detail || "Could not load this caregiver.");
     } finally {
       setLoading(false);
     }
@@ -458,7 +458,7 @@ export function AdminAgencyDetail({ agencyId }) {
       setConfirm(null);
       await load();
     } catch (err) {
-      setError(err.response?.data?.detail || "Could not update this agency.");
+      setError(err.response?.data?.detail || "Could not update this caregiver.");
       setConfirm(null);
     } finally {
       setBusy(false);
@@ -472,10 +472,10 @@ export function AdminAgencyDetail({ agencyId }) {
   const bookings = filter === "all" ? agency.bookings : agency.bookings.filter((b) => b.status === filter);
 
   const confirmations = {
-    approve: { title: `Approve ${agency.name}?`, body: "Families will be able to find and book this agency right away. The agency will get an email.", label: "Yes, approve", tone: "approve", changes: { status: "available" } },
-    show: { title: `Show ${agency.name} to families again?`, body: "The agency will appear in search and can receive new bookings. The agency will get an email.", label: "Yes, show it", tone: "approve", changes: { status: "available" } },
-    hide: { title: `Hide ${agency.name} from families?`, body: "Families won't see this agency or be able to book it. Existing bookings stay as they are. The agency will get an email.", label: "Yes, hide it", tone: "danger", changes: { status: "unavailable" } },
-    verify: { title: `Give ${agency.name} the verified badge?`, body: "Families will see a green Verified badge on this agency.", label: "Yes, verify", tone: "approve", changes: { is_verified: true } },
+    approve: { title: `Approve ${agency.name}?`, body: "Families will be able to find and book this caregiver right away. The caregiver will get an email.", label: "Yes, approve", tone: "approve", changes: { status: "available" } },
+    show: { title: `Show ${agency.name} to families again?`, body: "The caregiver will appear in search and can receive new bookings. The caregiver will get an email.", label: "Yes, show it", tone: "approve", changes: { status: "available" } },
+    hide: { title: `Hide ${agency.name} from families?`, body: "Families won't see this caregiver or be able to book it. Existing bookings stay as they are. The caregiver will get an email.", label: "Yes, hide it", tone: "danger", changes: { status: "unavailable" } },
+    verify: { title: `Give ${agency.name} the verified badge?`, body: "Families will see a green Verified badge on this caregiver.", label: "Yes, verify", tone: "approve", changes: { is_verified: true } },
     unverify: { title: `Remove the verified badge from ${agency.name}?`, body: "The green Verified badge will no longer show to families.", label: "Yes, remove it", tone: "danger", changes: { is_verified: false } },
   };
   const c = confirm && confirmations[confirm];
@@ -506,20 +506,20 @@ export function AdminAgencyDetail({ agencyId }) {
               <a href={`mailto:${agency.owner.email}`} className={`flex items-center gap-3 underline font-semibold ${focusRing}`}><Mail className="w-6 h-6" aria-hidden="true" />{agency.owner.email}</a>
               {agency.owner.phone && <a href={`tel:${agency.owner.phone}`} className={`flex items-center gap-3 underline font-semibold ${focusRing}`}><Phone className="w-6 h-6" aria-hidden="true" />{agency.owner.phone}</a>}
             </div>
-          ) : <p className="text-xl text-stone-700">This is a sample agency with no owner account.</p>}
+          ) : <p className="text-xl text-stone-700">This is a sample caregiver profile with no owner account.</p>}
           <Link to={`/agencies/${agency.id}`} className={`${btn.secondary} mt-6`}>See what families see</Link>
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-2xl font-extrabold mb-1">Can families book this agency?</h2>
+          <h2 className="text-2xl font-extrabold mb-1">Can families book this caregiver?</h2>
           <p className="text-lg text-stone-700 mb-5">
-            {agency.status === "pending_approval" ? "Not yet. This agency is waiting for your approval."
-              : agency.status === "available" ? "Yes. Families can find and book this agency."
-              : "No. This agency is hidden from families."}
+            {agency.status === "pending_approval" ? "Not yet. This caregiver is waiting for your approval."
+              : agency.status === "available" ? "Yes. Families can find and book this caregiver."
+              : "No. This caregiver is hidden from families."}
           </p>
           <div className="flex flex-col gap-3">
             {agency.status === "pending_approval" && (
-              <button className={btn.approve} disabled={busy} onClick={() => setConfirm("approve")} data-testid="detail-approve"><CheckCircle2 className="w-5 h-5" aria-hidden="true" />Approve this agency</button>
+              <button className={btn.approve} disabled={busy} onClick={() => setConfirm("approve")} data-testid="detail-approve"><CheckCircle2 className="w-5 h-5" aria-hidden="true" />Approve this caregiver</button>
             )}
             {agency.status === "unavailable" && (
               <button className={btn.approve} disabled={busy} onClick={() => setConfirm("show")} data-testid="detail-available"><CheckCircle2 className="w-5 h-5" aria-hidden="true" />Show to families again</button>
@@ -534,7 +534,7 @@ export function AdminAgencyDetail({ agencyId }) {
         </Card>
       </div>
 
-      <Section title="Bookings" subtitle="Every request this agency received, newest first.">
+      <Section title="Bookings" subtitle="Every request this caregiver received, newest first.">
         <div className="flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Filter bookings">
           {["all", ...BOOKING_STATUSES].map((s) => {
             const n = s === "all" ? agency.bookings.length : counts[s] || 0;

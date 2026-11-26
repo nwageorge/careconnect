@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Caregiver">
+<rect width="400" height="300" fill="#f3ece2"/>
+<circle cx="200" cy="150" r="88" fill="#1f3039"/>
+<circle cx="200" cy="128" r="28" fill="#eaab6c"/>
+<path d="M150 205 Q200 150 250 205" stroke="#eaab6c" stroke-width="22" stroke-linecap="round" fill="none"/>
+</svg>

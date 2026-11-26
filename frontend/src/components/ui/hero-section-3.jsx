@@ -75,7 +75,7 @@ export default function HeroSection3() {
             <h2 className="text-3xl sm:text-4xl lg:text-[1.75rem] font-normal text-white mb-6 lg:mb-3">Find care near you</h2>
             <p className="text-lg sm:text-xl lg:text-base text-white mb-3 lg:mb-1.5">Enter your city or zip code</p>
             <p className="text-xs sm:text-sm lg:text-xs text-white/80 leading-relaxed mb-7 lg:mb-4">
-              Browse reviewed care agencies and companionship visits.{" "}
+              Meet background-checked companions near your loved one.{" "}
               <Link to="/faq" className="text-white underline underline-offset-4 decoration-white/60 hover:decoration-white">
                 How it works
               </Link>
@@ -101,8 +101,8 @@ export default function HeroSection3() {
               Search <ChevronRight className="w-5 h-5" />
             </button>
             <p className="text-base sm:text-lg lg:text-base text-white">
-              Are you a care agency?{" "}
-              <Link to="/signup" className="inline-flex items-center gap-1 font-medium underline underline-offset-4 decoration-white/60 hover:decoration-white">
+              Are you a caregiver?{" "}
+              <Link to="/caregivers" className="inline-flex items-center gap-1 font-medium underline underline-offset-4 decoration-white/60 hover:decoration-white">
                 Join Voallen <ArrowUpRight className="w-4 h-4" />
               </Link>
             </p>

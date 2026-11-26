@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="JO">
+<rect width="400" height="300" fill="#eef5e3"/>
+<circle cx="340" cy="40" r="70" fill="#3d7a5a" opacity="0.12"/>
+<circle cx="40" cy="280" r="90" fill="#3d7a5a" opacity="0.10"/>
+<circle cx="200" cy="150" r="88" fill="#3d7a5a"/>
+<text x="200" y="150" dy="0.35em" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="68" font-weight="500" letter-spacing="-2" fill="#ffffff">JO</text>
+</svg>
