@@ -48,14 +48,14 @@ export default function HeroSection3({
     navigate(q ? `/agencies?search=${encodeURIComponent(q)}` : "/agencies");
   };
   return (
-    <div className="min-h-[100svh] w-full antialiased text-white relative flex flex-col">
+    <div className="w-full antialiased text-white relative pt-[72px] sm:pt-[88px] md:pt-[104px]">
       {/* Navigation Header */}
       <header className="absolute inset-x-0 top-0 p-4 sm:p-6 md:p-8 z-30">
         <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-xl sm:text-2xl md:text-3xl font-semibold drop-shadow-lg">{logoText}</Link>
+          <Link to="/" className="text-xl sm:text-2xl md:text-3xl font-semibold text-stone-900">{logoText}</Link>
           
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center space-x-1 bg-black/40 backdrop-blur-md rounded-full px-4 py-2">
+          <nav className="hidden md:flex items-center space-x-1 bg-[#1c1917] rounded-full px-4 py-2">
             {navLinks.map((link) => (
               <Link 
                 key={link.href + link.label} 
@@ -68,7 +68,7 @@ export default function HeroSection3({
           </nav>
           
           {/* Desktop Auth Buttons */}
-          <div className="hidden sm:flex items-center space-x-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
+          <div className="hidden sm:flex items-center space-x-2 bg-[#1c1917] rounded-full px-3 py-1.5">
             <Link to="/agencies" aria-label="Search agencies" className="p-1.5 hover:bg-white/20 rounded-full transition-colors">
               <SearchIcon />
             </Link>
@@ -102,9 +102,9 @@ export default function HeroSection3({
 
           {/* Mobile Menu Button */}
           <div className="sm:hidden flex items-center gap-2">
-            <ThemeToggle className="text-white bg-black/40 backdrop-blur-md hover:bg-black/60" />
+            <ThemeToggle className="text-white bg-[#1c1917] hover:bg-[#292524]" />
             <button 
-              className="p-2 bg-black/40 backdrop-blur-md rounded-full"
+              className="p-2 bg-[#1c1917] rounded-full"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -168,7 +168,8 @@ export default function HeroSection3({
         )}
       </header>
 
-      {/* Hero photo fills the whole screen */}
+      {/* Hero photo frame: sits below the header bar with slim side margins and fills the rest of the screen */}
+      <div className="relative mx-[2.2vw] min-h-[calc(100svh-72px)] sm:min-h-[calc(100svh-88px)] md:min-h-[calc(100svh-104px)] overflow-hidden flex flex-col">
       <img
         src={hero.image}
         alt={hero.alt}
@@ -177,7 +178,7 @@ export default function HeroSection3({
         fetchpriority="high"
       />
 
-      <main className="relative z-10 flex-1 flex items-center pt-28 pb-12 sm:pt-32">
+      <main className="relative z-10 flex-1 flex items-center py-12">
         <div className="container mx-auto px-4 sm:px-6 md:px-8 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
           {/* Headline */}
           <div className="max-w-2xl">
@@ -249,6 +250,7 @@ export default function HeroSection3({
           </motion.form>
         </div>
       </main>
+      </div>
     </div>
   );
 }
