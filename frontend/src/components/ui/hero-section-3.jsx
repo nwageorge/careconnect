@@ -180,7 +180,7 @@ export default function HeroSection3({
       </header>
 
       {/* Hero frame: a rounded photo card with side margins, a little shorter than the screen */}
-      <div className="relative mx-3 sm:mx-6 lg:mx-[3vw] mt-1 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col min-h-[calc(100svh-96px)] sm:min-h-[calc(100svh-120px)] lg:min-h-0 lg:h-[calc(100svh-140px)] lg:max-h-[860px] lg:min-h-[640px]">
+      <div className="relative mx-3 sm:mx-6 lg:mx-[3vw] mt-1 rounded-[1.75rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col min-h-[calc(100svh-96px)] sm:min-h-[calc(100svh-120px)] lg:min-h-[calc(100svh-140px)]">
       <img
         src={hero.image}
         alt={hero.alt}
