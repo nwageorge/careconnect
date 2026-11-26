@@ -103,11 +103,11 @@ const WishlistProvider = ({ children }) => {
 };
 
 // Radial Gradient Background Component (warm brown/nature theme)
-const PageBackground = ({ children, className = "" }) => {
+const PageBackground = ({ children, className = "", tone = "white" }) => {
   return (
     <div className={`min-h-screen w-full relative ${className}`}>
-      {/* Airbnb-style clean bright white background */}
-      <div className="fixed inset-0 z-0 bg-white dark:bg-[#0f0d0c]" />
+      {/* Page background: clean white, or the warm cream used on the home page behind the header and hero */}
+      <div className={`fixed inset-0 z-0 ${tone === "cream" ? "bg-[#faf6f0]" : "bg-white"} dark:bg-[#0f0d0c]`} />
       {/* Content */}
       <div className="relative z-10">{children}</div>
     </div>
@@ -511,7 +511,7 @@ const HeroSection = () => {
 // Home Page
 const HomePage = () => {
   return (
-    <PageBackground>
+    <PageBackground tone="cream">
       {/* New Hero Section with integrated header */}
       <NewHeroSection />
       
