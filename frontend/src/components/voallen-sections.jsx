@@ -89,14 +89,12 @@ export const OurServicesSection = () => {
   const service = services[active];
 
   return (
-    <section id="our-services" className="py-16 sm:py-24 scroll-mt-24" data-testid="our-services-section">
-      <motion.div {...reveal} className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-        <Eyebrow>Personalized companionship visits</Eyebrow>
-        <h2 className="text-4xl sm:text-5xl font-bold text-stone-800 leading-tight mb-4">Our Services</h2>
+    <section id="our-services" className="pt-10 sm:pt-14 pb-16 sm:pb-24 scroll-mt-24" data-testid="our-services-section">
+      {/* Intro sits top left, right under the hero */}
+      <motion.div {...reveal} className="max-w-3xl mb-8 sm:mb-10">
+        <h2 className="text-3xl sm:text-4xl font-bold text-stone-800 leading-tight mb-3">Get to know our services</h2>
         <p className="text-lg sm:text-xl text-stone-500">
-          Reduce loneliness. Stay connected.
-          <br />
-          Gain peace of mind.
+          Warm, personal company for the people you love, at home or wherever they live.
         </p>
       </motion.div>
 
