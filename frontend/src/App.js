@@ -13,9 +13,10 @@ import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AdminDashboard, AdminAgencyDetail } from "@/components/admin-dashboard";
 import { VisitHero, VisitBenefits, VisitStatBanner, VisitFAQ } from "@/components/visit-page";
-import { OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection, CaregiverJobsSection } from "@/components/voallen-sections";
-import { VoallenLogo } from "@/components/voallen-logo";
-import { VisitMomentsBand, HowVoallenWorks, TwoPathsSection, ClosingCTASection, HomeFooter } from "@/components/voallen-home-extras";
+import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_EMAIL, OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection, CaregiverJobsSection } from "@/components/voallen-sections";
+import { SiteHeader, ScrollToTop, usePageTitle, PageIntro } from "@/components/site-chrome";
+import { AboutPage, HowItWorksPage, PrivacyPage, TermsPage, NotFoundPage } from "@/components/site-pages";
+import { VisitMomentsBand, HowVoallenWorks, TwoPathsSection, ClosingCTASection, HomeFooter, SiteFooter } from "@/components/voallen-home-extras";
 import { CaregiverHero, CaregiverWaysToHelp, CaregiverReasons, CaregiverSteps, CaregiverSafety, CaregiverFAQ, CaregiverCTA } from "@/components/caregiver-page";
 
 // Empty means the API is served from the same site as the app (production build)
@@ -106,7 +107,7 @@ const WishlistProvider = ({ children }) => {
 };
 
 // Radial Gradient Background Component (warm brown/nature theme)
-const PageBackground = ({ children, className = "", tone = "white" }) => {
+const PageBackground = ({ children, className = "", tone = "cream" }) => {
   return (
     <div className={`min-h-screen w-full relative ${className}`}>
       {/* Page background: clean white, or the warm cream used on the home page behind the header and hero */}
@@ -117,119 +118,8 @@ const PageBackground = ({ children, className = "", tone = "white" }) => {
   );
 };
 
-// Navigation Component - Airbnb Style
-const Navigation = () => {
-  const { user, logout } = useAuth();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-sm border-b border-gray-100" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center" aria-label="Voallen">
-            <VoallenLogo size="md" />
-          </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link to="/agencies" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-agencies">
-              Find Care
-            </Link>
-            <Link to="/faq" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-faq">
-              How It Works
-            </Link>
-            <Link to="/contact" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-contact">
-              Contact
-            </Link>
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <ThemeToggle className="text-stone-600 hover:bg-stone-100" />
-            {user ? (
-              <>
-                <Link to="/dashboard" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-dashboard">
-                  Dashboard
-                </Link>
-                <button
-                  onClick={logout}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-stone-600 hover:text-red-600 transition"
-                  data-testid="logout-btn"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="text-sm text-stone-600 hover:text-stone-900 transition font-medium" data-testid="nav-login">
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="px-4 py-2 bg-stone-800 text-white rounded-lg text-sm font-medium hover:bg-stone-700 transition-all"
-                  data-testid="nav-signup"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-1">
-            <ThemeToggle className="text-stone-700 hover:bg-stone-100" />
-            <button className="p-2 hover:bg-stone-100 rounded-full transition" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-5 h-5 text-stone-700" /> : <Menu className="w-5 h-5 text-stone-700" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu - Full Screen Overlay */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="md:hidden fixed inset-x-0 top-[56px] bg-white border-t border-gray-100 shadow-lg z-50"
-            >
-              <div className="flex flex-col py-2">
-                <Link to="/agencies" onClick={() => setIsMenuOpen(false)} className="px-6 py-3 text-base text-stone-700 hover:bg-stone-50 transition font-medium">Find Care</Link>
-                <Link to="/faq" onClick={() => setIsMenuOpen(false)} className="px-6 py-3 text-base text-stone-700 hover:bg-stone-50 transition font-medium">How It Works</Link>
-                <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="px-6 py-3 text-base text-stone-700 hover:bg-stone-50 transition font-medium">Contact</Link>
-                <div className="border-t border-gray-100 my-2"></div>
-                {user ? (
-                  <>
-                    <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className="px-6 py-3 text-base text-stone-700 hover:bg-stone-50 transition font-medium">Dashboard</Link>
-                    <button onClick={() => { logout(); setIsMenuOpen(false); }} className="px-6 py-3 text-base text-left text-red-600 hover:bg-red-50 transition font-medium">Logout</button>
-                  </>
-                ) : (
-                  <>
-                    <Link to="/login" onClick={() => setIsMenuOpen(false)} className="px-6 py-3 text-base text-stone-700 hover:bg-stone-50 transition font-medium">Sign In</Link>
-                    <Link to="/signup" onClick={() => setIsMenuOpen(false)} className="mx-4 my-2 px-4 py-2.5 bg-stone-800 text-white rounded-lg text-base text-center font-medium hover:bg-stone-700 transition">Get Started</Link>
-                  </>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.nav>
-  );
-};
+// Navigation: the shared site header (same as the home page)
+const Navigation = () => <SiteHeader />;
 
 // Agency Card Component - Exact Airbnb Style
 import { GlareCard } from "@/components/ui/glare-card";
@@ -510,6 +400,7 @@ const HeroSection = () => {
 // Features Section - Black & White Theme
 // Home Page
 const HomePage = () => {
+  usePageTitle();
   return (
     <PageBackground tone="cream">
       {/* New Hero Section with integrated header */}
@@ -546,6 +437,7 @@ const HomePage = () => {
 
 // "Ask about a visit" page: companionship visits plus the Philadelphia agencies
 const VisitPage = () => {
+  usePageTitle("Companionship visits");
   const [agencies, setAgencies] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -590,12 +482,14 @@ const VisitPage = () => {
         <VisitStatBanner agencyCount={agencies.length} />
         <VisitFAQ />
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
 
 // Work with us page for caregivers looking for jobs (/caregivers)
 const CaregiverPage = () => {
+  usePageTitle("Caregiver jobs");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -611,22 +505,26 @@ const CaregiverPage = () => {
         <CaregiverFAQ />
         <CaregiverCTA />
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
 
 // Login Page - Using New Auth Component
 const LoginPage = () => {
+  usePageTitle("Log in");
   return <AuthComponent mode="login" />;
 };
 
 // Signup Page - Using New Auth Component
 const SignupPage = () => {
+  usePageTitle("Join Voallen");
   return <AuthComponent mode="signup" />;
 };
 
 // Agencies Page - Warm Nature Theme
 const AgenciesPage = () => {
+  usePageTitle("Find care");
   const [agencies, setAgencies] = useState([]);
   const [allAgencies, setAllAgencies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -691,10 +589,10 @@ const AgenciesPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-24 pb-12">
+      <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-stone-800 mb-2">Find In-Home Care</h1>
+            <h1 className="font-display font-light text-4xl sm:text-5xl text-stone-900 tracking-[-0.035em] leading-[1.05] mb-3">Find care in Philadelphia</h1>
             <p className="text-stone-500">Browse verified care agencies in your area</p>
           </div>
 
@@ -742,6 +640,7 @@ const AgenciesPage = () => {
           {!loading && agencies.length === 0 && <div className="text-center py-20"><p className="text-stone-500">No agencies found matching your criteria.</p></div>}
         </div>
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
@@ -754,6 +653,7 @@ const AgencyDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [showGallery, setShowGallery] = useState(false);
   const [bookingData, setBookingData] = useState({ service_type: "", date: "", time_slot: "", patient_name: "", patient_age: "", care_needs: "", notes: "" });
+  usePageTitle(agency?.name || "Care agency");
   const [bookingLoading, setBookingLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -791,7 +691,7 @@ const AgencyDetailPage = () => {
   };
 
   if (loading) return <PageBackground className="flex items-center justify-center"><div className="animate-spin w-12 h-12 border-4 border-stone-700 border-t-transparent rounded-full" /></PageBackground>;
-  if (!agency) return <PageBackground className="flex items-center justify-center"><p className="text-stone-500">Agency not found</p></PageBackground>;
+  if (!agency) return <PageBackground className="flex items-center justify-center"><div className="text-center"><h1 className="font-display font-light text-4xl text-stone-900 mb-3">Agency not found</h1><p className="text-stone-500 mb-6">It may have been removed or the link is out of date.</p><Link to="/agencies" className="inline-flex px-6 py-3 rounded-full font-medium bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917]">Browse agencies</Link></div></PageBackground>;
 
   const allImages = [agency.image_url, ...(agency.gallery_images || [])];
   const timeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
@@ -847,7 +747,7 @@ const AgencyDetailPage = () => {
         )}
       </AnimatePresence>
 
-      <div className="pt-24 pb-12">
+      <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           
           {/* Image Gallery Section - Booking.com Style */}
@@ -1167,6 +1067,7 @@ const AgencyDetailPage = () => {
           </div>
         </div>
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
@@ -1444,6 +1345,7 @@ const AgencyDashboard = ({ user }) => {
 };
 
 const DashboardPage = () => {
+  usePageTitle("Dashboard");
   const { user } = useAuth();
   const navigate = useNavigate();
   const [view, setView] = useState("admin");
@@ -1456,7 +1358,7 @@ const DashboardPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-24 pb-12">
+      <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           {user.is_admin && user.role !== "admin" && (
             <div className="grid grid-cols-2 gap-2 p-2 mb-8 bg-stone-100 rounded-2xl max-w-md" role="tablist" aria-label="Which dashboard">
@@ -1489,7 +1391,7 @@ const AdminAgencyPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-24 pb-12">
+      <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6"><AdminAgencyDetail agencyId={id} /></div>
       </div>
     </PageBackground>
@@ -1498,6 +1400,7 @@ const AdminAgencyPage = () => {
 
 // Booking Success Page
 const BookingSuccessPage = () => {
+  usePageTitle("Request sent");
   useEffect(() => { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }, []);
   return (
     <PageBackground className="flex items-center justify-center p-6">
@@ -1516,6 +1419,7 @@ const BookingSuccessPage = () => {
 
 // Contact Page - Warm Nature Theme
 const ContactPage = () => {
+  usePageTitle("Contact us");
   const [formData, setFormData] = useState({ name: "", email: "", subject: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -1537,9 +1441,9 @@ const ContactPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-24 pb-12">
+      <div className="pt-[72px] sm:pt-[84px] pb-16 sm:pb-24">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12"><h1 className="text-4xl font-bold text-stone-800 mb-4">Contact Us</h1><p className="text-stone-500">Have questions? We're here to help!</p></div>
+          <PageIntro center eyebrow="Contact" title="We'd love to hear from you" lead="Questions about visits, a loved one, or working with us? Send a note or give us a call." />
           {success ? (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-3xl shadow-lg p-12 text-center border border-stone-100">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><CheckCircle className="w-8 h-8 text-green-500" /></div>
@@ -1561,18 +1465,20 @@ const ContactPage = () => {
             </div>
           )}
           <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">1-800-ADL-TRACK</p></div>
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500">support@voallen.com</p></div>
-            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center mx-auto mb-4"><Clock className="w-6 h-6 text-stone-800" /></div><h3 className="font-semibold text-stone-800 mb-1">Hours</h3><p className="text-stone-500">24/7 Support</p></div>
+            <a href={CONTACT_PHONE_HREF} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100 hover:shadow-md transition"><div className="w-12 h-12 bg-[#d4e3ef] rounded-xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-[#1f3039]" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">{CONTACT_PHONE}</p></a>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100 hover:shadow-md transition"><div className="w-12 h-12 bg-[#f3ece2] rounded-xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-[#1f3039]" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500 text-sm [overflow-wrap:anywhere]">{CONTACT_EMAIL}</p></a>
+            <div className="bg-white rounded-2xl p-6 text-center shadow-sm border border-stone-100"><div className="w-12 h-12 bg-[#eef5e3] rounded-xl flex items-center justify-center mx-auto mb-4"><MapPin className="w-6 h-6 text-[#3d7a5a]" /></div><h3 className="font-semibold text-stone-800 mb-1">Service area</h3><p className="text-stone-500">Philadelphia, PA</p></div>
           </div>
         </div>
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
 
 // FAQ Page - Warm Nature Theme
 const FAQPage = () => {
+  usePageTitle("FAQ");
   const [openIndex, setOpenIndex] = useState(null);
   const faqs = [
     { question: "What types of in-home care services do you offer?", answer: "We connect families with caregivers offering a wide range of services including elderly care, pediatric care, post-surgery recovery, chronic disease management, dementia/Alzheimer's care, 24-hour care, respite care, and skilled nursing services." },
@@ -1588,9 +1494,9 @@ const FAQPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-24 pb-12">
+      <div className="pt-[72px] sm:pt-[84px] pb-16 sm:pb-24">
         <div className="max-w-3xl mx-auto px-6">
-          <div className="text-center mb-12"><h1 className="text-4xl font-bold text-stone-800 mb-4">Frequently Asked Questions</h1><p className="text-stone-500">Everything you need to know about our services</p></div>
+          <PageIntro center eyebrow="FAQ" title="Questions, answered" lead="Everything families usually ask before their first visit." />
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-stone-100">
@@ -1608,13 +1514,14 @@ const FAQPage = () => {
               </motion.div>
             ))}
           </div>
-          <div className="mt-12 bg-stone-800 rounded-3xl p-8 text-center text-white">
-            <h2 className="text-2xl font-bold mb-4">Still have questions?</h2>
-            <p className="text-stone-300 mb-6">Our team is here to help you find the perfect care solution.</p>
-            <Link to="/contact" className="inline-block px-8 py-3 bg-white text-stone-800 rounded-xl font-semibold hover:bg-stone-100 transition">Contact Us</Link>
+          <div className="mt-12 rounded-3xl p-8 sm:p-10 text-center" style={{ backgroundColor: "#1f3039" }}>
+            <h2 className="font-display font-light text-3xl sm:text-4xl tracking-[-0.03em] mb-4" style={{ color: "#ffffff" }}>Still have questions?</h2>
+            <p className="mb-6" style={{ color: "rgba(255,255,255,0.7)" }}>We're happy to talk it through, no pressure.</p>
+            <Link to="/contact" className="inline-flex items-center px-8 py-3 rounded-full font-semibold hover:brightness-95 transition" style={{ backgroundColor: "#d4e3ef", color: "#1f3039" }}>Contact us</Link>
           </div>
         </div>
       </div>
+      <SiteFooter />
     </PageBackground>
   );
 };
@@ -1626,6 +1533,7 @@ function App() {
     <AuthProvider>
       <WishlistProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -1639,6 +1547,11 @@ function App() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/visits" element={<VisitPage />} />
             <Route path="/caregivers" element={<CaregiverPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </WishlistProvider>

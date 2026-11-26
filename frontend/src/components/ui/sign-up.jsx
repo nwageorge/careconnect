@@ -3,7 +3,8 @@
 import { cn } from '@/lib/utils';
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from 'react';
 import { cva } from 'class-variance-authority';
-import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Heart, Building2, Activity } from 'lucide-react';
+import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Heart, Building2 } from 'lucide-react';
+import { VoallenLogo } from "@/components/voallen-logo";
 import { AnimatePresence, motion, useInView } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Link, useNavigate } from 'react-router-dom';
@@ -156,12 +157,7 @@ const modalSteps = [
 ];
 const TEXT_LOOP_INTERVAL = 1.5;
 
-// --- VOALLEN LOGO ---
-const VoallenLogo = () => (
-  <div className="bg-stone-800 text-white rounded-xl p-1.5">
-    <Activity className="h-4 w-4" />
-  </div>
-);
+
 
 // --- USER TYPE SELECTION ---
 const UserTypeSelection = ({ selectedType, onSelect }) => (
@@ -388,7 +384,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
   );
 
   return (
-    <div className="bg-stone-50 min-h-screen w-full flex flex-col">
+    <div className="bg-[#faf6f0] dark:bg-[#0f0d0c] min-h-screen w-full flex flex-col">
       <style>{`
         @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; }
         @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
@@ -409,9 +405,8 @@ export const AuthComponent = ({ mode = 'signup' }) => {
       <Modal />
 
       {/* Header */}
-      <Link to="/" className="fixed top-4 left-4 z-20 flex items-center gap-2 md:left-1/2 md:-translate-x-1/2">
-        <VoallenLogo />
-        <h1 className="text-base font-bold text-stone-800">Voallen</h1>
+      <Link to="/" aria-label="Voallen home" className="fixed top-5 left-5 z-20 md:left-1/2 md:-translate-x-1/2">
+        <VoallenLogo size="md" />
       </Link>
 
       <div className="flex w-full flex-1 h-full items-center justify-center relative overflow-hidden">
