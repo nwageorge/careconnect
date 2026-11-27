@@ -11,7 +11,7 @@ const reveal = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.6 },
+  transition: { type: "spring", stiffness: 100, damping: 20 },
 };
 
 /* ------------------------------------------------------------------ Hero */
@@ -30,7 +30,7 @@ export const VisitHero = () => (
         transition={{ duration: 0.6 }}
         className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md bg-white rounded-3xl shadow-2xl p-7 sm:p-10"
       >
-        <h1 className="text-3xl sm:text-4xl font-display font-normal tracking-[-0.03em] text-stone-800 leading-tight mb-4">
+        <h1 className="font-display text-4xl sm:text-6xl leading-[0.95] text-stone-800 leading-tight mb-4">
           Companionship visits near you
         </h1>
         <p className="text-lg text-stone-600 leading-relaxed mb-8">
@@ -38,14 +38,14 @@ export const VisitHero = () => (
         </p>
         <a
           href="#philadelphia-agencies"
-          className="block w-full text-center px-8 py-4 bg-stone-800 text-white rounded-2xl text-lg font-semibold hover:bg-stone-700 transition-all mb-3"
+          className="btn-joy rounded-full block w-full text-center px-8 py-4 text-lg mb-3"
           data-testid="visit-hero-cta"
         >
           Find care in Philadelphia
         </a>
         <a
           href={CONTACT_PHONE_HREF}
-          className="flex items-center justify-center gap-2 w-full px-8 py-4 bg-white border border-stone-200 text-stone-800 rounded-2xl font-semibold hover:bg-stone-100 transition-all"
+          className="btn-glass rounded-full flex items-center justify-center gap-2 w-full px-8 py-4 text-stone-800 font-semibold"
         >
           <Phone className="w-5 h-5" /> Call {CONTACT_PHONE}
         </a>
@@ -93,7 +93,7 @@ export const VisitBenefits = () => (
         />
       </motion.div>
       <motion.div {...reveal}>
-        <h2 className="text-4xl sm:text-5xl font-bold text-stone-800 leading-tight mb-10">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-10">
           A familiar face, close to home
         </h2>
         <ul className="space-y-8">
@@ -188,7 +188,7 @@ export const VisitFAQ = () => {
   return (
     <section className="py-16 sm:py-24" data-testid="visit-faq">
       <div className="max-w-4xl">
-        <h2 className="text-4xl sm:text-5xl font-bold text-stone-800 leading-tight mb-3">Companionship visit FAQs</h2>
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-3">Companionship visit FAQs</h2>
         <p className="text-lg text-stone-500 mb-10">Common questions about visits with Voallen</p>
         <div className="border-t border-stone-200">
           {visitFaqs.map((item, i) => {
@@ -230,13 +230,13 @@ export const VisitFAQ = () => {
         <div className="mt-10 flex flex-col sm:flex-row gap-3">
           <a
             href={CONTACT_PHONE_HREF}
-            className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-stone-800 text-white rounded-2xl font-semibold hover:bg-stone-700 transition-all"
+            className="btn-joy rounded-full inline-flex items-center justify-center gap-2 px-6 py-4"
           >
             <Phone className="w-5 h-5" /> Call {CONTACT_PHONE}
           </a>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-white border border-stone-200 text-stone-800 rounded-2xl font-semibold hover:bg-stone-100 transition-all"
+            className="btn-glass rounded-full inline-flex items-center justify-center gap-2 px-6 py-4 text-stone-800 font-semibold"
           >
             <Mail className="w-5 h-5" /> Email us
           </a>

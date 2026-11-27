@@ -2,22 +2,24 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Check, Phone, Mail, Camera, Clock, MessageCircle, Footprints, Puzzle, BookOpen, Video } from "lucide-react";
 import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_EMAIL } from "@/components/voallen-sections";
-import { VoallenLogo, VOALLEN_TEAL, VOALLEN_APRICOT, VOALLEN_GREEN } from "@/components/voallen-logo";
+import { VoallenLogo } from "@/components/voallen-logo";
+
+const INK = "#1A1A2E";
+const CORAL = "#FF6B6B";
 
 // Extra home page sections: a numbered "How it works" timeline, a two card row,
-// a closing call to action and the deep teal footer. They keep our rounded cards,
-// stone type and spacing, and use the teal / apricot / green / pale blue accents
-// only in a few chosen places.
+// a closing call to action and the footer. Styled in the OnePermit design system:
+// warm pastel gradients, liquid glass cards, rounded-3xl and gradient pill buttons.
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.6 },
+  transition: { type: "spring", stiffness: 100, damping: 20 },
 };
 
 const Eyebrow = ({ children }) => (
-  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 mb-4">{children}</p>
+  <p className="eyebrow mb-4">{children}</p>
 );
 
 /* ------------------------------------------------------------- How it works */
@@ -50,7 +52,7 @@ export const HowVoallenWorks = () => (
     <div className="grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16 items-start">
       <motion.div {...reveal} className="lg:sticky lg:top-32">
         <Eyebrow>How it works</Eyebrow>
-        <h2 className="font-display text-4xl sm:text-5xl font-semibold text-stone-800 leading-[1.05] tracking-[-0.03em] mb-5">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-6">
           We visit.
           <br />
           <span className="relative inline-flex items-center gap-3">
@@ -62,14 +64,13 @@ export const HowVoallenWorks = () => (
                 className="absolute left-0 -bottom-2 w-full h-3"
                 aria-hidden="true"
               >
-                <path d="M2 8 Q 100 1 198 7" stroke={VOALLEN_GREEN} strokeWidth="4" strokeLinecap="round" fill="none" />
+                <path d="M2 8 Q 100 1 198 7" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none" />
               </svg>
             </span>
             <span
-              className="inline-flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full"
-              style={{ backgroundColor: VOALLEN_GREEN }}
+              className="inline-flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full btn-joy"
             >
-              <Check className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={3} />
+              <Check className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
             </span>
           </span>
         </h2>
@@ -78,17 +79,16 @@ export const HowVoallenWorks = () => (
         </p>
       </motion.div>
 
-      <motion.ol {...reveal} className="relative rounded-3xl bg-white border border-stone-100 shadow-sm px-6 py-8 sm:px-10 sm:py-10">
+      <motion.ol {...reveal} className="glass-card rounded-3xl relative px-6 py-8 sm:px-10 sm:py-10">
         {steps.map((step, i) => {
           const last = i === steps.length - 1;
           return (
             <li key={step.title} className="relative flex gap-5 sm:gap-6 pb-8 last:pb-0">
               {!last && (
-                <span className="absolute left-5 sm:left-6 top-12 bottom-0 w-px bg-stone-200" aria-hidden="true" />
+                <span className="absolute left-5 sm:left-6 top-12 bottom-0 w-px bg-gradient-to-b from-[#FFB7B2] to-[#E6E6FA]" aria-hidden="true" />
               )}
               <span
-                className="relative z-10 shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-sm sm:text-base font-semibold text-white bg-[#1c1917] dark:bg-[#fafaf9] dark:text-[#1c1917]"
-                style={last ? { backgroundColor: VOALLEN_GREEN, color: "#fff" } : undefined}
+                className={`relative z-10 shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-sm sm:text-base font-bold ${last ? "btn-joy" : "bg-joy-hero text-stone-900"}`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
@@ -105,7 +105,7 @@ export const HowVoallenWorks = () => (
 );
 
 
-/* ----------------------------------------------- Deep teal band: what a visit holds */
+/* ----------------------------------------------- Peach to lavender band: what a visit holds */
 
 const visitMoments = [
   { icon: MessageCircle, title: "Good conversation", body: "Stories, news and a listening ear." },
@@ -118,11 +118,11 @@ const visitMoments = [
 
 export const VisitMomentsBand = () => (
   <section className="py-16 sm:py-24" data-testid="visit-moments-section">
-    <div className="rounded-[2rem] p-4 sm:p-6 lg:p-8" style={{ backgroundColor: VOALLEN_TEAL }}>
+    <div className="rounded-[2.5rem] p-4 sm:p-6 lg:p-8 bg-joy-hero">
       <div className="grid lg:grid-cols-[1fr_2fr] gap-4 sm:gap-5">
-        <motion.div {...reveal} className="rounded-3xl overflow-hidden bg-[#fffdf9] flex flex-col">
+        <motion.div {...reveal} className="glass-card overflow-hidden flex flex-col">
           <div className="p-7 sm:p-8">
-            <h2 className="font-display text-3xl sm:text-4xl font-light leading-[1.08] tracking-[-0.035em]" style={{ color: VOALLEN_TEAL }}>
+            <h2 className="font-display text-4xl sm:text-5xl leading-[0.98] text-stone-900">
               Every visit is shaped around them
             </h2>
           </div>
@@ -137,13 +137,12 @@ export const VisitMomentsBand = () => (
             <motion.div
               key={title}
               {...reveal}
-              className="rounded-3xl bg-[#fffdf9] p-6 sm:p-7 flex flex-col justify-between min-h-[150px] sm:min-h-[180px]"
-              style={{ color: VOALLEN_TEAL }}
+              className="glass-card glass-lift p-6 sm:p-7 flex flex-col justify-between min-h-[150px] sm:min-h-[180px] text-stone-900"
             >
-              <Icon className="w-7 h-7" strokeWidth={1.6} />
+              <span className="inline-flex w-12 h-12 items-center justify-center rounded-2xl bg-white/70 dark:bg-white/10 shadow-sm"><Icon className="w-6 h-6" strokeWidth={1.5} style={{ color: CORAL }} /></span>
               <div className="mt-8">
-                <h3 className="text-xl font-medium tracking-[-0.01em] mb-1" style={{ color: VOALLEN_TEAL }}>{title}</h3>
-                <p className="text-sm" style={{ color: "#5b6a70" }}>{body}</p>
+                <h3 className="text-xl font-semibold tracking-[-0.02em] mb-1 text-stone-900">{title}</h3>
+                <p className="text-sm text-stone-600">{body}</p>
               </div>
             </motion.div>
           ))}
@@ -161,10 +160,10 @@ export const TwoPathsSection = () => (
       {/* White card: book a visit */}
       <motion.div
         {...reveal}
-        className="rounded-3xl bg-white border border-stone-100 shadow-sm p-8 sm:p-10 flex flex-col"
+        className="glass-card glass-lift rounded-3xl p-8 sm:p-10 flex flex-col"
       >
         <Eyebrow>For families</Eyebrow>
-        <h3 className="font-display text-3xl sm:text-4xl font-normal text-stone-800 leading-tight tracking-[-0.03em] mb-4">
+        <h3 className="font-display text-3xl sm:text-4xl text-stone-900 leading-[1.02] mb-4">
           Company for the people you love, on their schedule.
         </h3>
         <p className="text-stone-500 text-lg mb-8 max-w-md">
@@ -172,27 +171,26 @@ export const TwoPathsSection = () => (
         </p>
         <Link
           to="/visits"
-          className="mt-auto self-start inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition"
+          className="btn-joy rounded-full mt-auto self-start inline-flex items-center gap-2 px-6 py-3.5 rounded-full"
         >
           See how visits work <ArrowUpRight className="w-4 h-4" />
         </Link>
       </motion.div>
 
-      {/* Apricot card: proof after every visit */}
+      {/* Blush card: proof after every visit */}
       <motion.div
         {...reveal}
-        className="rounded-3xl p-8 sm:p-10 flex flex-col"
-        style={{ backgroundColor: VOALLEN_APRICOT, color: VOALLEN_TEAL }}
+        className="rounded-3xl p-8 sm:p-10 flex flex-col bg-joy-blush text-stone-900 glass-lift"
       >
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] mb-4 opacity-70">Proof of care</p>
-        <h3 className="font-display text-3xl sm:text-4xl font-normal leading-tight tracking-[-0.03em] mb-6">
+        <p className="eyebrow mb-4" style={{ color: INK, opacity: 0.6 }}>Proof of care</p>
+        <h3 className="font-display text-3xl sm:text-4xl leading-[1.02] mb-6 text-stone-900">
           After every visit, a little note lands on your phone.
         </h3>
         {/* Example update card */}
-        <div className="mt-auto rounded-2xl bg-[#fffdf9] p-4 sm:p-5 shadow-sm" style={{ color: VOALLEN_TEAL }}>
+        <div className="mt-auto glass-card p-4 sm:p-5 text-stone-900">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold">Visit update</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#eef5e3] px-2.5 py-1 text-xs font-semibold" style={{ color: VOALLEN_GREEN }}>
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF0EE] px-2.5 py-1 text-xs font-bold" style={{ color: "#C9374A" }}>
               <Check className="w-3.5 h-3.5" strokeWidth={3} /> Visit complete
             </span>
           </div>
@@ -223,10 +221,10 @@ export const ClosingCTASection = () => (
   <section className="py-16 sm:py-24" data-testid="closing-cta-section">
     <motion.div
       {...reveal}
-      className="rounded-3xl bg-[#f3ece2] dark:bg-stone-100 px-6 py-12 sm:px-12 sm:py-16 lg:px-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
+      className="rounded-[2.5rem] bg-joy-hero px-6 py-14 sm:px-12 sm:py-20 lg:px-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
     >
       <div className="max-w-xl">
-        <h2 className="font-display text-4xl sm:text-5xl font-light text-stone-800 leading-[1.05] tracking-[-0.035em] mb-4">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-5">
           Ready for a friendly face at the door?
         </h2>
         <p className="text-lg text-stone-500">
@@ -236,14 +234,13 @@ export const ClosingCTASection = () => (
       <div className="flex flex-col sm:flex-row gap-3 shrink-0">
         <a
           href={CONTACT_PHONE_HREF}
-          className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold hover:brightness-95 transition"
-          style={{ backgroundColor: "#d4e3ef", color: VOALLEN_TEAL }}
+          className="btn-joy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
         >
           <Phone className="w-5 h-5" /> Book a call
         </a>
         <a
           href={`mailto:${CONTACT_EMAIL}`}
-          className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold border border-stone-300 text-stone-800 hover:bg-stone-50 transition"
+          className="btn-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-semibold"
         >
           <Mail className="w-5 h-5" /> Email us
         </a>
@@ -254,21 +251,23 @@ export const ClosingCTASection = () => (
 
 /* --------------------------------------------------------------- Footer */
 
-const footerLink = "text-sm text-white/60 hover:text-white transition";
+// Minimal, clean footer on a glass panel, as in the OnePermit footer.
+const footerLink = "text-sm text-stone-600 hover:text-stone-900 transition";
+const footerHead = "text-xs font-bold uppercase tracking-[0.2em] text-stone-400 mb-4";
 
 export const HomeFooter = () => (
-  <footer className="text-white" style={{ backgroundColor: VOALLEN_TEAL }}>
-    <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
+  <footer className="relative px-3 sm:px-6 lg:px-[3vw] pb-4 sm:pb-6 pt-8">
+    <div className="glass-card max-w-[1400px] mx-auto px-6 sm:px-10 pt-12 pb-8">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
         <div className="col-span-2 md:col-span-1">
-          <VoallenLogo size="sm" tone="light" className="mb-4" />
-          <p className="text-sm text-white/60 leading-relaxed max-w-xs">
+          <VoallenLogo size="sm" className="mb-4" />
+          <p className="text-sm text-stone-600 leading-relaxed max-w-xs">
             Warm companionship visits for older adults, with proof of care after every visit.
           </p>
-          <p className="text-sm text-white/60 mt-3">Serving Philadelphia, PA</p>
+          <p className="text-sm text-stone-600 mt-3">Serving Philadelphia, PA</p>
         </div>
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40 mb-4">Visits</h4>
+          <h4 className={footerHead}>Visits</h4>
           <ul className="space-y-2.5">
             <li><Link to="/visits" className={footerLink}>Friendly companionship</Link></li>
             <li><Link to="/visits" className={footerLink}>Special occasions</Link></li>
@@ -277,7 +276,7 @@ export const HomeFooter = () => (
           </ul>
         </div>
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40 mb-4">Company</h4>
+          <h4 className={footerHead}>Company</h4>
           <ul className="space-y-2.5">
             <li><Link to="/about" className={footerLink}>About us</Link></li>
             <li><Link to="/how-it-works" className={footerLink}>How it works</Link></li>
@@ -287,19 +286,19 @@ export const HomeFooter = () => (
           </ul>
         </div>
         <div>
-          <h4 className="text-xs font-semibold uppercase tracking-[0.18em] text-white/40 mb-4">Contact</h4>
+          <h4 className={footerHead}>Contact</h4>
           <ul className="space-y-2.5">
-            <li><a href={CONTACT_PHONE_HREF} className={`${footerLink} inline-flex items-center gap-2`}><Phone className="w-4 h-4" /> {CONTACT_PHONE}</a></li>
-            <li><a href={`mailto:${CONTACT_EMAIL}`} className={`${footerLink} inline-flex items-center gap-2 break-all`}><Mail className="w-4 h-4 shrink-0" /> {CONTACT_EMAIL}</a></li>
+            <li><a href={CONTACT_PHONE_HREF} className={`${footerLink} inline-flex items-center gap-2`}><Phone className="w-4 h-4" style={{ color: CORAL }} /> {CONTACT_PHONE}</a></li>
+            <li><a href={`mailto:${CONTACT_EMAIL}`} className={`${footerLink} inline-flex items-center gap-2 break-all`}><Mail className="w-4 h-4 shrink-0" style={{ color: CORAL }} /> {CONTACT_EMAIL}</a></li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <p className="text-xs text-white/40">© {new Date().getFullYear()} Voallen. All rights reserved.</p>
+      <div className="border-t border-stone-200 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <p className="text-xs text-stone-500">© {new Date().getFullYear()} Voallen. All rights reserved.</p>
         <div className="flex gap-5">
-          <Link to="/privacy" className="text-xs text-white/50 hover:text-white transition">Privacy</Link>
-          <Link to="/terms" className="text-xs text-white/50 hover:text-white transition">Terms</Link>
-          <Link to="/contact" className="text-xs text-white/50 hover:text-white transition">Accessibility help</Link>
+          <Link to="/privacy" className="text-xs text-stone-500 hover:text-stone-900 transition">Privacy</Link>
+          <Link to="/terms" className="text-xs text-stone-500 hover:text-stone-900 transition">Terms</Link>
+          <Link to="/contact" className="text-xs text-stone-500 hover:text-stone-900 transition">Accessibility help</Link>
         </div>
       </div>
     </div>

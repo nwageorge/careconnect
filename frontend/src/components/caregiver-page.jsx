@@ -29,13 +29,13 @@ const reveal = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.6 },
+  transition: { type: "spring", stiffness: 100, damping: 20 },
 };
 
 const SectionHeading = ({ eyebrow, title, intro, center = false }) => (
   <motion.div {...reveal} className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`}>
     {eyebrow && <p className="text-sm font-semibold tracking-wide uppercase text-stone-500 mb-3">{eyebrow}</p>}
-    <h2 className="text-3xl sm:text-5xl font-bold text-stone-800 leading-tight mb-4">{title}</h2>
+    <h2 className="font-display text-4xl sm:text-6xl text-stone-900 leading-[0.95] mb-4">{title}</h2>
     {intro && <p className="text-lg sm:text-xl text-stone-500 leading-relaxed">{intro}</p>}
   </motion.div>
 );
@@ -43,7 +43,7 @@ const SectionHeading = ({ eyebrow, title, intro, center = false }) => (
 const PrimaryButton = ({ href, children, className = "" }) => (
   <a
     href={href}
-    className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] text-lg font-semibold hover:opacity-90 transition-opacity ${className}`}
+    className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full btn-joy text-lg ${className}`}
     data-testid="caregiver-apply"
   >
     {children}
@@ -53,7 +53,7 @@ const PrimaryButton = ({ href, children, className = "" }) => (
 const SecondaryButton = ({ href, children, className = "" }) => (
   <a
     href={href}
-    className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 border-stone-800 text-stone-800 text-lg font-semibold hover:bg-stone-100 transition-colors ${className}`}
+    className={`inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full btn-glass text-lg font-semibold ${className}`}
   >
     {children}
   </a>
@@ -74,20 +74,18 @@ export const CaregiverHero = () => (
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md rounded-3xl shadow-2xl p-7 sm:p-10"
-        style={{ backgroundColor: "#ffffff" }}
+        className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md glass-card bg-white/80 dark:bg-[#1c1a2e]/80 shadow-2xl p-7 sm:p-10"
       >
-        <p className="text-sm font-semibold tracking-wide uppercase mb-3" style={{ color: "#78716c" }}>For caregivers</p>
-        <h1 className="text-3xl sm:text-4xl font-display font-normal tracking-[-0.03em] leading-tight mb-4" style={{ color: "#292524" }}>
+        <p className="eyebrow mb-3">For caregivers</p>
+        <h1 className="font-display text-4xl sm:text-6xl leading-[0.95] mb-4 text-stone-900">
           Find caregiving work you'll love
         </h1>
-        <p className="text-lg leading-relaxed mb-8" style={{ color: "#57534e" }}>
+        <p className="text-lg leading-relaxed mb-8 text-stone-600">
           Spend your days brightening someone's. Create your own profile and get booked by Philadelphia families who need a friendly face.
         </p>
         <a
           href={CAREGIVER_APPLY_HREF}
-          className="block w-full text-center px-8 py-4 rounded-2xl text-lg font-semibold mb-3 hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "#292524", color: "#ffffff" }}
+          className="btn-joy block w-full text-center px-8 py-4 rounded-full text-lg mb-3"
           data-testid="caregiver-hero-apply"
         >
           Apply now
@@ -185,13 +183,13 @@ const startSteps = [
 
 export const CaregiverSteps = () => (
   <section className="py-16 sm:py-24" data-testid="caregiver-steps">
-    <div className="rounded-3xl bg-[#f3ece2] dark:bg-stone-100 p-6 sm:p-12 lg:p-16 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
+    <div className="rounded-3xl bg-joy-hero p-6 sm:p-12 lg:p-16 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
       <div>
         <SectionHeading title="Getting started is simple" />
         <ol className="space-y-7">
           {startSteps.map((s, i) => (
             <motion.li {...reveal} key={s.title} className="flex gap-5">
-              <span className="shrink-0 w-11 h-11 rounded-full bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] flex items-center justify-center text-lg font-semibold">
+              <span className="btn-joy rounded-full shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-lg">
                 {i + 1}
               </span>
               <div>
@@ -318,33 +316,31 @@ export const CaregiverFAQ = () => {
 
 export const CaregiverCTA = () => (
   <section className="pb-20 sm:pb-28" data-testid="caregiver-cta">
-    <motion.div {...reveal} className="rounded-3xl bg-[#1c1917] px-6 py-14 sm:px-12 sm:py-16 text-center">
-      <h2 className="text-3xl sm:text-5xl font-bold leading-tight mb-4" style={{ color: "#fafaf9" }}>Ready to start caring?</h2>
-      <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto" style={{ color: "#d6d3d1" }}>
+    <motion.div {...reveal} className="rounded-[2.5rem] bg-joy-hero px-6 py-14 sm:px-12 sm:py-20 text-center">
+      <h2 className="font-display text-4xl sm:text-6xl leading-[0.95] mb-5 text-stone-900">Ready to start caring?</h2>
+      <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto text-stone-600">
         Join Voallen and bring a little more company to seniors near you.
       </p>
-      <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10" style={{ color: "#e7e5e4" }}>
+      <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-stone-800">
         {["Flexible hours", "Visits near home", "Your own profile"].map((t) => (
-          <li key={t} className="flex items-center gap-2 text-base"><Check className="w-5 h-5" /> {t}</li>
+          <li key={t} className="flex items-center gap-2 text-base"><Check className="w-5 h-5 text-[#FF6B6B]" strokeWidth={2.5} /> {t}</li>
         ))}
       </ul>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
           href={CAREGIVER_APPLY_HREF}
-          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-semibold hover:opacity-90 transition-opacity"
-          style={{ backgroundColor: "#fafaf9", color: "#1c1917" }}
+          className="btn-joy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
         >
           <Mail className="w-5 h-5" /> Apply by email
         </a>
         <a
           href={CONTACT_PHONE_HREF}
-          className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full border-2 text-lg font-semibold hover:opacity-80 transition-opacity"
-          style={{ borderColor: "#fafaf9", color: "#fafaf9" }}
+          className="btn-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-semibold"
         >
           <Phone className="w-5 h-5" /> Call {CONTACT_PHONE}
         </a>
       </div>
-      <p className="mt-8 text-sm" style={{ color: "#a8a29e" }}>
+      <p className="mt-8 text-sm text-stone-600">
         Looking for care instead? <Link to="/visits" className="underline underline-offset-2">Ask about a visit</Link>
       </p>
     </motion.div>
