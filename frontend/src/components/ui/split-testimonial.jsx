@@ -99,7 +99,7 @@ export function TestimonialsSplit() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -40 }}
                 transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="text-2xl md:text-3xl lg:text-4xl font-light leading-[1.3] tracking-tight text-stone-800"
+                className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-[1.2] tracking-[-0.03em] text-stone-900"
               >
                 "{active.quote}"
               </motion.blockquote>

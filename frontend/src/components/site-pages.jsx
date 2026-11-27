@@ -10,7 +10,6 @@ import {
   ClosingCTASection,
   SiteFooter,
 } from "@/components/voallen-home-extras";
-import { VOALLEN_TEAL, VOALLEN_APRICOT, VOALLEN_GREEN } from "@/components/voallen-logo";
 
 // New pages that round out the site: About, How it works, Privacy, Terms and Not found.
 // They reuse the shared header, cream background, display headlines and teal footer.
@@ -19,13 +18,13 @@ const reveal = {
   initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, amount: 0.2 },
-  transition: { duration: 0.6 },
+  transition: { type: "spring", stiffness: 100, damping: 20 },
 };
 
 // Page shell: cream background, shared header, content, teal footer.
 const SitePage = ({ children, testId }) => (
   <div className="min-h-screen w-full relative" data-testid={testId}>
-    <div className="fixed inset-0 z-0 bg-[#faf6f0] dark:bg-[#0f0d0c]" />
+    <div className="fixed inset-0 z-0 bg-joy" />
     <div className="relative z-10">
       <SiteHeader />
       <main className="pt-[72px] sm:pt-[84px]">{children}</main>
@@ -68,9 +67,9 @@ const values = [
 ];
 
 const toneStyle = {
-  white: { className: "bg-white border border-stone-100 shadow-sm", style: undefined, dark: false },
-  apricot: { className: "", style: { backgroundColor: VOALLEN_APRICOT, color: VOALLEN_TEAL }, dark: true },
-  green: { className: "", style: { backgroundColor: "#eef5e3", color: VOALLEN_TEAL }, dark: true },
+  white: { className: "glass-card" },
+  apricot: { className: "bg-joy-blush" },
+  green: { className: "bg-joy-hero" },
 };
 
 export const AboutPage = () => {
@@ -98,8 +97,8 @@ export const AboutPage = () => {
       <Container className="py-12 sm:py-20">
         <div className="grid lg:grid-cols-[2fr_3fr] gap-8 lg:gap-16">
           <motion.div {...reveal}>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 mb-4">Why we started</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-light text-stone-800 leading-[1.08] tracking-[-0.035em]">
+            <p className="eyebrow mb-4">Why we started</p>
+            <h2 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1]">
               Nobody should have to wonder how Mom's week went.
             </h2>
           </motion.div>
@@ -122,19 +121,19 @@ export const AboutPage = () => {
 
       {/* Values */}
       <Container className="pb-12 sm:pb-20">
-        <motion.h2 {...reveal} className="font-display text-3xl sm:text-4xl font-light text-stone-800 tracking-[-0.035em] mb-8">
+        <motion.h2 {...reveal} className="font-display text-4xl sm:text-5xl text-stone-900 tracking-[-0.035em] mb-8">
           What we stand for
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {values.map(({ icon: Icon, title, body, tone }) => {
             const t = toneStyle[tone];
             return (
-              <motion.div key={title} {...reveal} className={`rounded-3xl p-7 flex flex-col ${t.className}`} style={t.style}>
-                <Icon className={`w-7 h-7 mb-10 ${t.dark ? "" : "text-stone-800"}`} strokeWidth={1.6} />
-                <h3 className={`text-xl font-semibold mb-2 ${t.dark ? "" : "text-stone-800"}`} style={t.dark ? { color: VOALLEN_TEAL } : undefined}>
+              <motion.div key={title} {...reveal} className={`rounded-3xl p-7 flex flex-col glass-lift ${t.className}`}>
+                <Icon className="w-7 h-7 mb-10" strokeWidth={1.5} style={{ color: "#FF6B6B" }} />
+                <h3 className="text-xl font-semibold mb-2 text-stone-900">
                   {title}
                 </h3>
-                <p className={t.dark ? "" : "text-stone-500"} style={t.dark ? { color: "#3b4a50" } : undefined}>
+                <p className="text-stone-600">
                   {body}
                 </p>
               </motion.div>
@@ -145,20 +144,19 @@ export const AboutPage = () => {
 
       {/* Two ways to be part of it */}
       <Container className="pb-4">
-        <div className="rounded-[2rem] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center" style={{ backgroundColor: VOALLEN_TEAL }}>
+        <div className="rounded-[2.5rem] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center bg-joy-hero">
           <div>
-            <h2 className="font-display text-3xl sm:text-4xl font-light leading-[1.08] tracking-[-0.035em] mb-4" style={{ color: "#ffffff" }}>
+            <h2 className="font-display text-4xl sm:text-5xl leading-[0.98] mb-4 text-stone-900">
               Want to be one of our companions?
             </h2>
-            <p style={{ color: "rgba(255,255,255,0.7)" }} className="text-lg">
+            <p className="text-lg text-stone-600">
               We're always looking for kind, patient people in Philadelphia who enjoy spending time with older adults.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row md:justify-end gap-3">
             <Link
               to="/caregivers"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold hover:brightness-95 transition"
-              style={{ backgroundColor: VOALLEN_APRICOT, color: VOALLEN_TEAL }}
+              className="btn-joy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
             >
               See caregiver jobs <ArrowUpRight className="w-4 h-4" />
             </Link>
@@ -217,7 +215,7 @@ const LegalPage = ({ testId, eyebrow, title, lead, children }) => (
   <SitePage testId={testId}>
     <div className="max-w-3xl mx-auto px-6 pb-16 sm:pb-24">
       <PageIntro eyebrow={eyebrow} title={title} lead={lead} />
-      <div className="rounded-3xl bg-white border border-stone-100 shadow-sm px-6 sm:px-10 py-4 sm:py-6">{children}</div>
+      <div className="glass-card rounded-3xl px-6 sm:px-10 py-4 sm:py-6">{children}</div>
     </div>
   </SitePage>
 );
@@ -325,22 +323,21 @@ export const NotFoundPage = () => {
           lead="The link may be old or mistyped. Here are a few good places to go instead."
         />
         <div className="flex flex-col sm:flex-row justify-center gap-3">
-          <Link to="/" className="inline-flex items-center justify-center px-7 py-4 rounded-full font-semibold bg-[#1c1917] text-[#fafaf9] dark:bg-[#fafaf9] dark:text-[#1c1917] hover:opacity-90 transition">
+          <Link to="/" className="btn-joy inline-flex items-center justify-center px-7 py-4 rounded-full">
             Back to home
           </Link>
-          <Link to="/visits" className="inline-flex items-center justify-center px-7 py-4 rounded-full font-semibold border-2 border-stone-900 text-stone-900 hover:bg-stone-100 transition">
+          <Link to="/visits" className="btn-glass inline-flex items-center justify-center px-7 py-4 rounded-full font-semibold">
             Companionship visits
           </Link>
           <a
             href={CONTACT_PHONE_HREF}
-            className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold hover:brightness-95 transition"
-            style={{ backgroundColor: "#d4e3ef", color: VOALLEN_TEAL }}
+            className="btn-glass inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold"
           >
             <Phone className="w-5 h-5" /> Call us
           </a>
         </div>
         <p className="mt-8 text-sm text-stone-500 inline-flex items-center gap-2">
-          <Mail className="w-4 h-4" style={{ color: VOALLEN_GREEN }} /> {CONTACT_EMAIL}
+          <Mail className="w-4 h-4" style={{ color: "#FF6B6B" }} /> {CONTACT_EMAIL}
         </p>
       </div>
     </SitePage>
