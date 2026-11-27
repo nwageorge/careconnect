@@ -114,15 +114,21 @@ export const OurServicesSection = () => {
               aria-selected={selected}
               aria-controls="service-panel"
               onClick={() => setActive(i)}
-              className={`snap-start shrink-0 w-40 lg:w-auto flex flex-col items-center text-center gap-3 rounded-3xl px-3 pt-4 pb-5 transition-all duration-500 ${
-                selected
-                  ? "bg-mist ring-2 ring-[#0066cc] shadow-[0_12px_28px_rgba(0,113,227,0.12)]"
-                  : "op-card hover:-translate-y-1"
-              }`}
+              className="group snap-start shrink-0 w-36 lg:w-auto flex flex-col items-center text-center gap-3 px-2 pt-2 pb-3 bg-transparent"
               data-testid={`service-tab-${i}`}
             >
-              <img src={s.icon} alt="" className="w-20 h-20 object-contain" loading="lazy" />
-              <span className={`text-sm leading-snug ${selected ? "font-semibold text-stone-900" : "font-medium text-stone-600"}`}>
+              {/* No box: just the icon with its name underneath. The chosen one gets a blue underline. */}
+              <img
+                src={s.icon}
+                alt=""
+                className={`w-20 h-20 object-contain transition-transform duration-300 ${selected ? "scale-105" : "group-hover:scale-105"}`}
+                loading="lazy"
+              />
+              <span
+                className={`text-sm leading-snug pb-1.5 border-b-2 transition-colors ${
+                  selected ? "font-semibold text-stone-900 border-[#0071e3]" : "font-normal text-stone-700 border-transparent group-hover:text-stone-900"
+                }`}
+              >
                 {s.label}
               </span>
             </button>
