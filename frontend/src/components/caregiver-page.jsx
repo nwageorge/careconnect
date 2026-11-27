@@ -124,7 +124,7 @@ export const CaregiverWaysToHelp = () => (
         <motion.div
           {...reveal}
           key={w.label}
-          className="flex flex-col items-center text-center gap-3 rounded-2xl border border-stone-200 bg-stone-50 px-3 pt-4 pb-5"
+          className="flex flex-col items-center text-center gap-3 px-2 pt-2 pb-3"
         >
           <img src={w.icon} alt="" className="w-20 h-20 object-contain" loading="lazy" />
           <span className="text-sm font-medium leading-snug text-stone-700">{w.label}</span>
