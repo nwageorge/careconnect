@@ -384,7 +384,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
   );
 
   return (
-    <div className="bg-joy min-h-screen w-full flex flex-col">
+    <div className="bg-page min-h-screen w-full flex flex-col">
       <style>{`
         @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; }
         @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
@@ -418,7 +418,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
             {mode === 'signup' && authStep === 'userType' && (
               <motion.div key="userType-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0.1} className="w-full text-center">
-                  <p className="font-bold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">Join Voallen</p>
+                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">Join Voallen</p>
                   <p className="text-sm text-stone-500 mt-2">Select how you'd like to use Voallen</p>
                 </BlurFade>
                 <BlurFade delay={0.2} className="w-full">
@@ -448,7 +448,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
             {mode === 'signup' && authStep === 'name' && (
               <motion.div key="name-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-bold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
+                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
                     {userType === 'agency' ? "Your name" : "What's your name?"}
                   </p>
                 </BlurFade>
@@ -488,7 +488,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
             {authStep === 'email' && (
               <motion.div key="email-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-bold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
+                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
                     {mode === 'login' ? 'Welcome Back' : 'Enter your email'}
                   </p>
                   {mode === 'login' && <p className="text-sm text-stone-500 mt-2">Sign in to your Voallen account</p>}
@@ -558,7 +558,7 @@ export const AuthComponent = ({ mode = 'signup' }) => {
             {authStep === 'password' && (
               <motion.div key="password-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
                 <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-bold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
+                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
                     {mode === 'login' ? 'Enter your password' : 'Create a password'}
                   </p>
                   <p className="text-sm text-stone-500 mt-2">

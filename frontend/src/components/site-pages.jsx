@@ -24,10 +24,10 @@ const reveal = {
 // Page shell: cream background, shared header, content, teal footer.
 const SitePage = ({ children, testId }) => (
   <div className="min-h-screen w-full relative" data-testid={testId}>
-    <div className="fixed inset-0 z-0 bg-joy" />
+    <div className="fixed inset-0 z-0 bg-page" />
     <div className="relative z-10">
       <SiteHeader />
-      <main className="pt-[72px] sm:pt-[84px]">{children}</main>
+      <main className="pt-[64px] sm:pt-[76px]">{children}</main>
       <SiteFooter />
     </div>
   </div>
@@ -67,9 +67,9 @@ const values = [
 ];
 
 const toneStyle = {
-  white: { className: "glass-card" },
-  apricot: { className: "bg-joy-blush" },
-  green: { className: "bg-joy-hero" },
+  white: { className: "op-card" },
+  apricot: { className: "bg-mist" },
+  green: { className: "bg-mist" },
 };
 
 export const AboutPage = () => {
@@ -128,8 +128,8 @@ export const AboutPage = () => {
           {values.map(({ icon: Icon, title, body, tone }) => {
             const t = toneStyle[tone];
             return (
-              <motion.div key={title} {...reveal} className={`rounded-3xl p-7 flex flex-col glass-lift ${t.className}`}>
-                <Icon className="w-7 h-7 mb-10" strokeWidth={1.5} style={{ color: "#FF6B6B" }} />
+              <motion.div key={title} {...reveal} className={`rounded-3xl p-7 flex flex-col ${t.className}`}>
+                <Icon className="w-7 h-7 mb-10" strokeWidth={1.5} style={{ color: "#0071e3" }} />
                 <h3 className="text-xl font-semibold mb-2 text-stone-900">
                   {title}
                 </h3>
@@ -144,9 +144,9 @@ export const AboutPage = () => {
 
       {/* Two ways to be part of it */}
       <Container className="pb-4">
-        <div className="rounded-[2.5rem] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center bg-joy-hero">
+        <div className="rounded-[28px] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center bg-mist">
           <div>
-            <h2 className="font-display text-4xl sm:text-5xl leading-[0.98] mb-4 text-stone-900">
+            <h2 className="font-display text-4xl sm:text-5xl leading-[1.07] mb-4 text-stone-900">
               Want to be one of our companions?
             </h2>
             <p className="text-lg text-stone-600">
@@ -156,7 +156,7 @@ export const AboutPage = () => {
           <div className="flex flex-col sm:flex-row md:justify-end gap-3">
             <Link
               to="/caregivers"
-              className="btn-joy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
+              className="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
             >
               See caregiver jobs <ArrowUpRight className="w-4 h-4" />
             </Link>
@@ -215,7 +215,7 @@ const LegalPage = ({ testId, eyebrow, title, lead, children }) => (
   <SitePage testId={testId}>
     <div className="max-w-3xl mx-auto px-6 pb-16 sm:pb-24">
       <PageIntro eyebrow={eyebrow} title={title} lead={lead} />
-      <div className="glass-card rounded-3xl px-6 sm:px-10 py-4 sm:py-6">{children}</div>
+      <div className="op-card rounded-3xl px-6 sm:px-10 py-4 sm:py-6">{children}</div>
     </div>
   </SitePage>
 );
@@ -323,21 +323,21 @@ export const NotFoundPage = () => {
           lead="The link may be old or mistyped. Here are a few good places to go instead."
         />
         <div className="flex flex-col sm:flex-row justify-center gap-3">
-          <Link to="/" className="btn-joy inline-flex items-center justify-center px-7 py-4 rounded-full">
+          <Link to="/" className="btn-primary inline-flex items-center justify-center px-7 py-4 rounded-full">
             Back to home
           </Link>
-          <Link to="/visits" className="btn-glass inline-flex items-center justify-center px-7 py-4 rounded-full font-semibold">
+          <Link to="/visits" className="btn-outline inline-flex items-center justify-center px-7 py-4 rounded-full font-semibold">
             Companionship visits
           </Link>
           <a
             href={CONTACT_PHONE_HREF}
-            className="btn-glass inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold"
+            className="btn-outline inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-semibold"
           >
             <Phone className="w-5 h-5" /> Call us
           </a>
         </div>
         <p className="mt-8 text-sm text-stone-500 inline-flex items-center gap-2">
-          <Mail className="w-4 h-4" style={{ color: "#FF6B6B" }} /> {CONTACT_EMAIL}
+          <Mail className="w-4 h-4" style={{ color: "#0071e3" }} /> {CONTACT_EMAIL}
         </p>
       </div>
     </SitePage>

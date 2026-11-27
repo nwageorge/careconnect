@@ -2,63 +2,61 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Voallen look, after the OnePermit design system: Sora everywhere (self-hosted
-   via @fontsource-variable/sora in index.js), warm pastel backgrounds, liquid
-   glass cards, rounded-3xl corners and gradient pill buttons. */
+/* Voallen look, matched to the OnePermit site: Apple-style SF type (the system
+   font on Apple devices, Helvetica Neue / Arial elsewhere), white and #f5f5f7
+   "mist" sections, ink #1d1d1f text, #707070 muted text, blue #0071e3 pill
+   buttons, #0066cc links and 28px rounded cards. */
 
 html {
-    background-color: #FFF5F5;
+    background-color: #ffffff;
 }
 
 body {
     margin: 0;
     font-family:
-        "Sora Variable", "Sora", -apple-system, BlinkMacSystemFont, "Roboto", "Helvetica Neue",
-        sans-serif;
+        -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
-    line-height: 1.4;
-    color: #1A1A2E;
-    letter-spacing: -0.01em;
-    background-color: #FFF5F5;
+    font-size: 17px;
+    line-height: 1.47;
+    color: #1d1d1f;
+    letter-spacing: -0.022em;
+    background-color: #ffffff;
 }
 
-/* Typography: big, bold and tightly tracked headings in Sora */
+/* Typography: SF Display headings at weight 600, as on OnePermit */
 h1, h2, h3, h4 {
-    font-family: "Sora Variable", "Sora", -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 600;
     color: rgb(var(--stone-900));
 }
 
 h1 {
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.04em;
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.015em;
 }
 
 h2 {
-    font-size: 30px;
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.035em;
+    font-size: 32px;
+    line-height: 1.08;
+    letter-spacing: -0.015em;
 }
 
 h3 {
-    font-size: 20px;
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    font-size: 21px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
 }
 
 p {
     font-weight: 400;
-    line-height: 1.6;
-    color: rgb(var(--stone-600));
+    line-height: 1.47;
+    color: rgb(var(--stone-500));
 }
 
 .text-muted {
-    color: rgb(var(--stone-600));
+    color: rgb(var(--stone-500));
 }
 
 .text-primary-dark {
@@ -66,13 +64,13 @@ p {
 }
 
 @media (min-width: 640px) {
-    h1 { font-size: 52px; }
-    h2 { font-size: 36px; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 40px; }
 }
 
 @media (min-width: 1024px) {
-    h1 { font-size: 64px; }
-    h2 { font-size: 40px; }
+    h1 { font-size: 80px; }
+    h2 { font-size: 48px; }
 }
 
 /* Hide scrollbar for carousel */
@@ -91,60 +89,60 @@ code {
 
 @layer base {
     :root {
-        --background: 0 100% 98%;
-        --foreground: 240 28% 14%;
+        --background: 0 0% 100%;
+        --foreground: 240 3% 12%;
         --card: 0 0% 100%;
-        --card-foreground: 240 28% 14%;
+        --card-foreground: 240 3% 12%;
         --popover: 0 0% 100%;
-        --popover-foreground: 240 28% 14%;
-        --primary: 240 28% 14%;
-        --primary-foreground: 0 100% 98%;
-        --secondary: 291 47% 93%;
-        --secondary-foreground: 240 28% 14%;
-        --muted: 340 30% 95%;
-        --muted-foreground: 240 18% 35%;
-        --accent: 28 100% 93%;
-        --accent-foreground: 240 28% 14%;
+        --popover-foreground: 240 3% 12%;
+        --primary: 210 100% 45%;
+        --primary-foreground: 0 0% 100%;
+        --secondary: 240 11% 96%;
+        --secondary-foreground: 240 3% 12%;
+        --muted: 240 11% 96%;
+        --muted-foreground: 0 0% 44%;
+        --accent: 240 11% 96%;
+        --accent-foreground: 240 3% 12%;
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
-        --border: 330 25% 90%;
-        --input: 330 25% 88%;
-        --ring: 0 100% 71%;
+        --border: 0 0% 84%;
+        --input: 240 3% 68%;
+        --ring: 210 100% 45%;
         --chart-1: 30 76% 50%;
         --chart-2: 35 58% 45%;
         --chart-3: 25 50% 35%;
         --chart-4: 40 70% 55%;
         --chart-5: 20 80% 60%;
-        --radius: 1rem;
-        --stone-50: 253 248 248;
-        --stone-100: 248 239 241;
-        --stone-200: 238 226 232;
-        --stone-300: 218 204 214;
-        --stone-400: 164 154 176;
-        --stone-500: 110 106 136;
-        --stone-600: 74 74 106;
-        --stone-700: 54 54 84;
-        --stone-800: 38 38 64;
-        --stone-900: 26 26 46;
-        --stone-950: 14 14 28;
+        --radius: 1.75rem;
+        --stone-50: 250 250 252;
+        --stone-100: 245 245 247;
+        --stone-200: 230 230 232;
+        --stone-300: 214 214 214;
+        --stone-400: 134 134 139;
+        --stone-500: 112 112 112;
+        --stone-600: 98 98 105;
+        --stone-700: 66 66 69;
+        --stone-800: 29 29 31;
+        --stone-900: 29 29 31;
+        --stone-950: 0 0 0;
     }
     .dark {
-        --stone-50: 30 27 46;
-        --stone-100: 40 36 60;
-        --stone-200: 56 51 80;
-        --stone-300: 82 76 108;
-        --stone-400: 120 114 146;
-        --stone-500: 170 165 192;
-        --stone-600: 200 196 218;
-        --stone-700: 220 216 232;
-        --stone-800: 236 232 244;
-        --stone-900: 248 245 250;
-        --stone-950: 253 251 253;
-        --background: 248 30% 9%;
-        --foreground: 0 0% 98%;
-        --card: 248 28% 12%;
-        --card-foreground: 0 0% 98%;
-        --popover: 248 28% 12%;
+        --stone-50: 18 18 18;
+        --stone-100: 29 29 31;
+        --stone-200: 44 44 46;
+        --stone-300: 58 58 60;
+        --stone-400: 110 110 115;
+        --stone-500: 161 161 166;
+        --stone-600: 174 174 178;
+        --stone-700: 210 210 215;
+        --stone-800: 245 245 247;
+        --stone-900: 245 245 247;
+        --stone-950: 255 255 255;
+        --background: 0 0% 0%;
+        --foreground: 240 11% 96%;
+        --card: 240 3% 12%;
+        --card-foreground: 240 11% 96%;
+        --popover: 240 3% 12%;
         --popover-foreground: 0 0% 98%;
         --primary: 0 0% 98%;
         --primary-foreground: 0 0% 9%;
@@ -213,16 +211,16 @@ code {
    text, borders and buttons adapt on their own. These rules cover the few
    hard-coded white surfaces and keep text readable on the flipped dark buttons. */
 .dark { color-scheme: dark; }
-.dark .bg-white { background-color: #1c1a2e; }
-.dark .bg-white\/95 { background-color: rgb(28 26 46 / 0.95); }
-.dark .bg-white\/90 { background-color: rgb(28 26 46 / 0.9); }
-.dark .bg-gray-50 { background-color: #15132a; }
+.dark .bg-white { background-color: #1d1d1f; }
+.dark .bg-white\/95 { background-color: rgb(29 29 31 / 0.95); }
+.dark .bg-white\/90 { background-color: rgb(29 29 31 / 0.9); }
+.dark .bg-gray-50 { background-color: #111111; }
 .dark .border-gray-100 { border-color: rgb(var(--stone-100)); }
-.dark .hover\:bg-white:hover { background-color: #26233d; }
+.dark .hover\:bg-white:hover { background-color: #2c2c2e; }
 .dark .text-gray-500 { color: rgb(var(--stone-500)); }
 .dark :is(.bg-stone-700, .bg-stone-800, .bg-stone-900).text-white,
 .dark :is(.bg-stone-700, .bg-stone-800, .bg-stone-900) > .text-white,
-.dark :is(.bg-stone-700, .bg-stone-800, .bg-stone-900) > svg.text-white { color: rgb(14 14 28); }
+.dark :is(.bg-stone-700, .bg-stone-800, .bg-stone-900) > svg.text-white { color: rgb(0 0 0); }
 .dark input, .dark textarea, .dark select { color: rgb(var(--stone-900)); }
 .dark input::placeholder, .dark textarea::placeholder { color: rgb(var(--stone-400)); }
 .dark .bg-amber-100 { background-color: rgb(120 53 15 / 0.35); }
@@ -247,93 +245,74 @@ code {
 :where(.admin-ui) :is(h1, h2, h3, h4, p) { color: inherit; font-family: inherit; }
 :where(.admin-ui) :is(h1, h2, h3, h4) { line-height: 1.2; }
 
-/* Display headlines: big, bold, tight Sora (the OnePermit "massive type"). */
+/* Display headlines: SF Display, weight 600, tight tracking (OnePermit h1/h2). */
 .font-display {
-    font-family: "Sora Variable", "Sora", -apple-system, sans-serif !important;
-    font-weight: 700 !important;
-    letter-spacing: -0.045em !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.015em !important;
 }
 
-/* ===== OnePermit-style building blocks ===== */
+/* ===== OnePermit building blocks ===== */
 
-/* Soft warm page background: blush to lavender, with two pastel glows */
-.bg-joy {
-    background-color: #FFF5F5;
-    background-image:
-        radial-gradient(60rem 40rem at 10% -10%, rgba(255, 218, 185, 0.75), transparent 60%),
-        radial-gradient(50rem 40rem at 100% 10%, rgba(230, 230, 250, 0.9), transparent 60%),
-        linear-gradient(180deg, #FFF5F5 0%, #F3E5F5 100%);
-}
-.dark .bg-joy {
-    background-color: #12101f;
-    background-image:
-        radial-gradient(60rem 40rem at 10% -10%, rgba(255, 154, 158, 0.14), transparent 60%),
-        radial-gradient(50rem 40rem at 100% 10%, rgba(180, 160, 255, 0.14), transparent 60%),
-        linear-gradient(180deg, #14111f 0%, #1a1530 100%);
-}
+/* Page background: plain white; sections alternate with the #f5f5f7 mist band */
+.bg-page { background-color: #ffffff; }
+.dark .bg-page { background-color: #000000; }
+.bg-mist { background-color: #f5f5f7; }
+.dark .bg-mist { background-color: #1d1d1f; }
 
-/* Peach to lavender, used for hero and highlight bands */
-.bg-joy-hero { background-image: linear-gradient(135deg, #FFDAB9 0%, #E6E6FA 100%); }
-.dark .bg-joy-hero { background-image: linear-gradient(135deg, #3a2633 0%, #26234a 100%); }
-.bg-joy-blush { background-image: linear-gradient(135deg, #FFB7B2 0%, #FFDAB9 100%); }
-.dark .bg-joy-blush { background-image: linear-gradient(135deg, #4a2a33 0%, #43302a 100%); }
+/* Frosted site header, as on OnePermit: near-white with an 18px blur and a hairline */
+.op-header {
+    background-color: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(29, 29, 31, 0.04);
+}
+.dark .op-header { background-color: rgba(0, 0, 0, 0.85); border-bottom-color: rgba(255, 255, 255, 0.08); }
 
-/* Liquid glass: frosted white with a bright edge and a soft shadow */
-.glass {
-    background-color: rgba(255, 255, 255, 0.65);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    backdrop-filter: blur(24px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
+/* Card: white, hairline border, 28px corners and a very soft shadow */
+.op-card {
+    background-color: #ffffff;
+    border: 1px solid #dddde2;
+    border-radius: 28px;
+    box-shadow: 0 18px 45px rgba(29, 29, 31, 0.024);
 }
-.glass-card {
-    background-color: rgba(255, 255, 255, 0.55);
-    -webkit-backdrop-filter: blur(24px) saturate(160%);
-    backdrop-filter: blur(24px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-    border-radius: 1.5rem;
-}
-.dark .glass, .dark .glass-card {
-    background-color: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-.glass-lift { transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms; }
-.glass-lift:hover { transform: translateY(-8px); box-shadow: 0 18px 40px 0 rgba(31, 38, 135, 0.1); }
+.bg-mist .op-card { border-color: transparent; box-shadow: none; }
+.dark .op-card { background-color: #1d1d1f; border-color: #2c2c2e; }
+.dark .bg-mist .op-card { background-color: #2c2c2e; }
 
-/* Primary gradient pill (rose to peach). Dark ink text keeps it easy to read. */
-.btn-joy {
-    background-image: linear-gradient(90deg, #FF8A8A 0%, #FFB88C 100%);
-    color: #1A1A2E !important;
-    font-weight: 700;
-    box-shadow: 0 10px 20px rgba(255, 105, 105, 0.3);
-    transition: transform 300ms, box-shadow 300ms, filter 300ms;
+/* Primary button: the OnePermit blue pill */
+.btn-primary {
+    background-color: #0071e3;
+    color: #ffffff !important;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    transition: background-color 200ms;
 }
-.btn-joy:hover { transform: scale(1.05); box-shadow: 0 14px 28px rgba(255, 105, 105, 0.38); }
-.btn-joy:active { transform: scale(0.95); }
+.btn-primary:hover { background-color: #0077ed; text-decoration: none; }
 
-/* Glass pill for secondary actions */
-.btn-glass {
-    background-color: rgba(255, 255, 255, 0.45);
-    -webkit-backdrop-filter: blur(24px);
-    backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    color: #1A1A2E;
-    transition: transform 300ms, background-color 300ms;
+/* Secondary button: grey outline pill */
+.btn-outline {
+    background-color: #ffffff;
+    border: 1px solid #86868b;
+    color: #1d1d1f;
+    font-weight: 400;
+    transition: background-color 200ms;
 }
-.btn-glass:hover { background-color: rgba(255, 255, 255, 0.6); transform: scale(1.05); }
-.btn-glass:active { transform: scale(0.95); }
-.dark .btn-glass { background-color: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); color: #f5f3fa; }
-.dark .btn-glass:hover { background-color: rgba(255, 255, 255, 0.14); }
+.btn-outline:hover { background-color: #f5f5f7; }
+.dark .btn-outline { background-color: transparent; border-color: #86868b; color: #f5f5f7; }
+.dark .btn-outline:hover { background-color: #1d1d1f; }
 
-/* Small uppercase label above headings */
+/* Text link in OnePermit blue */
+.op-link { color: #0066cc; }
+.op-link:hover { text-decoration: underline; }
+.dark .op-link { color: #2997ff; }
+
+/* Small label above headings: 13px, semibold, grey, sentence case */
 .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
-    color: #FF6B6B;
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #626269;
 }
-
-@media (prefers-reduced-motion: reduce) {
-    .btn-joy:hover, .btn-glass:hover, .glass-lift:hover { transform: none; }
-}
+.dark .eyebrow { color: #a1a1a6; }

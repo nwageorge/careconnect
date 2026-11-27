@@ -4,12 +4,11 @@ import { ArrowUpRight, Check, Phone, Mail, Camera, Clock, MessageCircle, Footpri
 import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_EMAIL } from "@/components/voallen-sections";
 import { VoallenLogo } from "@/components/voallen-logo";
 
-const INK = "#1A1A2E";
-const CORAL = "#FF6B6B";
+const BLUE = "#0071e3";
 
 // Extra home page sections: a numbered "How it works" timeline, a two card row,
-// a closing call to action and the footer. Styled in the OnePermit design system:
-// warm pastel gradients, liquid glass cards, rounded-3xl and gradient pill buttons.
+// a closing call to action and the footer. Styled to match the OnePermit site:
+// white and #f5f5f7 sections, white 28px cards, SF type and blue pill buttons.
 
 const reveal = {
   initial: { opacity: 0, y: 24 },
@@ -52,7 +51,7 @@ export const HowVoallenWorks = () => (
     <div className="grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16 items-start">
       <motion.div {...reveal} className="lg:sticky lg:top-32">
         <Eyebrow>How it works</Eyebrow>
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-6">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-6">
           We visit.
           <br />
           <span className="relative inline-flex items-center gap-3">
@@ -64,11 +63,11 @@ export const HowVoallenWorks = () => (
                 className="absolute left-0 -bottom-2 w-full h-3"
                 aria-hidden="true"
               >
-                <path d="M2 8 Q 100 1 198 7" stroke={CORAL} strokeWidth="4" strokeLinecap="round" fill="none" />
+                <path d="M2 8 Q 100 1 198 7" stroke={BLUE} strokeWidth="4" strokeLinecap="round" fill="none" />
               </svg>
             </span>
             <span
-              className="inline-flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full btn-joy"
+              className="inline-flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full btn-primary"
             >
               <Check className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={3} />
             </span>
@@ -79,16 +78,16 @@ export const HowVoallenWorks = () => (
         </p>
       </motion.div>
 
-      <motion.ol {...reveal} className="glass-card rounded-3xl relative px-6 py-8 sm:px-10 sm:py-10">
+      <motion.ol {...reveal} className="op-card rounded-3xl relative px-6 py-8 sm:px-10 sm:py-10">
         {steps.map((step, i) => {
           const last = i === steps.length - 1;
           return (
             <li key={step.title} className="relative flex gap-5 sm:gap-6 pb-8 last:pb-0">
               {!last && (
-                <span className="absolute left-5 sm:left-6 top-12 bottom-0 w-px bg-gradient-to-b from-[#FFB7B2] to-[#E6E6FA]" aria-hidden="true" />
+                <span className="absolute left-5 sm:left-6 top-12 bottom-0 w-px bg-stone-300" aria-hidden="true" />
               )}
               <span
-                className={`relative z-10 shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-sm sm:text-base font-bold ${last ? "btn-joy" : "bg-joy-hero text-stone-900"}`}
+                className={`relative z-10 shrink-0 inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full text-sm sm:text-base font-semibold ${last ? "btn-primary" : "bg-mist text-stone-900"}`}
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
@@ -105,7 +104,7 @@ export const HowVoallenWorks = () => (
 );
 
 
-/* ----------------------------------------------- Peach to lavender band: what a visit holds */
+/* ----------------------------------------------- Mist band: what a visit holds */
 
 const visitMoments = [
   { icon: MessageCircle, title: "Good conversation", body: "Stories, news and a listening ear." },
@@ -118,11 +117,11 @@ const visitMoments = [
 
 export const VisitMomentsBand = () => (
   <section className="py-16 sm:py-24" data-testid="visit-moments-section">
-    <div className="rounded-[2.5rem] p-4 sm:p-6 lg:p-8 bg-joy-hero">
+    <div className="rounded-[28px] p-4 sm:p-6 lg:p-8 bg-mist">
       <div className="grid lg:grid-cols-[1fr_2fr] gap-4 sm:gap-5">
-        <motion.div {...reveal} className="glass-card overflow-hidden flex flex-col">
+        <motion.div {...reveal} className="op-card overflow-hidden flex flex-col">
           <div className="p-7 sm:p-8">
-            <h2 className="font-display text-4xl sm:text-5xl leading-[0.98] text-stone-900">
+            <h2 className="font-display text-4xl sm:text-5xl leading-[1.07] text-stone-900">
               Every visit is shaped around them
             </h2>
           </div>
@@ -137,9 +136,9 @@ export const VisitMomentsBand = () => (
             <motion.div
               key={title}
               {...reveal}
-              className="glass-card glass-lift p-6 sm:p-7 flex flex-col justify-between min-h-[150px] sm:min-h-[180px] text-stone-900"
+              className="op-card p-6 sm:p-7 flex flex-col justify-between min-h-[150px] sm:min-h-[180px] text-stone-900"
             >
-              <span className="inline-flex w-12 h-12 items-center justify-center rounded-2xl bg-white/70 dark:bg-white/10 shadow-sm"><Icon className="w-6 h-6" strokeWidth={1.5} style={{ color: CORAL }} /></span>
+              <span className="inline-flex w-12 h-12 items-center justify-center rounded-full bg-mist"><Icon className="w-6 h-6" strokeWidth={1.5} style={{ color: BLUE }} /></span>
               <div className="mt-8">
                 <h3 className="text-xl font-semibold tracking-[-0.02em] mb-1 text-stone-900">{title}</h3>
                 <p className="text-sm text-stone-600">{body}</p>
@@ -160,10 +159,10 @@ export const TwoPathsSection = () => (
       {/* White card: book a visit */}
       <motion.div
         {...reveal}
-        className="glass-card glass-lift rounded-3xl p-8 sm:p-10 flex flex-col"
+        className="op-card rounded-3xl p-8 sm:p-10 flex flex-col"
       >
         <Eyebrow>For families</Eyebrow>
-        <h3 className="font-display text-3xl sm:text-4xl text-stone-900 leading-[1.02] mb-4">
+        <h3 className="font-display text-3xl sm:text-4xl text-stone-900 leading-[1.1] mb-4">
           Company for the people you love, on their schedule.
         </h3>
         <p className="text-stone-500 text-lg mb-8 max-w-md">
@@ -171,26 +170,26 @@ export const TwoPathsSection = () => (
         </p>
         <Link
           to="/visits"
-          className="btn-joy rounded-full mt-auto self-start inline-flex items-center gap-2 px-6 py-3.5 rounded-full"
+          className="btn-primary rounded-full mt-auto self-start inline-flex items-center gap-2 px-6 py-3.5 rounded-full"
         >
           See how visits work <ArrowUpRight className="w-4 h-4" />
         </Link>
       </motion.div>
 
-      {/* Blush card: proof after every visit */}
+      {/* Mist card: proof after every visit */}
       <motion.div
         {...reveal}
-        className="rounded-3xl p-8 sm:p-10 flex flex-col bg-joy-blush text-stone-900 glass-lift"
+        className="rounded-3xl p-8 sm:p-10 flex flex-col bg-mist text-stone-900"
       >
-        <p className="eyebrow mb-4" style={{ color: INK, opacity: 0.6 }}>Proof of care</p>
-        <h3 className="font-display text-3xl sm:text-4xl leading-[1.02] mb-6 text-stone-900">
+        <p className="eyebrow mb-4">Proof of care</p>
+        <h3 className="font-display text-3xl sm:text-4xl leading-[1.1] mb-6 text-stone-900">
           After every visit, a little note lands on your phone.
         </h3>
         {/* Example update card */}
-        <div className="mt-auto glass-card p-4 sm:p-5 text-stone-900">
+        <div className="mt-auto op-card p-4 sm:p-5 text-stone-900">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-semibold">Visit update</span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#FFF0EE] px-2.5 py-1 text-xs font-bold" style={{ color: "#C9374A" }}>
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#e8f2fc] px-2.5 py-1 text-xs font-semibold" style={{ color: "#0066cc" }}>
               <Check className="w-3.5 h-3.5" strokeWidth={3} /> Visit complete
             </span>
           </div>
@@ -221,10 +220,10 @@ export const ClosingCTASection = () => (
   <section className="py-16 sm:py-24" data-testid="closing-cta-section">
     <motion.div
       {...reveal}
-      className="rounded-[2.5rem] bg-joy-hero px-6 py-14 sm:px-12 sm:py-20 lg:px-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
+      className="rounded-[28px] bg-mist px-6 py-14 sm:px-12 sm:py-20 lg:px-16 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
     >
       <div className="max-w-xl">
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-5">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-5">
           Ready for a friendly face at the door?
         </h2>
         <p className="text-lg text-stone-500">
@@ -234,13 +233,13 @@ export const ClosingCTASection = () => (
       <div className="flex flex-col sm:flex-row gap-3 shrink-0">
         <a
           href={CONTACT_PHONE_HREF}
-          className="btn-joy inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
+          className="btn-primary inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg"
         >
           <Phone className="w-5 h-5" /> Book a call
         </a>
         <a
           href={`mailto:${CONTACT_EMAIL}`}
-          className="btn-glass inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-semibold"
+          className="btn-outline inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full text-lg font-semibold"
         >
           <Mail className="w-5 h-5" /> Email us
         </a>
@@ -251,24 +250,23 @@ export const ClosingCTASection = () => (
 
 /* --------------------------------------------------------------- Footer */
 
-// Minimal, clean footer on a glass panel, as in the OnePermit footer.
-const footerLink = "text-sm text-stone-600 hover:text-stone-900 transition";
-const footerHead = "text-xs font-bold uppercase tracking-[0.2em] text-stone-400 mb-4";
+// Full-width #f5f5f7 footer with small grey text, as on the OnePermit site.
+const footerLink = "text-[12px] text-stone-600 hover:text-stone-900 hover:underline";
+const footerHead = "text-[12px] font-semibold text-stone-900 mb-3";
 
 export const HomeFooter = () => (
-  <footer className="relative px-3 sm:px-6 lg:px-[3vw] pb-4 sm:pb-6 pt-8">
-    <div className="glass-card max-w-[1400px] mx-auto px-6 sm:px-10 pt-12 pb-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-        <div className="col-span-2 md:col-span-1">
-          <VoallenLogo size="sm" className="mb-4" />
-          <p className="text-sm text-stone-600 leading-relaxed max-w-xs">
-            Warm companionship visits for older adults, with proof of care after every visit.
-          </p>
-          <p className="text-sm text-stone-600 mt-3">Serving Philadelphia, PA</p>
-        </div>
+  <footer className="bg-mist relative mt-8">
+    <div className="max-w-[1000px] mx-auto px-6 pt-14 pb-7">
+      <div className="pb-6 border-b border-stone-300">
+        <VoallenLogo size="sm" className="mb-3" />
+        <p className="text-[12px] text-stone-500 leading-relaxed max-w-md">
+          Warm companionship visits for older adults, with proof of care after every visit. Serving Philadelphia, PA.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 py-8">
         <div>
           <h4 className={footerHead}>Visits</h4>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             <li><Link to="/visits" className={footerLink}>Friendly companionship</Link></li>
             <li><Link to="/visits" className={footerLink}>Special occasions</Link></li>
             <li><Link to="/visits" className={footerLink}>Hospice companionship</Link></li>
@@ -277,7 +275,7 @@ export const HomeFooter = () => (
         </div>
         <div>
           <h4 className={footerHead}>Company</h4>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             <li><Link to="/about" className={footerLink}>About us</Link></li>
             <li><Link to="/how-it-works" className={footerLink}>How it works</Link></li>
             <li><Link to="/caregivers" className={footerLink}>Caregiver jobs</Link></li>
@@ -285,20 +283,20 @@ export const HomeFooter = () => (
             <li><Link to="/contact" className={footerLink}>Contact us</Link></li>
           </ul>
         </div>
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h4 className={footerHead}>Contact</h4>
-          <ul className="space-y-2.5">
-            <li><a href={CONTACT_PHONE_HREF} className={`${footerLink} inline-flex items-center gap-2`}><Phone className="w-4 h-4" style={{ color: CORAL }} /> {CONTACT_PHONE}</a></li>
-            <li><a href={`mailto:${CONTACT_EMAIL}`} className={`${footerLink} inline-flex items-center gap-2 break-all`}><Mail className="w-4 h-4 shrink-0" style={{ color: CORAL }} /> {CONTACT_EMAIL}</a></li>
+          <ul className="space-y-2">
+            <li><a href={CONTACT_PHONE_HREF} className={`${footerLink} inline-flex items-center gap-2`}><Phone className="w-3.5 h-3.5" /> {CONTACT_PHONE}</a></li>
+            <li><a href={`mailto:${CONTACT_EMAIL}`} className={`${footerLink} inline-flex items-center gap-2 break-all`}><Mail className="w-3.5 h-3.5 shrink-0" /> {CONTACT_EMAIL}</a></li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-stone-200 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <p className="text-xs text-stone-500">© {new Date().getFullYear()} Voallen. All rights reserved.</p>
-        <div className="flex gap-5">
-          <Link to="/privacy" className="text-xs text-stone-500 hover:text-stone-900 transition">Privacy</Link>
-          <Link to="/terms" className="text-xs text-stone-500 hover:text-stone-900 transition">Terms</Link>
-          <Link to="/contact" className="text-xs text-stone-500 hover:text-stone-900 transition">Accessibility help</Link>
+      <div className="border-t border-stone-300 pt-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8">
+        <p className="text-[12px] text-stone-500">Copyright © {new Date().getFullYear()} Voallen. All rights reserved.</p>
+        <div className="flex gap-5 sm:ml-auto">
+          <Link to="/privacy" className={footerLink}>Privacy</Link>
+          <Link to="/terms" className={footerLink}>Terms</Link>
+          <Link to="/contact" className={footerLink}>Accessibility help</Link>
         </div>
       </div>
     </div>

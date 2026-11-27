@@ -92,7 +92,7 @@ export const OurServicesSection = () => {
     <section id="our-services" className="pt-10 sm:pt-14 pb-16 sm:pb-24 scroll-mt-24" data-testid="our-services-section">
       {/* Intro sits top left, right under the hero */}
       <motion.div {...reveal} className="max-w-3xl mb-8 sm:mb-10">
-        <h2 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[0.98] mb-3">Get to know our services</h2>
+        <h2 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] mb-3">Get to know our services</h2>
         <p className="text-lg sm:text-xl text-stone-500">
           Warm, personal company for the people you love, at home or wherever they live.
         </p>
@@ -116,8 +116,8 @@ export const OurServicesSection = () => {
               onClick={() => setActive(i)}
               className={`snap-start shrink-0 w-40 lg:w-auto flex flex-col items-center text-center gap-3 rounded-3xl px-3 pt-4 pb-5 transition-all duration-500 ${
                 selected
-                  ? "bg-joy-hero ring-2 ring-[#FF8A8A] shadow-[0_12px_28px_rgba(255,105,105,0.18)]"
-                  : "glass-card hover:-translate-y-1"
+                  ? "bg-mist ring-2 ring-[#0066cc] shadow-[0_12px_28px_rgba(0,113,227,0.12)]"
+                  : "op-card hover:-translate-y-1"
               }`}
               data-testid={`service-tab-${i}`}
             >
@@ -164,12 +164,12 @@ export const OurServicesSection = () => {
             transition={{ duration: 0.3 }}
           >
             <Eyebrow>{service.label}</Eyebrow>
-            <h3 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[0.98] mb-4">{service.title}</h3>
+            <h3 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] mb-4">{service.title}</h3>
             <p className="text-lg text-stone-600 leading-relaxed mb-8">{service.description}</p>
             <Link
               to="/visits"
               data-testid="ask-about-visit"
-              className="btn-joy rounded-full inline-block px-8 py-4"
+              className="btn-primary rounded-full inline-block px-8 py-4"
             >
               Ask about a visit
             </Link>
@@ -187,7 +187,7 @@ export const ThoughtfulVisitsSection = () => (
     <div className="grid lg:grid-cols-2 gap-12 items-center">
       <motion.div {...reveal}>
         <Eyebrow>A trusted, professional approach</Eyebrow>
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-6">
+        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-6">
           Thoughtful visits.
           <br />
           Personal connection.
@@ -197,7 +197,7 @@ export const ThoughtfulVisitsSection = () => (
         </p>
         <a
           href="#our-services"
-          className="btn-joy rounded-full inline-block px-8 py-4"
+          className="btn-primary rounded-full inline-block px-8 py-4"
         >
           Explore our services
         </a>
@@ -275,7 +275,7 @@ export const StayConnectedSection = () => {
 
         <motion.div {...reveal} className="order-1 lg:order-2">
           <Eyebrow>Companionship, with family connection</Eyebrow>
-          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-4">
+          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
             Simple ways to
             <br />
             stay connected.
@@ -373,7 +373,7 @@ export const QuestionsAnsweredSection = () => {
       <div className="rounded-3xl bg-stone-50 border border-stone-100 px-6 py-10 sm:p-12 lg:p-16 grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16">
         <motion.div {...reveal}>
           <Eyebrow>A little clarity, before you reach out</Eyebrow>
-          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-4">
+          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
             Your questions,
             <br />
             answered.
@@ -386,13 +386,13 @@ export const QuestionsAnsweredSection = () => {
           <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
             <a
               href={CONTACT_PHONE_HREF}
-              className="btn-joy rounded-full inline-flex items-center justify-center gap-2 px-6 py-4"
+              className="btn-primary rounded-full inline-flex items-center justify-center gap-2 px-6 py-4"
             >
               <Phone className="w-5 h-5" /> Call {CONTACT_PHONE}
             </a>
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="btn-glass rounded-full inline-flex items-center justify-center gap-2 px-6 py-4 text-stone-800 font-semibold"
+              className="btn-outline rounded-full inline-flex items-center justify-center gap-2 px-6 py-4 text-stone-800 font-semibold"
             >
               <Mail className="w-5 h-5" /> Email us
             </a>
@@ -403,7 +403,7 @@ export const QuestionsAnsweredSection = () => {
           {questionGroups.map((group, i) => {
             const isOpen = i === open;
             return (
-              <div key={group.title} className="glass-card rounded-3xl overflow-hidden">
+              <div key={group.title} className="op-card rounded-3xl overflow-hidden">
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
@@ -474,13 +474,13 @@ const caregiverSteps = [
 export const CaregiverJobsSection = () => (
   <section
     id="work-with-us"
-    className="bg-joy-hero py-16 sm:py-24 scroll-mt-24"
+    className="bg-mist py-16 sm:py-24 scroll-mt-24"
     data-testid="caregiver-jobs-section"
   >
     <div className="max-w-7xl mx-auto px-6">
       <motion.div {...reveal} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
         <Eyebrow>For caregivers</Eyebrow>
-        <h2 className="font-display text-4xl sm:text-6xl text-stone-900 leading-[0.95] mb-4">
+        <h2 className="font-display text-4xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
           Find caregiving work that feels like family
         </h2>
         <p className="text-lg sm:text-xl text-stone-500">
@@ -511,7 +511,7 @@ export const CaregiverJobsSection = () => (
                 style={{ objectPosition: step.position }}
                 loading="lazy"
               />
-              <span className="btn-joy rounded-full absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md">
+              <span className="btn-primary rounded-full absolute -bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center text-lg shadow-md">
                 {i + 1}
               </span>
             </div>
@@ -524,14 +524,14 @@ export const CaregiverJobsSection = () => (
       <motion.div {...reveal} className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-center gap-3">
         <Link
           to="/caregivers"
-          className="btn-joy rounded-full inline-flex items-center justify-center px-8 py-4 rounded-full text-lg"
+          className="btn-primary rounded-full inline-flex items-center justify-center px-8 py-4 rounded-full text-lg"
           data-testid="caregiver-apply-btn"
         >
           Learn more and apply
         </Link>
         <a
           href={CONTACT_PHONE_HREF}
-          className="btn-glass inline-flex items-center justify-center px-8 py-4 rounded-full text-lg font-semibold"
+          className="btn-outline inline-flex items-center justify-center px-8 py-4 rounded-full text-lg font-semibold"
         >
           Questions? Call {CONTACT_PHONE}
         </a>

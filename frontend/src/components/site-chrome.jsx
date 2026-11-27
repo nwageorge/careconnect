@@ -5,9 +5,10 @@ import { useAuth } from "@/App";
 import { VoallenLogo } from "@/components/voallen-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-// The site header and the things every page shares. The header is a floating
-// liquid-glass bar (OnePermit style) with plain links, a glass Log In pill and a
-// gradient Join pill, used on every page so the whole site matches.
+// The site header and the things every page shares. The header matches the
+// OnePermit site: a full-width frosted white bar with the wordmark on the left,
+// small plain links in the middle, and a blue "Log In" text link plus a small
+// blue Join pill on the right. Used on every page so the whole site matches.
 
 export const SITE_NAV = [
   { href: "/visits", label: "Visits" },
@@ -19,11 +20,11 @@ export const SITE_NAV = [
 ];
 
 // Height of the fixed header, for pages that need to clear it.
-export const HEADER_OFFSET = "pt-[72px] sm:pt-[84px]";
+export const HEADER_OFFSET = "pt-[64px] sm:pt-[76px]";
 
 const navClass = ({ isActive }) =>
-  `px-3.5 xl:px-4 py-2 rounded-full text-[15px] xl:text-[16px] font-medium transition-colors ${
-    isActive ? "text-stone-900 bg-white/70 dark:bg-white/10 shadow-sm" : "text-stone-700 hover:text-stone-900 hover:bg-white/50 dark:hover:bg-white/10"
+  `text-[13px] xl:text-[14px] tracking-[-0.01em] transition-colors hover:underline underline-offset-4 ${
+    isActive ? "text-stone-900 font-semibold" : "text-stone-800"
   }`;
 
 export const SiteHeader = () => {
@@ -50,23 +51,22 @@ export const SiteHeader = () => {
   };
 
   const outlinePill =
-    "btn-glass inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 text-[15px] xl:text-[16px] font-semibold";
+    "op-link inline-flex items-center gap-1 text-[14px] px-2 py-1.5";
   const darkPill =
-    "btn-joy inline-flex items-center gap-1.5 rounded-full px-6 py-2.5 text-[15px] xl:text-[16px]";
+    "btn-primary inline-flex items-center gap-1 rounded-full px-4 py-2 text-[13px] leading-4";
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 h-[72px] sm:h-[84px] px-3 sm:px-6 lg:px-[3vw] pt-3 sm:pt-4" data-testid="site-header">
-      <div
-        className={`glass h-full max-w-[1400px] mx-auto rounded-full pl-4 pr-2 sm:pl-6 sm:pr-3 flex justify-between items-center gap-4 transition-shadow duration-500 ${
-          scrolled ? "shadow-[0_8px_32px_rgba(31,38,135,0.12)]" : "shadow-[0_8px_32px_rgba(31,38,135,0.06)]"
-        }`}
-      >
-        <Link to="/" aria-label="Voallen home" className="shrink-0">
-          <VoallenLogo size="lg" />
+    <header
+      className={`op-header fixed inset-x-0 top-0 z-40 h-[64px] sm:h-[76px] transition-shadow duration-300 ${scrolled ? "shadow-[0_1px_0_rgba(29,29,31,0.06)]" : ""}`}
+      data-testid="site-header"
+    >
+      <div className="h-full max-w-[1280px] mx-auto px-5 sm:px-6 flex justify-between items-center gap-5">
+        <Link to="/" aria-label="Voallen home" className="shrink-0 flex items-center">
+          <VoallenLogo size="md" />
         </Link>
 
         {/* Desktop nav: plain text links */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5" aria-label="Main">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-7" aria-label="Main">
           {SITE_NAV.map((link) => (
             <NavLink key={link.href} to={link.href} className={navClass}>
               {link.label}
@@ -76,10 +76,10 @@ export const SiteHeader = () => {
 
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-2 xl:gap-3 shrink-0">
-          <Link to="/agencies" aria-label="Search caregivers" className="p-2 text-stone-800 hover:bg-white/60 dark:hover:bg-white/10 rounded-full transition-colors">
-            <Search className="w-5 h-5" />
+          <Link to="/agencies" aria-label="Search caregivers" className="p-2 text-stone-800 hover:bg-stone-100 rounded-full transition-colors">
+            <Search className="w-[18px] h-[18px]" />
           </Link>
-          <ThemeToggle className="text-stone-800 hover:bg-white/60 dark:hover:bg-white/10" />
+          <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
           {user ? (
             <>
               <Link to="/dashboard" className={outlinePill} data-testid="nav-dashboard">
@@ -101,7 +101,7 @@ export const SiteHeader = () => {
           )}
           {/* Menu button for tablets, where the text links don't fit */}
           <button
-            className="lg:hidden p-2 text-stone-900 rounded-full hover:bg-white/60 dark:hover:bg-white/10"
+            className="lg:hidden p-2 text-stone-900 rounded-full hover:bg-stone-100"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -112,9 +112,9 @@ export const SiteHeader = () => {
 
         {/* Mobile menu button */}
         <div className="sm:hidden flex items-center gap-1">
-          <ThemeToggle className="text-stone-800 hover:bg-white/60 dark:hover:bg-white/10" />
+          <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
           <button
-            className="p-2 text-stone-900 rounded-full hover:bg-white/60 dark:hover:bg-white/10"
+            className="p-2 text-stone-900 rounded-full hover:bg-stone-100"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
             aria-expanded={open}
@@ -126,24 +126,24 @@ export const SiteHeader = () => {
 
       {/* Mobile and tablet menu */}
       {open && (
-        <div className="lg:hidden glass-card mt-3 sm:ml-auto sm:w-80 bg-white/80 dark:bg-[#1c1a2e]/90 p-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="lg:hidden op-card mx-3 sm:mx-6 mt-2 sm:ml-auto sm:w-80 p-4 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
           <nav className="flex flex-col space-y-1 mb-4" aria-label="Mobile">
             {SITE_NAV.map((link) => (
               <NavLink
                 key={link.href}
                 to={link.href}
                 className={({ isActive }) =>
-                  `px-4 py-3 font-medium text-base rounded-xl transition-colors ${isActive ? "bg-white/80 dark:bg-white/10 text-stone-900" : "text-stone-900 hover:bg-white/60 dark:hover:bg-white/10"}`
+                  `px-4 py-3 font-medium text-base rounded-xl transition-colors ${isActive ? "bg-stone-100 text-stone-900 font-semibold" : "text-stone-900 hover:bg-stone-100"}`
                 }
               >
                 {link.label}
               </NavLink>
             ))}
           </nav>
-          <div className="border-t border-white/60 dark:border-white/10 pt-4 space-y-2 sm:hidden">
+          <div className="border-t border-stone-200 pt-4 space-y-2 sm:hidden">
             {user ? (
               <>
-                <Link to="/dashboard" className="btn-glass block px-4 py-3 rounded-full font-semibold text-base text-center">
+                <Link to="/dashboard" className="btn-outline block px-4 py-3 rounded-full text-base text-center">
                   Dashboard
                 </Link>
                 <button onClick={handleLogout} className="w-full px-4 py-3 text-red-600 font-medium text-base text-center hover:bg-white/60 rounded-full transition-colors">
@@ -152,12 +152,12 @@ export const SiteHeader = () => {
               </>
             ) : (
               <>
-                <Link to="/login" className="btn-glass block px-4 py-3 rounded-full font-semibold text-base text-center">
+                <Link to="/login" className="btn-outline block px-4 py-3 rounded-full text-base text-center">
                   Log In
                 </Link>
                 <Link
                   to="/signup"
-                  className="btn-joy block w-full rounded-full px-4 py-3 text-base text-center"
+                  className="btn-primary block w-full rounded-full px-4 py-3 text-base text-center"
                 >
                   Join Voallen
                 </Link>
@@ -200,7 +200,7 @@ export const PageIntro = ({ eyebrow, title, lead, center = false, children }) =>
     {eyebrow && (
       <p className="eyebrow mb-4">{eyebrow}</p>
     )}
-    <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-stone-900 leading-[0.95] mb-6">
+    <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-stone-900 leading-[1.05] mb-6">
       {title}
     </h1>
     {lead && <p className="text-lg sm:text-xl text-stone-500 leading-relaxed">{lead}</p>}
