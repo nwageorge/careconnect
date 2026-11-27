@@ -111,7 +111,7 @@ const PageBackground = ({ children, className = "", tone = "cream" }) => {
   return (
     <div className={`min-h-screen w-full relative ${className}`}>
       {/* Page background: the soft blush-to-lavender wash used on every page */}
-      <div className="fixed inset-0 z-0 bg-joy" />
+      <div className="fixed inset-0 z-0 bg-page" />
       {/* Content */}
       <div className="relative z-10">{children}</div>
     </div>
@@ -232,7 +232,7 @@ const AgencyCarousel = ({ title, agencies, viewAllLink, large = false }) => {
   return (
     <section className="py-4 sm:py-6">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h2 className={large ? "font-display text-4xl sm:text-5xl text-stone-900 leading-[0.98] pr-4" : "text-lg sm:text-[22px] font-semibold text-stone-900"}>{title}</h2>
+        <h2 className={large ? "font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] pr-4" : "text-lg sm:text-[22px] font-semibold text-stone-900"}>{title}</h2>
         <div className="flex items-center gap-2">
           <Link
             to={viewAllLink}
@@ -313,7 +313,7 @@ const HeroSection = () => {
               Trusted by 10,000+ families
             </div>
             
-            <h1 className="text-5xl lg:text-6xl font-bold text-stone-800 leading-tight mb-6">
+            <h1 className="text-5xl lg:text-6xl font-semibold text-stone-800 leading-tight mb-6">
               Compassionate
               <span className="text-stone-500"> Home Care </span>
               For Your Loved Ones
@@ -338,7 +338,7 @@ const HeroSection = () => {
               </div>
               <button
                 type="submit"
-                className="btn-joy rounded-full px-8 py-4"
+                className="btn-primary rounded-full px-8 py-4"
                 data-testid="hero-search-btn"
               >
                 Search
@@ -475,7 +475,7 @@ const VisitPage = () => {
           <div className="flex justify-center pt-6 pb-10">
             <Link
               to={`/agencies?city=${encodeURIComponent("Philadelphia, PA")}`}
-              className="btn-glass w-full sm:w-auto sm:min-w-[360px] text-center px-8 py-4 rounded-full font-semibold"
+              className="btn-outline w-full sm:w-auto sm:min-w-[360px] text-center px-8 py-4 rounded-full font-semibold"
             >
               View all Philadelphia caregivers
             </Link>
@@ -594,7 +594,7 @@ const AgenciesPage = () => {
       <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
-            <h1 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[0.95] mb-3">Find care in Philadelphia</h1>
+            <h1 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-3">Find care in Philadelphia</h1>
             <p className="text-stone-500">Meet background-checked, non-medical companions near your loved one</p>
           </div>
 
@@ -693,7 +693,7 @@ const AgencyDetailPage = () => {
   };
 
   if (loading) return <PageBackground className="flex items-center justify-center"><div className="animate-spin w-12 h-12 border-4 border-stone-700 border-t-transparent rounded-full" /></PageBackground>;
-  if (!agency) return <PageBackground className="flex items-center justify-center"><div className="text-center"><h1 className="font-display font-light text-4xl text-stone-900 mb-3">Caregiver not found</h1><p className="text-stone-500 mb-6">It may have been removed or the link is out of date.</p><Link to="/agencies" className="btn-joy rounded-full inline-flex px-6 py-3 rounded-full">Browse caregivers</Link></div></PageBackground>;
+  if (!agency) return <PageBackground className="flex items-center justify-center"><div className="text-center"><h1 className="font-display font-light text-4xl text-stone-900 mb-3">Caregiver not found</h1><p className="text-stone-500 mb-6">It may have been removed or the link is out of date.</p><Link to="/agencies" className="btn-primary rounded-full inline-flex px-6 py-3 rounded-full">Browse caregivers</Link></div></PageBackground>;
 
   const allImages = [agency.image_url, ...(agency.gallery_images || [])];
   const timeSlots = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"];
@@ -758,7 +758,7 @@ const AgencyDetailPage = () => {
               <button type="button" onClick={() => setShowGallery(true)} className="block rounded-2xl overflow-hidden aspect-[4/3] bg-stone-100" aria-label={`Open ${agency.name}'s photo`}>
                 <img src={agency.image_url} alt={agency.name} className="w-full h-full object-cover" />
               </button>
-              <div className="rounded-3xl p-7 sm:p-10 flex flex-col justify-end bg-joy-hero">
+              <div className="rounded-3xl p-7 sm:p-10 flex flex-col justify-end bg-mist">
                 <p className="eyebrow mb-4">Meet {agency.name?.split(" ")[0]}</p>
                 <p className="font-display text-2xl sm:text-3xl leading-[1.15] text-stone-900">"{agency.bio}"</p>
                 {agency.certifications?.length > 0 && (
@@ -816,7 +816,7 @@ const AgencyDetailPage = () => {
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
-                className="glass-card rounded-3xl p-6"
+                className="op-card rounded-3xl p-6"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-4 sm:gap-5 min-w-0">
@@ -833,7 +833,7 @@ const AgencyDetailPage = () => {
                         </span>
                       )}
                     </div>
-                    <h1 className="font-display text-4xl sm:text-5xl leading-[0.98] text-stone-900 mb-2">{agency.name}</h1>
+                    <h1 className="font-display text-4xl sm:text-5xl leading-[1.07] text-stone-900 mb-2">{agency.name}</h1>
                     <div className="flex items-center gap-2 text-stone-500">
                       <MapPin className="w-4 h-4 shrink-0" />
                       <span>{agency.location}</span>
@@ -843,7 +843,7 @@ const AgencyDetailPage = () => {
                   <div className="text-right">
                     <div className="flex items-center gap-1 bg-stone-800 text-white px-3 py-1.5 rounded-lg">
                       <Star className="w-4 h-4 fill-white" />
-                      <span className="font-bold">{agency.rating}</span>
+                      <span className="font-semibold">{agency.rating}</span>
                     </div>
                     <p className="text-sm text-stone-500 mt-1">{agency.review_count} {agency.review_count === 1 ? "review" : "reviews"}</p>
                   </div>
@@ -852,19 +852,19 @@ const AgencyDetailPage = () => {
                 {/* Quick Stats - TripAdvisor Style */}
                 <div className="grid grid-cols-4 gap-4 mt-6 pt-6 border-t border-stone-100">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.experience_years || agency.years_in_business || 0}</div>
+                    <div className="text-2xl font-semibold text-stone-800">{agency.experience_years || agency.years_in_business || 0}</div>
                     <div className="text-xs text-stone-500">Years caring</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.families_served || 0}</div>
+                    <div className="text-2xl font-semibold text-stone-800">{agency.families_served || 0}</div>
                     <div className="text-xs text-stone-500">Families helped</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-stone-800">{agency.review_count || 0}</div>
+                    <div className="text-2xl font-semibold text-stone-800">{agency.review_count || 0}</div>
                     <div className="text-xs text-stone-500">Reviews</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-amber-600">${agency.price_per_hour}</div>
+                    <div className="text-2xl font-semibold text-amber-600">${agency.price_per_hour}</div>
                     <div className="text-xs text-stone-500">Per Hour</div>
                   </div>
                 </div>
@@ -875,9 +875,9 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="glass-card rounded-3xl p-6"
+                className="op-card rounded-3xl p-6"
               >
-                <h2 className="text-xl font-bold text-stone-800 mb-4 flex items-center gap-2">
+                <h2 className="text-xl font-semibold text-stone-800 mb-4 flex items-center gap-2">
                   <Building2 className="w-5 h-5" />
                   About {agency.name}
                 </h2>
@@ -892,16 +892,16 @@ const AgencyDetailPage = () => {
                 transition={{ delay: 0.2 }}
                 className="grid md:grid-cols-2 gap-6"
               >
-                <div className="glass-card rounded-3xl p-6">
-                  <h2 className="text-lg font-bold text-stone-800 mb-4">How I can help</h2>
+                <div className="op-card rounded-3xl p-6">
+                  <h2 className="text-lg font-semibold text-stone-800 mb-4">How I can help</h2>
                   <div className="flex flex-wrap gap-2">
                     {agency.specialties?.map((s, i) => (
                       <span key={i} className="px-3 py-2 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium">{s}</span>
                     ))}
                   </div>
                 </div>
-                <div className="glass-card rounded-3xl p-6">
-                  <h2 className="text-lg font-bold text-stone-800 mb-4">Certifications</h2>
+                <div className="op-card rounded-3xl p-6">
+                  <h2 className="text-lg font-semibold text-stone-800 mb-4">Certifications</h2>
                   <div className="space-y-2">
                     {agency.certifications?.map((c, i) => (
                       <div key={i} className="flex items-center gap-2 text-stone-700">
@@ -918,10 +918,10 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="glass-card rounded-3xl p-6"
+                className="op-card rounded-3xl p-6"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-stone-800 flex items-center gap-2">
+                  <h2 className="text-xl font-semibold text-stone-800 flex items-center gap-2">
                     <MessageSquare className="w-5 h-5" />
                     Family Reviews
                   </h2>
@@ -931,7 +931,7 @@ const AgencyDetailPage = () => {
                         <Star key={i} className={`w-5 h-5 ${i < Math.round(agency.rating) ? 'fill-amber-400 text-amber-400' : 'text-stone-300'}`} />
                       ))}
                     </div>
-                    <span className="font-bold text-stone-800">{agency.rating}</span>
+                    <span className="font-semibold text-stone-800">{agency.rating}</span>
                     <span className="text-stone-500">({agency.review_count} {agency.review_count === 1 ? "review" : "reviews"})</span>
                   </div>
                 </div>
@@ -979,10 +979,10 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.2 }} 
-                className="glass-card rounded-3xl p-6 sticky top-28"
+                className="op-card rounded-3xl p-6 sticky top-28"
               >
                 <div className="text-center mb-6 pb-6 border-b border-stone-100">
-                  <div className="text-4xl font-bold text-stone-800">
+                  <div className="text-4xl font-semibold text-stone-800">
                     ${agency.price_per_hour}
                     <span className="text-lg font-normal text-stone-500">/hour</span>
                   </div>
@@ -1059,7 +1059,7 @@ const AgencyDetailPage = () => {
                   <button 
                     type="submit" 
                     disabled={bookingLoading} 
-                    className="btn-joy rounded-full w-full py-4 disabled:opacity-50 flex items-center justify-center gap-2" 
+                    className="btn-primary rounded-full w-full py-4 disabled:opacity-50 flex items-center justify-center gap-2" 
                     data-testid="booking-submit"
                   >
                     {bookingLoading ? (
@@ -1118,10 +1118,10 @@ const StatusBadge = ({ status }) => (
 );
 
 const StatCard = ({ icon: Icon, iconBg, iconColor, label, value }) => (
-  <div className="glass-card rounded-3xl p-6">
+  <div className="op-card rounded-3xl p-6">
     <div className="flex items-center gap-4">
       <div className={`w-12 h-12 ${iconBg} rounded-xl flex items-center justify-center`}><Icon className={`w-6 h-6 ${iconColor}`} /></div>
-      <div><p className="text-sm text-stone-500">{label}</p><p className="text-2xl font-bold text-stone-800">{value}</p></div>
+      <div><p className="text-sm text-stone-500">{label}</p><p className="text-2xl font-semibold text-stone-800">{value}</p></div>
     </div>
   </div>
 );
@@ -1160,7 +1160,7 @@ const ReviewForm = ({ booking, onDone }) => {
         placeholder="Share what went well and what could be better"
         className="w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm" data-testid="review-comment" />
       {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
-      <button type="submit" disabled={saving} className="btn-joy rounded-full mt-3 px-5 py-2 text-sm disabled:opacity-50" data-testid="review-submit">
+      <button type="submit" disabled={saving} className="btn-primary rounded-full mt-3 px-5 py-2 text-sm disabled:opacity-50" data-testid="review-submit">
         {saving ? "Saving..." : "Post review"}
       </button>
     </form>
@@ -1195,16 +1195,16 @@ const ClientDashboard = ({ user }) => {
 
   return (
     <>
-      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">Manage your care bookings and account</p></div>
+      <div className="mb-8"><h1 className="text-3xl font-semibold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">Manage your care bookings and account</p></div>
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         <StatCard icon={Calendar} iconBg="bg-stone-100" iconColor="text-stone-800" label="Total Bookings" value={bookings.length} />
         <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
         <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Pending" value={bookings.filter(b => b.status === "pending").length} />
       </div>
-      <div className="glass-card rounded-3xl">
-        <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-bold text-stone-800">Your Bookings</h2></div>
+      <div className="op-card rounded-3xl">
+        <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-semibold text-stone-800">Your Bookings</h2></div>
         {loading ? (<div className="p-12 text-center"><div className="animate-spin w-8 h-8 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" /></div>) : bookings.length === 0 ? (
-          <div className="p-12 text-center"><p className="text-stone-500 mb-4">You haven't made any bookings yet.</p><Link to="/agencies" className="btn-joy rounded-full inline-flex items-center gap-2 px-6 py-3">Find Care<ChevronRight className="w-4 h-4" /></Link></div>
+          <div className="p-12 text-center"><p className="text-stone-500 mb-4">You haven't made any bookings yet.</p><Link to="/agencies" className="btn-primary rounded-full inline-flex items-center gap-2 px-6 py-3">Find Care<ChevronRight className="w-4 h-4" /></Link></div>
         ) : (
           <div className="divide-y divide-stone-100">{bookings.map((booking) => (
             <div key={booking.id} className="p-6" data-testid="client-booking">
@@ -1262,8 +1262,8 @@ const AgencyProfileForm = ({ onCreated }) => {
 
   const input = "w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm";
   return (
-    <form onSubmit={submit} className="glass-card rounded-3xl p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
-      <div className="md:col-span-2"><h2 className="text-xl font-bold text-stone-800">Create your caregiver profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
+    <form onSubmit={submit} className="op-card rounded-3xl p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
+      <div className="md:col-span-2"><h2 className="text-xl font-semibold text-stone-800">Create your caregiver profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
       <input required placeholder="Your name (first name and last initial)" value={form.name} onChange={set("name")} className={input} />
       <input required placeholder="City, e.g. Philadelphia, PA" value={form.city} onChange={set("city")} className={input} />
       <input required placeholder="Neighborhood, e.g. Fishtown, Philadelphia, PA" value={form.location} onChange={set("location")} className={`${input} md:col-span-2`} />
@@ -1274,7 +1274,7 @@ const AgencyProfileForm = ({ onCreated }) => {
       <input placeholder="What you help with, e.g. Companionship, Meal Prep" value={form.specialties} onChange={set("specialties")} className={input} />
       <input placeholder="Photo link (optional)" value={form.image_url} onChange={set("image_url")} className={input} />
       {error && <p className="text-sm text-red-600 md:col-span-2">{error}</p>}
-      <div className="md:col-span-2"><button type="submit" disabled={saving} className="btn-joy rounded-full px-6 py-3 disabled:opacity-50">{saving ? "Saving..." : "Publish profile"}</button></div>
+      <div className="md:col-span-2"><button type="submit" disabled={saving} className="btn-primary rounded-full px-6 py-3 disabled:opacity-50">{saving ? "Saving..." : "Publish profile"}</button></div>
     </form>
   );
 };
@@ -1320,7 +1320,7 @@ const AgencyDashboard = ({ user }) => {
 
   return (
     <>
-      <div className="mb-8"><h1 className="text-3xl font-bold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage visit requests for your profile, <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Create your caregiver profile so families can find and book you"}</p></div>
+      <div className="mb-8"><h1 className="text-3xl font-semibold text-stone-800 mb-2">Welcome back, {user?.name}!</h1><p className="text-stone-500">{agency ? <>Manage visit requests for your profile, <Link to={`/agencies/${agency.id}`} className="underline">{agency.name}</Link></> : "Create your caregiver profile so families can find and book you"}</p></div>
       {!agency ? <AgencyProfileForm onCreated={load} /> : (
         <>
           {agency.status === "pending_approval" && (
@@ -1338,8 +1338,8 @@ const AgencyDashboard = ({ user }) => {
             <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
             <StatCard icon={Star} iconBg="bg-stone-100" iconColor="text-stone-800" label="Rating" value={agency.review_count ? `${agency.rating} (${agency.review_count})` : "No reviews yet"} />
           </div>
-          <div className="glass-card rounded-3xl">
-            <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-bold text-stone-800">Consultation requests</h2></div>
+          <div className="op-card rounded-3xl">
+            <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-semibold text-stone-800">Consultation requests</h2></div>
             {bookings.length === 0 ? <div className="p-12 text-center text-stone-500">No requests yet.</div> : (
               <div className="divide-y divide-stone-100">{bookings.map((booking) => (
                 <div key={booking.id} className="p-6 flex flex-col md:flex-row md:items-start justify-between gap-4" data-testid="agency-booking">
@@ -1355,11 +1355,11 @@ const AgencyDashboard = ({ user }) => {
                     <StatusBadge status={booking.status} />
                     <div className="flex gap-2">
                       {booking.status === "pending" && (<>
-                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "confirmed")} className="btn-joy rounded-full px-4 py-2 text-sm disabled:opacity-50" data-testid="accept-booking">Accept</button>
+                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "confirmed")} className="btn-primary rounded-full px-4 py-2 text-sm disabled:opacity-50" data-testid="accept-booking">Accept</button>
                         <button disabled={busy === booking.id} onClick={() => setStatus(booking, "declined")} className="px-4 py-2 bg-stone-100 text-stone-700 rounded-lg text-sm font-medium hover:bg-stone-200 disabled:opacity-50" data-testid="decline-booking">Decline</button>
                       </>)}
                       {booking.status === "confirmed" && (
-                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "completed")} className="btn-joy rounded-full px-4 py-2 text-sm disabled:opacity-50" data-testid="complete-booking">Mark visit complete</button>
+                        <button disabled={busy === booking.id} onClick={() => setStatus(booking, "completed")} className="btn-primary rounded-full px-4 py-2 text-sm disabled:opacity-50" data-testid="complete-booking">Mark visit complete</button>
                       )}
                     </div>
                   </div>
@@ -1393,7 +1393,7 @@ const DashboardPage = () => {
             <div className="grid grid-cols-2 gap-2 p-2 mb-8 bg-stone-100 rounded-2xl max-w-md" role="tablist" aria-label="Which dashboard">
               {[["admin", "Admin"], ["own", user.role === "agency" ? "My profile" : "My bookings"]].map(([id, label]) => (
                 <button key={id} role="tab" aria-selected={view === id} onClick={() => setView(id)}
-                  className={`min-h-[52px] px-4 rounded-xl text-lg font-bold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-stone-400 ${view === id ? "bg-stone-900 text-white" : "text-stone-800 hover:bg-white"}`}
+                  className={`min-h-[52px] px-4 rounded-xl text-lg font-semibold transition focus:outline-none focus-visible:ring-4 focus-visible:ring-stone-400 ${view === id ? "bg-stone-900 text-white" : "text-stone-800 hover:bg-white"}`}
                   data-testid={`dashboard-view-${id}`}>{label}</button>
               ))}
             </div>
@@ -1433,12 +1433,12 @@ const BookingSuccessPage = () => {
   useEffect(() => { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }, []);
   return (
     <PageBackground className="flex items-center justify-center p-6">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-card rounded-3xl shadow-2xl p-12 text-center max-w-md">
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="op-card rounded-3xl shadow-2xl p-12 text-center max-w-md">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle className="w-10 h-10 text-green-500" /></div>
-        <h1 className="text-3xl font-bold text-stone-800 mb-4">Request Sent!</h1>
+        <h1 className="text-3xl font-semibold text-stone-800 mb-4">Request Sent!</h1>
         <p className="text-stone-500 mb-8">We sent your visit request to the caregiver and emailed you a copy. You'll get an email as soon as they accept it.</p>
         <div className="flex flex-col gap-3">
-          <Link to="/dashboard" className="btn-joy rounded-full px-6 py-3">View My Bookings</Link>
+          <Link to="/dashboard" className="btn-primary rounded-full px-6 py-3">View My Bookings</Link>
           <Link to="/" className="px-6 py-3 bg-stone-100 text-stone-700 rounded-xl font-medium hover:bg-stone-200 transition">Back to Home</Link>
         </div>
       </motion.div>
@@ -1470,18 +1470,18 @@ const ContactPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-[72px] sm:pt-[84px] pb-16 sm:pb-24">
+      <div className="pt-[64px] sm:pt-[76px] pb-16 sm:pb-24">
         <div className="max-w-3xl mx-auto px-6">
           <PageIntro center eyebrow="Contact" title="We'd love to hear from you" lead="Questions about visits, a loved one, or working with us? Send a note or give us a call." />
           {success ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card rounded-3xl p-12 text-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="op-card rounded-3xl p-12 text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><CheckCircle className="w-8 h-8 text-green-500" /></div>
-              <h2 className="text-2xl font-bold text-stone-800 mb-2">Message Sent!</h2>
+              <h2 className="text-2xl font-semibold text-stone-800 mb-2">Message Sent!</h2>
               <p className="text-stone-500 mb-6">We'll get back to you within 24 hours.</p>
-              <button onClick={() => setSuccess(false)} className="btn-joy rounded-full px-6 py-3">Send Another Message</button>
+              <button onClick={() => setSuccess(false)} className="btn-primary rounded-full px-6 py-3">Send Another Message</button>
             </motion.div>
           ) : (
-            <div className="glass-card rounded-3xl p-8">
+            <div className="op-card rounded-3xl p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div><label className="block text-sm font-medium text-stone-700 mb-2">Name</label><input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-4 focus:ring-stone-100 outline-none transition" required data-testid="contact-name" /></div>
@@ -1489,14 +1489,14 @@ const ContactPage = () => {
                 </div>
                 <div><label className="block text-sm font-medium text-stone-700 mb-2">Subject</label><input type="text" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-4 focus:ring-stone-100 outline-none transition" required data-testid="contact-subject" /></div>
                 <div><label className="block text-sm font-medium text-stone-700 mb-2">Message</label><textarea value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-4 focus:ring-stone-100 outline-none transition resize-none" rows={6} required data-testid="contact-message" /></div>
-                <button type="submit" disabled={loading} className="btn-joy rounded-full w-full py-4 disabled:opacity-50" data-testid="contact-submit">{loading ? "Sending..." : "Send Message"}</button>
+                <button type="submit" disabled={loading} className="btn-primary rounded-full w-full py-4 disabled:opacity-50" data-testid="contact-submit">{loading ? "Sending..." : "Send Message"}</button>
               </form>
             </div>
           )}
           <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <a href={CONTACT_PHONE_HREF} className="glass-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-joy-hero rounded-2xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-[#FF6B6B]" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">{CONTACT_PHONE}</p></a>
-            <a href={`mailto:${CONTACT_EMAIL}`} className="glass-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-joy-blush rounded-2xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-[#FF6B6B]" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500 text-sm [overflow-wrap:anywhere]">{CONTACT_EMAIL}</p></a>
-            <div className="glass-card rounded-3xl p-6 text-center"><div className="w-12 h-12 bg-joy-hero rounded-2xl flex items-center justify-center mx-auto mb-4"><MapPin className="w-6 h-6 text-[#FF6B6B]" /></div><h3 className="font-semibold text-stone-800 mb-1">Service area</h3><p className="text-stone-500">Philadelphia, PA</p></div>
+            <a href={CONTACT_PHONE_HREF} className="op-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">{CONTACT_PHONE}</p></a>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="op-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500 text-sm [overflow-wrap:anywhere]">{CONTACT_EMAIL}</p></a>
+            <div className="op-card rounded-3xl p-6 text-center"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><MapPin className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Service area</h3><p className="text-stone-500">Philadelphia, PA</p></div>
           </div>
         </div>
       </div>
@@ -1523,12 +1523,12 @@ const FAQPage = () => {
   return (
     <PageBackground>
       <Navigation />
-      <div className="pt-[72px] sm:pt-[84px] pb-16 sm:pb-24">
+      <div className="pt-[64px] sm:pt-[76px] pb-16 sm:pb-24">
         <div className="max-w-3xl mx-auto px-6">
           <PageIntro center eyebrow="FAQ" title="Questions, answered" lead="Everything families usually ask before their first visit." />
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="glass-card rounded-3xl overflow-hidden">
+              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="op-card rounded-3xl overflow-hidden">
                 <button onClick={() => setOpenIndex(openIndex === index ? null : index)} className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-stone-50 transition" data-testid={`faq-${index}`}>
                   <span className="font-semibold text-stone-800 pr-4">{faq.question}</span>
                   <motion.div animate={{ rotate: openIndex === index ? 180 : 0 }} transition={{ duration: 0.2 }}><ChevronRight className="w-5 h-5 text-stone-500 rotate-90" /></motion.div>
@@ -1543,10 +1543,10 @@ const FAQPage = () => {
               </motion.div>
             ))}
           </div>
-          <div className="mt-12 rounded-[2.5rem] p-8 sm:p-12 text-center bg-joy-hero">
+          <div className="mt-12 rounded-[28px] p-8 sm:p-12 text-center bg-mist">
             <h2 className="font-display text-4xl sm:text-5xl text-stone-900 mb-4">Still have questions?</h2>
             <p className="mb-6 text-stone-600">We're happy to talk it through, no pressure.</p>
-            <Link to="/contact" className="btn-joy inline-flex items-center px-8 py-4 rounded-full text-lg">Contact us</Link>
+            <Link to="/contact" className="btn-primary inline-flex items-center px-8 py-4 rounded-full text-lg">Contact us</Link>
           </div>
         </div>
       </div>

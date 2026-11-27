@@ -1357,11 +1357,6 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.12.tgz#afefe785949f16ac4cdd1e695935a321572dd56a"
   integrity sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==
 
-"@fontsource-variable/sora@5.2.6":
-  version "5.2.6"
-  resolved "https://registry.yarnpkg.com/@fontsource-variable/sora/-/sora-5.2.6.tgz#aba7a99227e8179cc52ded301f2fd043b7c411f1"
-  integrity sha512-9cVxKZXAdZIsPfCV+/dIn5zbvmAhXiqNXZdh2454n7Dk7U7nQ9ZfQuh2Q/De/qgzSUwQldTLlHMzgJ3OtOt67w==
-
 "@hookform/resolvers@^5.0.1":
   version "5.9.2"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-5.9.2.tgz#e28d076f3b690d3d90d8f522aed21aa7aefd7238"

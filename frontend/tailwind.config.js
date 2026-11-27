@@ -8,7 +8,7 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['"Sora Variable"', 'Sora', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+  			sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"Helvetica Neue"', 'Arial', 'sans-serif']
   		},
   		borderRadius: {
   			lg: 'var(--radius)',
@@ -16,18 +16,10 @@ module.exports = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
-  			// OnePermit-style warm pastels (see index.css for the gradients and glass)
-  			ink: { DEFAULT: '#1A1A2E', soft: '#4A4A6A' },
-  			coral: '#FF6B6B',
-  			joy: {
-  				blush: '#FFF5F5',
-  				lilac: '#F3E5F5',
-  				lavender: '#E6E6FA',
-  				peach: '#FFDAB9',
-  				pink: '#FFB7B2',
-  				cream: '#FFFDD0',
-  				mist: '#E0F7FA'
-  			},
+  			// OnePermit tokens (see index.css for the buttons, cards and header)
+  			ink: { DEFAULT: '#1d1d1f', muted: '#707070' },
+  			mist: '#f5f5f7',
+  			op: { blue: '#0071e3', link: '#0066cc' },
   			// Stone is driven by CSS variables so dark mode can flip the whole scale (see index.css)
   			stone: {
   				'50': 'rgb(var(--stone-50) / <alpha-value>)',
