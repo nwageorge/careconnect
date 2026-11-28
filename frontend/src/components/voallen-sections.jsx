@@ -92,7 +92,7 @@ export const OurServicesSection = () => {
     <section id="our-services" className="pt-10 sm:pt-14 pb-16 sm:pb-24 scroll-mt-24" data-testid="our-services-section">
       {/* Intro sits top left, right under the hero */}
       <motion.div {...reveal} className="max-w-3xl mb-8 sm:mb-10">
-        <h2 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] mb-3">Get to know our services</h2>
+        <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 leading-[0.98] mb-3">Get to know our services</h2>
         <p className="text-lg sm:text-xl text-stone-500">
           Warm, personal company for the people you love, at home or wherever they live.
         </p>
@@ -126,7 +126,7 @@ export const OurServicesSection = () => {
               />
               <span
                 className={`text-sm leading-snug pb-1.5 border-b-2 transition-colors ${
-                  selected ? "font-semibold text-stone-900 border-[#0071e3]" : "font-normal text-stone-700 border-transparent group-hover:text-stone-900"
+                  selected ? "font-semibold text-stone-900 border-[#1f4fff]" : "font-normal text-stone-700 border-transparent group-hover:text-stone-900"
                 }`}
               >
                 {s.label}
@@ -143,7 +143,7 @@ export const OurServicesSection = () => {
         aria-labelledby={`service-tab-${active}`}
         className="mt-8 sm:mt-10 grid md:grid-cols-2 gap-8 md:gap-12 items-center"
       >
-        <div className="relative rounded-3xl overflow-hidden bg-stone-100 aspect-[4/3] shadow-lg">
+        <div className="relative rounded-[20px] overflow-hidden bg-stone-100 aspect-[4/3] shadow-lg">
           <AnimatePresence mode="wait">
             <motion.img
               key={service.image}
@@ -170,7 +170,7 @@ export const OurServicesSection = () => {
             transition={{ duration: 0.3 }}
           >
             <Eyebrow>{service.label}</Eyebrow>
-            <h3 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] mb-4">{service.title}</h3>
+            <h3 className="font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 leading-[0.98] mb-4">{service.title}</h3>
             <p className="text-lg text-stone-600 leading-relaxed mb-8">{service.description}</p>
             <Link
               to="/visits"
@@ -193,7 +193,7 @@ export const ThoughtfulVisitsSection = () => (
     <div className="grid lg:grid-cols-2 gap-12 items-center">
       <motion.div {...reveal}>
         <Eyebrow>A trusted, professional approach</Eyebrow>
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-6">
+        <h2 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-6">
           Thoughtful visits.
           <br />
           Personal connection.
@@ -210,7 +210,7 @@ export const ThoughtfulVisitsSection = () => (
       </motion.div>
 
       <motion.figure {...reveal} className="flex flex-col">
-        <div className="rounded-3xl overflow-hidden bg-stone-100 aspect-[3/4] max-h-[640px] shadow-lg">
+        <div className="rounded-[20px] overflow-hidden bg-stone-100 aspect-[3/4] max-h-[640px] shadow-lg">
           <img
             src="/voallen/stairs.jpg"
             alt="A young man walking an older woman up the stairs, carrying her groceries."
@@ -260,7 +260,7 @@ export const StayConnectedSection = () => {
   return (
     <section id="stay-connected" className="py-16 sm:py-24 scroll-mt-24" data-testid="stay-connected-section">
       <div className="grid lg:grid-cols-2 gap-12 items-center">
-        <motion.div {...reveal} className="order-2 lg:order-1 relative rounded-3xl overflow-hidden bg-stone-100 aspect-[4/5] max-h-[620px] shadow-lg">
+        <motion.div {...reveal} className="order-2 lg:order-1 relative rounded-[20px] overflow-hidden bg-stone-100 aspect-[4/5] max-h-[620px] shadow-lg">
           <AnimatePresence initial={false}>
             <motion.img
               key={item.image}
@@ -281,7 +281,7 @@ export const StayConnectedSection = () => {
 
         <motion.div {...reveal} className="order-1 lg:order-2">
           <Eyebrow>Companionship, with family connection</Eyebrow>
-          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
+          <h2 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-4">
             Simple ways to
             <br />
             stay connected.
@@ -376,10 +376,10 @@ export const QuestionsAnsweredSection = () => {
 
   return (
     <section id="your-questions" className="py-16 sm:py-24 scroll-mt-24" data-testid="questions-section">
-      <div className="rounded-3xl bg-stone-50 border border-stone-100 px-6 py-10 sm:p-12 lg:p-16 grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16">
+      <div className="rounded-[20px] bg-stone-50 border border-stone-100 px-6 py-10 sm:p-12 lg:p-16 grid lg:grid-cols-[2fr_3fr] gap-10 lg:gap-16">
         <motion.div {...reveal}>
           <Eyebrow>A little clarity, before you reach out</Eyebrow>
-          <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
+          <h2 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-4">
             Your questions,
             <br />
             answered.
@@ -409,7 +409,7 @@ export const QuestionsAnsweredSection = () => {
           {questionGroups.map((group, i) => {
             const isOpen = i === open;
             return (
-              <div key={group.title} className="op-card rounded-3xl overflow-hidden">
+              <div key={group.title} className="op-card rounded-[20px] overflow-hidden">
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}
                   aria-expanded={isOpen}
@@ -486,7 +486,7 @@ export const CaregiverJobsSection = () => (
     <div className="max-w-7xl mx-auto px-6">
       <motion.div {...reveal} className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
         <Eyebrow>For caregivers</Eyebrow>
-        <h2 className="font-display text-4xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">
+        <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl text-stone-900 leading-[0.98] mb-4">
           Find caregiving work that feels like family
         </h2>
         <p className="text-lg sm:text-xl text-stone-500">

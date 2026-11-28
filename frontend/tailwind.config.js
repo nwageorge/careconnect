@@ -8,6 +8,7 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
+  			display: ['"Inter Tight Variable"', '"Inter Tight"', '-apple-system', 'sans-serif'],
   			sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"Helvetica Neue"', 'Arial', 'sans-serif']
   		},
   		borderRadius: {
@@ -17,9 +18,11 @@ module.exports = {
   		},
   		colors: {
   			// OnePermit tokens (see index.css for the buttons, cards and header)
-  			ink: { DEFAULT: '#1d1d1f', muted: '#707070' },
-  			mist: '#f5f5f7',
-  			op: { blue: '#0071e3', link: '#0066cc' },
+  			// Editorial tokens (see index.css for the buttons, cards and header)
+  			ink: { DEFAULT: '#0b0b0c', muted: '#666666' },
+  			mist: '#f4f4f2',
+  			coral: '#ff6b4a',
+  			op: { blue: '#1f4fff', link: '#1f4fff' },
   			// Stone is driven by CSS variables so dark mode can flip the whole scale (see index.css)
   			stone: {
   				'50': 'rgb(var(--stone-50) / <alpha-value>)',

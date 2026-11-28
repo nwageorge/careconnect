@@ -18,7 +18,7 @@ const reveal = {
 
 export const VisitHero = () => (
   <section className="pt-24 sm:pt-28" data-testid="visit-hero">
-    <div className="relative rounded-3xl overflow-hidden bg-stone-100 min-h-[560px] lg:min-h-[600px] flex items-end lg:items-center lg:justify-end">
+    <div className="relative rounded-[20px] overflow-hidden bg-stone-100 min-h-[560px] lg:min-h-[600px] flex items-end lg:items-center lg:justify-end">
       <img
         src="/voallen/photo-album.jpg"
         alt="An older woman and a companion looking through a photo album by the window."
@@ -28,9 +28,9 @@ export const VisitHero = () => (
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md bg-white rounded-3xl shadow-2xl p-7 sm:p-10"
+        className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md bg-white rounded-[20px] shadow-2xl p-7 sm:p-10"
       >
-        <h1 className="font-display text-4xl sm:text-6xl leading-[1.05] text-stone-800 leading-tight mb-4">
+        <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.98] text-stone-800 leading-tight mb-4">
           Companionship visits near you
         </h1>
         <p className="text-lg text-stone-600 leading-relaxed mb-8">
@@ -83,7 +83,7 @@ const benefits = [
 export const VisitBenefits = () => (
   <section className="py-16 sm:py-24" data-testid="visit-benefits">
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      <motion.div {...reveal} className="rounded-3xl overflow-hidden bg-stone-100 aspect-[4/5] max-h-[600px] shadow-lg">
+      <motion.div {...reveal} className="rounded-[20px] overflow-hidden bg-stone-100 aspect-[4/5] max-h-[600px] shadow-lg">
         <img
           src="/voallen/window.jpg"
           alt="An older woman holding hands with a companion while looking out a window."
@@ -93,7 +93,7 @@ export const VisitBenefits = () => (
         />
       </motion.div>
       <motion.div {...reveal}>
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-10">
+        <h2 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-10">
           A familiar face, close to home
         </h2>
         <ul className="space-y-8">
@@ -118,7 +118,7 @@ export const VisitBenefits = () => (
 
 export const VisitStatBanner = ({ agencyCount }) => (
   <section className="py-8" data-testid="visit-stat-banner">
-    <div className="rounded-3xl bg-stone-100 overflow-hidden flex flex-col sm:flex-row items-center">
+    <div className="rounded-[20px] bg-stone-100 overflow-hidden flex flex-col sm:flex-row items-center">
       <img
         src="/voallen/groceries.jpg"
         alt=""
@@ -188,7 +188,7 @@ export const VisitFAQ = () => {
   return (
     <section className="py-16 sm:py-24" data-testid="visit-faq">
       <div className="max-w-4xl">
-        <h2 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-3">Companionship visit FAQs</h2>
+        <h2 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-3">Companionship visit FAQs</h2>
         <p className="text-lg text-stone-500 mb-10">Common questions about visits with Voallen</p>
         <div className="border-t border-stone-200">
           {visitFaqs.map((item, i) => {

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin } from "lucide-react";
+import { MapPin, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-chrome";
 
-// The home page hero, laid out like the OnePermit home hero: a centred SF
-// headline on white, a short line under it, then a large photo with rounded
-// corners and a white search "capsule" sitting on its bottom edge.
+// The home page hero in the editorial style: an oversized left-aligned
+// headline with the short intro beside it, then a large wide photo with the
+// search capsule (coral Search button) sitting on its bottom edge.
 const hero = {
   image: "/voallen/hero-walk.jpg",
   alt: "An older woman walking arm in arm with a smiling companion in an autumn park.",
@@ -30,28 +30,30 @@ export default function HeroSection3() {
     <div className="w-full antialiased relative pt-[64px] sm:pt-[76px]">
       <SiteHeader />
 
-      <section className="text-center pt-10 sm:pt-14 overflow-hidden">
-        <div className="px-5">
+      <section className="pt-10 sm:pt-16 lg:pt-20 overflow-hidden">
+        <div className="max-w-[1360px] mx-auto px-5 sm:px-8 grid lg:grid-cols-[1fr_minmax(0,340px)] gap-6 lg:gap-16 lg:items-end">
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={ease}
-            className="font-display text-[2.75rem] sm:text-6xl lg:text-[80px] leading-[1.05] text-stone-900 max-w-4xl mx-auto"
+            className="display-xl text-stone-900"
           >
             {hero.title}
           </motion.h1>
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...ease, delay: 0.1 }}
-            className="text-[14px] sm:text-[17px] leading-[1.4] text-stone-900 mt-6 sm:mt-7"
+            className="lg:pb-3"
           >
-            {hero.subtitle}.
-            <br />
-            <Link to="/faq" className="op-link">How it works</Link>
-            <span className="text-stone-400 px-3">|</span>
-            <Link to="/caregivers" className="op-link">Are you a caregiver?</Link>
-          </motion.p>
+            <p className="text-[18px] sm:text-[21px] leading-[1.4] text-stone-900">
+              {hero.subtitle}. Companionship visits across Philadelphia, with a note and photos after every one.
+            </p>
+            <p className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-[15px] font-medium">
+              <Link to="/faq" className="op-link inline-flex items-center gap-1">How it works <ArrowRight className="w-4 h-4" /></Link>
+              <Link to="/caregivers" className="op-link inline-flex items-center gap-1">Are you a caregiver? <ArrowRight className="w-4 h-4" /></Link>
+            </p>
+          </motion.div>
         </div>
 
         {/* Photo with the search capsule on its bottom edge */}
@@ -59,9 +61,9 @@ export default function HeroSection3() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...ease, delay: 0.2 }}
-          className="relative mt-8 sm:mt-10 mx-auto w-full max-w-[1100px] px-4 sm:px-6"
+          className="relative mt-10 sm:mt-14 mx-auto w-full max-w-[1360px] px-4 sm:px-8"
         >
-          <div className="relative rounded-[24px] sm:rounded-[28px] overflow-hidden bg-mist h-[420px] sm:h-[520px] lg:h-[620px]">
+          <div className="relative rounded-[20px] overflow-hidden bg-mist h-[460px] sm:h-[560px] lg:h-[680px]">
             <img
               src={hero.image}
               alt={hero.alt}
@@ -72,7 +74,7 @@ export default function HeroSection3() {
 
           <form
             onSubmit={handleSearch}
-            className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-8 w-[calc(100%-3rem)] sm:w-auto bg-white dark:bg-[#1d1d1f] rounded-[28px] pl-5 pr-2 py-2 sm:pl-6 flex items-center gap-3 sm:gap-6 text-left shadow-[0_10px_30px_rgba(0,0,0,0.08)]"
+            className="absolute left-1/2 -translate-x-1/2 bottom-4 sm:bottom-8 w-[calc(100%-3rem)] sm:w-auto bg-white dark:bg-[#161617] rounded-full pl-5 pr-2 py-2 sm:pl-6 flex items-center gap-3 sm:gap-6 text-left shadow-[0_12px_40px_rgba(0,0,0,0.12)]"
             data-testid="hero-search-card"
           >
             <div className="hidden sm:block shrink-0">
@@ -93,7 +95,7 @@ export default function HeroSection3() {
             </label>
             <button
               type="submit"
-              className="btn-primary shrink-0 rounded-full px-5 py-2.5 text-[15px]"
+              className="btn-coral shrink-0 rounded-full px-6 py-3 text-[15px]"
               data-testid="hero-search-btn"
             >
               Search

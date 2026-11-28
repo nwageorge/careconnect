@@ -7,7 +7,6 @@ import {
   VisitMomentsBand,
   HowVoallenWorks,
   TwoPathsSection,
-  ClosingCTASection,
   SiteFooter,
 } from "@/components/voallen-home-extras";
 
@@ -87,7 +86,7 @@ export const AboutPage = () => {
             <img
               src="/voallen/window.jpg"
               alt="An older woman and a companion holding hands and looking out of a window together."
-              className="w-full h-[280px] sm:h-[380px] object-cover object-[center_30%] rounded-3xl"
+              className="w-full h-[280px] sm:h-[380px] object-cover object-[center_30%] rounded-[20px]"
             />
           </motion.div>
         </div>
@@ -98,7 +97,7 @@ export const AboutPage = () => {
         <div className="grid lg:grid-cols-[2fr_3fr] gap-8 lg:gap-16">
           <motion.div {...reveal}>
             <p className="eyebrow mb-4">Why we started</p>
-            <h2 className="font-display text-4xl sm:text-5xl text-stone-900 leading-[1]">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 leading-[1]">
               Nobody should have to wonder how Mom's week went.
             </h2>
           </motion.div>
@@ -121,15 +120,15 @@ export const AboutPage = () => {
 
       {/* Values */}
       <Container className="pb-12 sm:pb-20">
-        <motion.h2 {...reveal} className="font-display text-4xl sm:text-5xl text-stone-900 tracking-[-0.035em] mb-8">
+        <motion.h2 {...reveal} className="font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 tracking-[-0.035em] mb-8">
           What we stand for
         </motion.h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {values.map(({ icon: Icon, title, body, tone }) => {
             const t = toneStyle[tone];
             return (
-              <motion.div key={title} {...reveal} className={`rounded-3xl p-7 flex flex-col ${t.className}`}>
-                <Icon className="w-7 h-7 mb-10" strokeWidth={1.5} style={{ color: "#0071e3" }} />
+              <motion.div key={title} {...reveal} className={`rounded-[20px] p-7 flex flex-col ${t.className}`}>
+                <Icon className="w-7 h-7 mb-10" strokeWidth={1.5} style={{ color: "#1f4fff" }} />
                 <h3 className="text-xl font-semibold mb-2 text-stone-900">
                   {title}
                 </h3>
@@ -144,9 +143,9 @@ export const AboutPage = () => {
 
       {/* Two ways to be part of it */}
       <Container className="pb-4">
-        <div className="rounded-[28px] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center bg-mist">
+        <div className="rounded-[20px] p-8 sm:p-12 grid md:grid-cols-2 gap-8 items-center bg-mist">
           <div>
-            <h2 className="font-display text-4xl sm:text-5xl leading-[1.07] mb-4 text-stone-900">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.98] mb-4 text-stone-900">
               Want to be one of our companions?
             </h2>
             <p className="text-lg text-stone-600">
@@ -162,10 +161,6 @@ export const AboutPage = () => {
             </Link>
           </div>
         </div>
-      </Container>
-
-      <Container>
-        <ClosingCTASection />
       </Container>
     </SitePage>
   );
@@ -189,7 +184,6 @@ export const HowItWorksPage = () => {
         <VisitMomentsBand />
         <TwoPathsSection />
         <QuestionsAnsweredSection />
-        <ClosingCTASection />
       </Container>
     </SitePage>
   );
@@ -215,7 +209,7 @@ const LegalPage = ({ testId, eyebrow, title, lead, children }) => (
   <SitePage testId={testId}>
     <div className="max-w-3xl mx-auto px-6 pb-16 sm:pb-24">
       <PageIntro eyebrow={eyebrow} title={title} lead={lead} />
-      <div className="op-card rounded-3xl px-6 sm:px-10 py-4 sm:py-6">{children}</div>
+      <div className="op-card rounded-[20px] px-6 sm:px-10 py-4 sm:py-6">{children}</div>
     </div>
   </SitePage>
 );
@@ -337,7 +331,7 @@ export const NotFoundPage = () => {
           </a>
         </div>
         <p className="mt-8 text-sm text-stone-500 inline-flex items-center gap-2">
-          <Mail className="w-4 h-4" style={{ color: "#0071e3" }} /> {CONTACT_EMAIL}
+          <Mail className="w-4 h-4" style={{ color: "#1f4fff" }} /> {CONTACT_EMAIL}
         </p>
       </div>
     </SitePage>

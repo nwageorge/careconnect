@@ -5,10 +5,10 @@ import { useAuth } from "@/App";
 import { VoallenLogo } from "@/components/voallen-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
-// The site header and the things every page shares. The header matches the
-// OnePermit site: a full-width frosted white bar with the wordmark on the left,
-// small plain links in the middle, and a blue "Log In" text link plus a small
-// blue Join pill on the right. Used on every page so the whole site matches.
+// The site header and the things every page shares. Editorial style: a clean
+// white bar with the wordmark on the left, plain links in the middle, and a
+// "Log In" text link plus a black Join pill on the right. A hairline appears
+// once the page scrolls. Used on every page so the whole site matches.
 
 export const SITE_NAV = [
   { href: "/visits", label: "Visits" },
@@ -23,8 +23,8 @@ export const SITE_NAV = [
 export const HEADER_OFFSET = "pt-[64px] sm:pt-[76px]";
 
 const navClass = ({ isActive }) =>
-  `text-[13px] xl:text-[14px] tracking-[-0.01em] transition-colors hover:underline underline-offset-4 ${
-    isActive ? "text-stone-900 font-semibold" : "text-stone-800"
+  `relative text-[14px] xl:text-[15px] font-medium tracking-[-0.01em] transition-colors after:absolute after:left-0 after:-bottom-1.5 after:h-[2px] after:bg-[#1f4fff] after:transition-all ${
+    isActive ? "text-stone-900 after:w-full" : "text-stone-600 hover:text-stone-900 after:w-0 hover:after:w-full"
   }`;
 
 export const SiteHeader = () => {
@@ -51,22 +51,22 @@ export const SiteHeader = () => {
   };
 
   const outlinePill =
-    "op-link inline-flex items-center gap-1 text-[14px] px-2 py-1.5";
+    "inline-flex items-center gap-1 text-[14px] font-medium text-stone-900 px-3 py-1.5 hover:underline underline-offset-4";
   const darkPill =
-    "btn-primary inline-flex items-center gap-1 rounded-full px-4 py-2 text-[13px] leading-4";
+    "btn-primary inline-flex items-center gap-1 rounded-full px-5 py-2.5 text-[14px] leading-4";
 
   return (
     <header
-      className={`op-header fixed inset-x-0 top-0 z-40 h-[64px] sm:h-[76px] transition-shadow duration-300 ${scrolled ? "shadow-[0_1px_0_rgba(29,29,31,0.06)]" : ""}`}
+      className={`op-header fixed inset-x-0 top-0 z-40 h-[64px] sm:h-[76px] ${scrolled ? "is-scrolled" : ""}`}
       data-testid="site-header"
     >
-      <div className="h-full max-w-[1280px] mx-auto px-5 sm:px-6 flex justify-between items-center gap-5">
+      <div className="h-full max-w-[1360px] mx-auto px-5 sm:px-8 flex justify-between items-center gap-5">
         <Link to="/" aria-label="Voallen home" className="shrink-0 flex items-center">
           <VoallenLogo size="md" />
         </Link>
 
         {/* Desktop nav: plain text links */}
-        <nav className="hidden lg:flex items-center gap-5 xl:gap-7" aria-label="Main">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8" aria-label="Main">
           {SITE_NAV.map((link) => (
             <NavLink key={link.href} to={link.href} className={navClass}>
               {link.label}
@@ -194,16 +194,17 @@ export const usePageTitle = (title) => {
   }, [title]);
 };
 
-// Shared page intro used by the inner pages: eyebrow, light display headline, lead text.
+// Shared page intro used by the inner pages: blue eyebrow, an oversized
+// editorial headline, and the lead text set beside it on wide screens.
 export const PageIntro = ({ eyebrow, title, lead, center = false, children }) => (
-  <div className={`pt-10 sm:pt-16 pb-8 sm:pb-12 ${center ? "text-center mx-auto" : ""} max-w-3xl`}>
+  <div className={`pt-12 sm:pt-20 pb-10 sm:pb-16 ${center ? "text-center mx-auto max-w-4xl" : "max-w-5xl"}`}>
     {eyebrow && (
-      <p className="eyebrow mb-4">{eyebrow}</p>
+      <p className="eyebrow mb-5">{eyebrow}</p>
     )}
-    <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-stone-900 leading-[1.05] mb-6">
+    <h1 className="font-display text-[3rem] sm:text-7xl lg:text-[6.5rem] text-stone-900 leading-[0.95] mb-8">
       {title}
     </h1>
-    {lead && <p className="text-lg sm:text-xl text-stone-500 leading-relaxed">{lead}</p>}
+    {lead && <p className={`text-lg sm:text-[22px] text-stone-500 leading-[1.45] max-w-2xl ${center ? "mx-auto" : ""}`}>{lead}</p>}
     {children}
   </div>
 );
