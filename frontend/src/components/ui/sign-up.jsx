@@ -1,11 +1,16 @@
 'use client';
 
+// Log in and sign up pages in the editorial style: a large companionship photo
+// on one side with an oversized Inter Tight headline, and a plain form on the
+// other. The form sits in normal page flow, so it scrolls on short and mobile
+// screens; the photo panel only pins to the viewport on large screens.
+
 import { cn } from '@/lib/utils';
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from 'react';
-import { cva } from 'class-variance-authority';
-import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, Heart, UserRound } from 'lucide-react';
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, Children } from 'react';
+import { ArrowRight, ArrowLeft, Mail, Lock, Eye, EyeOff, X, AlertCircle, PartyPopper, Loader, Heart, UserRound, Check } from 'lucide-react';
 import { VoallenLogo } from "@/components/voallen-logo";
-import { AnimatePresence, motion, useInView } from 'framer-motion';
+import { ThemeToggle } from "@/components/theme-toggle";
+import { AnimatePresence, motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -71,70 +76,6 @@ function TextLoop({ children, className, interval = 2, transition = { duration: 
   );
 }
 
-// --- BLUR FADE ANIMATION COMPONENT ---
-function BlurFade({ children, className, variant, duration = 0.4, delay = 0, yOffset = 6, inView = true, inViewMargin = '-50px', blur = '6px' }) {
-  const ref = useRef(null);
-  const inViewResult = useInView(ref, { once: true, margin: inViewMargin });
-  const isInView = !inView || inViewResult;
-  const defaultVariants = {
-    hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})` },
-    visible: { y: -yOffset, opacity: 1, filter: `blur(0px)` },
-  };
-  const combinedVariants = variant || defaultVariants;
-  return (
-    <motion.div ref={ref} initial="hidden" animate={isInView ? 'visible' : 'hidden'} exit="hidden" variants={combinedVariants} transition={{ delay: 0.04 + delay, duration, ease: 'easeOut' }} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-
-// --- GLASS BUTTON COMPONENT ---
-const glassButtonVariants = cva('relative isolate all-unset cursor-pointer rounded-full transition-all', { variants: { size: { default: 'text-base font-medium', sm: 'text-sm font-medium', lg: 'text-lg font-medium', icon: 'h-10 w-10' } }, defaultVariants: { size: 'default' } });
-const glassButtonTextVariants = cva('glass-button-text relative block select-none tracking-tighter', { variants: { size: { default: 'px-6 py-3.5', sm: 'px-4 py-2', lg: 'px-8 py-4', icon: 'flex h-10 w-10 items-center justify-center' } }, defaultVariants: { size: 'default' } });
-
-const GlassButton = React.forwardRef(({ className, children, size, contentClassName, onClick, ...props }, ref) => {
-  const handleWrapperClick = (e) => {
-    const button = e.currentTarget.querySelector('button');
-    if (button && e.target !== button) button.click();
-  };
-  return (
-    <div className={cn('glass-button-wrap cursor-pointer rounded-full relative', className)} onClick={handleWrapperClick}>
-      <button className={cn('glass-button relative z-10', glassButtonVariants({ size }))} ref={ref} onClick={onClick} {...props}>
-        <span className={cn(glassButtonTextVariants({ size }), contentClassName)}>{children}</span>
-      </button>
-      <div className="glass-button-shadow rounded-full pointer-events-none"></div>
-    </div>
-  );
-});
-GlassButton.displayName = 'GlassButton';
-
-// --- GRADIENT BACKGROUND ---
-const GradientBackground = () => (
-  <>
-    <style>
-      {`@keyframes float1 { 0% { transform: translate(0, 0); } 50% { transform: translate(-10px, 10px); } 100% { transform: translate(0, 0); } } @keyframes float2 { 0% { transform: translate(0, 0); } 50% { transform: translate(10px, -10px); } 100% { transform: translate(0, 0); } }`}
-    </style>
-    <svg width="100%" height="100%" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" className="absolute top-0 left-0 w-full h-full">
-      <defs>
-        <linearGradient id="rev_grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor: '#a8998a', stopOpacity:0.8}} /><stop offset="100%" style={{stopColor: '#d4c4b0', stopOpacity:0.6}} /></linearGradient>
-        <linearGradient id="rev_grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor: '#c9b99a', stopOpacity:0.9}} /><stop offset="50%" style={{stopColor: '#e8ddd0', stopOpacity:0.7}} /><stop offset="100%" style={{stopColor: '#f5f0e8', stopOpacity:0.6}} /></linearGradient>
-        <radialGradient id="rev_grad3" cx="50%" cy="50%" r="50%"><stop offset="0%" style={{stopColor: '#b8a898', stopOpacity:0.8}} /><stop offset="100%" style={{stopColor: '#d4c8b8', stopOpacity:0.4}} /></radialGradient>
-        <filter id="rev_blur1" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="35"/></filter>
-        <filter id="rev_blur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="25"/></filter>
-        <filter id="rev_blur3" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="45"/></filter>
-      </defs>
-      <g style={{ animation: 'float1 20s ease-in-out infinite' }}>
-        <ellipse cx="200" cy="500" rx="250" ry="180" fill="url(#rev_grad1)" filter="url(#rev_blur1)" transform="rotate(-30 200 500)"/>
-        <rect x="500" y="100" width="300" height="250" rx="80" fill="url(#rev_grad2)" filter="url(#rev_blur2)" transform="rotate(15 650 225)"/>
-      </g>
-      <g style={{ animation: 'float2 25s ease-in-out infinite' }}>
-        <circle cx="650" cy="450" r="150" fill="url(#rev_grad3)" filter="url(#rev_blur3)" opacity="0.7"/>
-        <ellipse cx="50" cy="150" rx="180" ry="120" fill="#e8e0d8" filter="url(#rev_blur2)" opacity="0.8"/>
-      </g>
-    </svg>
-  </>
-);
-
 // --- GOOGLE ICON ---
 const GoogleIcon = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" className="w-6 h-6">
@@ -158,57 +99,125 @@ const modalSteps = [
 const TEXT_LOOP_INTERVAL = 1.5;
 
 
+// Photo and headline for each page. Both photos are Voallen's own companionship images.
+const PANELS = {
+  login: {
+    image: '/voallen/hero.jpg',
+    alt: 'Two women laughing together over coffee at dusk.',
+    eyebrow: 'Welcome back',
+    title: 'Proof of care, not promises.',
+    position: 'object-[50%_50%]',
+  },
+  signup: {
+    image: '/voallen/groceries.jpg',
+    alt: 'A young man smiling as he hands a bag of groceries to an older woman.',
+    eyebrow: 'Join Voallen',
+    title: 'Transparent care for your loved ones.',
+    position: 'object-[50%_30%]',
+  },
+};
 
 // --- USER TYPE SELECTION ---
-const UserTypeSelection = ({ selectedType, onSelect }) => (
-  <div className="flex flex-col gap-3 w-full">
-    <button
-      type="button"
-      onClick={() => onSelect('family')}
-      className={cn(
-        'flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left',
-        selectedType === 'family'
-          ? 'border-stone-800 bg-stone-50 shadow-md'
-          : 'border-stone-200 hover:border-stone-300 bg-white/50'
-      )}
-    >
-      <div className={cn(
-        'w-12 h-12 rounded-xl flex items-center justify-center transition-colors',
-        selectedType === 'family' ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'
-      )}>
-        <Heart className="w-6 h-6" />
-      </div>
-      <div>
-        <p className="font-semibold text-stone-800">Family Seeking Care</p>
-        <p className="text-sm text-stone-500">Find trusted in-home caregivers</p>
-      </div>
-    </button>
-    <button
-      type="button"
-      onClick={() => onSelect('agency')}
-      className={cn(
-        'flex items-center gap-4 p-4 rounded-2xl border-2 transition-all text-left',
-        selectedType === 'agency'
-          ? 'border-stone-800 bg-stone-50 shadow-md'
-          : 'border-stone-200 hover:border-stone-300 bg-white/50'
-      )}
-    >
-      <div className={cn(
-        'w-12 h-12 rounded-xl flex items-center justify-center transition-colors',
-        selectedType === 'agency' ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600'
-      )}>
-        <UserRound className="w-6 h-6" />
-      </div>
-      <div>
-        <p className="font-semibold text-stone-800">Caregiver</p>
-        <p className="text-sm text-stone-500">Create your profile & meet families</p>
-      </div>
-    </button>
+const USER_TYPES = [
+  { id: 'family', icon: Heart, title: 'Family Seeking Care', text: 'Find trusted in-home caregivers' },
+  { id: 'agency', icon: UserRound, title: 'Caregiver', text: 'Create your profile & meet families' },
+];
+
+const UserTypeSelection = ({ selectedType, onSelect, invalid }) => (
+  <div role="radiogroup" aria-label="How you'd like to use Voallen" className="grid sm:grid-cols-2 gap-3 w-full">
+    {USER_TYPES.map(({ id, icon: Icon, title, text }) => {
+      const selected = selectedType === id;
+      return (
+        <button
+          key={id}
+          type="button"
+          role="radio"
+          aria-checked={selected}
+          onClick={() => onSelect(id)}
+          data-testid={`user-type-${id}`}
+          className={cn(
+            'relative flex flex-col gap-3 p-4 rounded-[20px] border text-left transition-colors',
+            selected
+              ? 'border-stone-900 ring-1 ring-stone-900'
+              : invalid
+                ? 'border-[#ff6b4a] hover:border-stone-500'
+                : 'border-stone-300 hover:border-stone-500'
+          )}
+        >
+          <span className={cn(
+            'w-10 h-10 rounded-full flex items-center justify-center transition-colors',
+            selected ? 'bg-[#1f4fff] text-white' : 'bg-stone-100 text-stone-700'
+          )}>
+            <Icon className="w-5 h-5" />
+          </span>
+          <span>
+            <span className="block font-semibold text-stone-900 tracking-[-0.01em]">{title}</span>
+            <span className="block text-sm text-stone-500 mt-0.5">{text}</span>
+          </span>
+          {selected && (
+            <span className="absolute top-3 right-3 w-6 h-6 rounded-full bg-stone-900 text-white dark:text-black flex items-center justify-center">
+              <Check className="w-3.5 h-3.5" />
+            </span>
+          )}
+        </button>
+      );
+    })}
   </div>
+);
+
+// --- TEXT FIELD ---
+const Field = forwardRef(({ id, label, icon: Icon, error, hint, trailing, ...props }, ref) => (
+  <div className="w-full">
+    <label htmlFor={id} className="block text-sm font-medium text-stone-800 mb-2">{label}</label>
+    <div className={cn(
+      'flex items-center gap-3 h-14 px-4 rounded-2xl border bg-transparent transition-colors',
+      'focus-within:border-[#1f4fff] focus-within:ring-2 focus-within:ring-[#1f4fff]/20',
+      error ? 'border-[#ff6b4a]' : 'border-stone-300'
+    )}>
+      <Icon className="w-5 h-5 text-stone-400 flex-shrink-0" aria-hidden="true" />
+      <input
+        id={id}
+        ref={ref}
+        aria-invalid={!!error}
+        aria-describedby={error || hint ? `${id}-note` : undefined}
+        className="h-full w-0 flex-grow bg-transparent text-base text-stone-900 placeholder:text-stone-400 focus:outline-none"
+        {...props}
+      />
+      {trailing}
+    </div>
+    {(error || hint) && (
+      <p id={`${id}-note`} className={cn('text-sm mt-2', error ? 'text-[#d9432a] dark:text-[#ff8466]' : 'text-stone-500')}>
+        {error || hint}
+      </p>
+    )}
+  </div>
+));
+Field.displayName = 'Field';
+
+// --- PHOTO PANEL ---
+const PhotoPanel = ({ panel }) => (
+  <aside className="relative w-full h-[38vh] min-h-[240px] max-h-[360px] lg:h-[100dvh] lg:max-h-none lg:sticky lg:top-0 overflow-hidden bg-[#0b0b0c]">
+    <img
+      src={panel.image}
+      alt={panel.alt}
+      className={cn('absolute inset-0 w-full h-full object-cover', panel.position)}
+    />
+    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/30" aria-hidden="true" />
+    <Link to="/" aria-label="Voallen home" className="absolute top-5 left-5 sm:top-7 sm:left-8 z-10">
+      <VoallenLogo size="md" tone="light" />
+    </Link>
+    <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8 lg:p-12 z-10">
+      <p className="text-xs font-semibold tracking-[0.14em] uppercase text-white/80 mb-3 lg:mb-5">{panel.eyebrow}</p>
+      <p className="font-display text-white leading-[0.95] text-[2.25rem] sm:text-5xl lg:text-[clamp(3.5rem,5.6vw,6rem)] max-w-[15ch]">
+        {panel.title}
+      </p>
+    </div>
+  </aside>
 );
 
 // --- MAIN AUTH COMPONENT ---
 export const AuthComponent = ({ mode = 'signup' }) => {
+  const isLogin = mode === 'login';
   const navigate = useNavigate();
   const { login } = useAuth();
   const [userType, setUserType] = useState('');
@@ -216,20 +225,29 @@ export const AuthComponent = ({ mode = 'signup' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [authStep, setAuthStep] = useState(mode === 'login' ? 'email' : 'userType');
+  const [submitted, setSubmitted] = useState(false);
   const [modalStatus, setModalStatus] = useState('closed');
   const [modalErrorMessage, setModalErrorMessage] = useState('');
-  const [error, setError] = useState('');
   const confettiRef = useRef(null);
+  const firstFieldRef = useRef(null);
 
   const isEmailValid = /\S+@\S+\.\S+/.test(email);
   const isPasswordValid = password.length >= 6;
-  const isNameValid = name.length >= 2;
-  
-  const passwordInputRef = useRef(null);
-  const emailInputRef = useRef(null);
-  const nameInputRef = useRef(null);
-  
+  const isNameValid = name.trim().length >= 2;
+
+  const errors = submitted ? {
+    userType: !isLogin && !userType ? "Choose how you'd like to use Voallen" : '',
+    name: !isLogin && !isNameValid ? 'Please enter your name' : '',
+    email: !isEmailValid ? 'Please enter a valid email address' : '',
+    password: !isPasswordValid ? 'Password must be at least 6 characters' : '',
+  } : {};
+
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+  useEffect(() => {
+    // Only focus on larger screens, so phones don't jump straight to the keyboard.
+    if (isLogin && window.matchMedia('(min-width: 1024px)').matches) firstFieldRef.current?.focus();
+  }, [isLogin]);
+
   const fireSideCanons = () => {
     const fire = confettiRef.current?.fire;
     if (fire) {
@@ -244,7 +262,6 @@ export const AuthComponent = ({ mode = 'signup' }) => {
     setModalStatus('loading');
     try {
       const response = await axios.post(`${API}/auth/login`, { email, password });
-      // Use the AuthContext login function
       login(response.data.access_token, response.data.user);
       fireSideCanons();
       setModalStatus('success');
@@ -258,13 +275,12 @@ export const AuthComponent = ({ mode = 'signup' }) => {
   const handleSignup = async () => {
     setModalStatus('loading');
     try {
-      const response = await axios.post(`${API}/auth/signup`, { 
-        name, 
-        email, 
+      const response = await axios.post(`${API}/auth/signup`, {
+        name: name.trim(),
+        email,
         password,
         role: userType === 'agency' ? 'agency' : 'client'
       });
-      // Use the AuthContext login function
       login(response.data.access_token, response.data.user);
       const loadingStepsCount = modalSteps.length - 1;
       const totalDuration = loadingStepsCount * TEXT_LOOP_INTERVAL * 1000;
@@ -279,57 +295,14 @@ export const AuthComponent = ({ mode = 'signup' }) => {
     }
   };
 
-  const handleFinalSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (modalStatus !== 'closed') return;
-    
-    if (mode === 'login') {
-      if (authStep === 'password' && isPasswordValid) {
-        handleLogin();
-      }
-    } else {
-      if (authStep === 'password' && isPasswordValid) {
-        handleSignup();
-      }
-    }
-  };
-
-  const handleProgressStep = () => {
-    setError('');
-    if (mode === 'signup') {
-      if (authStep === 'userType' && userType) {
-        setAuthStep('name');
-      } else if (authStep === 'name' && isNameValid) {
-        setAuthStep('email');
-      } else if (authStep === 'email' && isEmailValid) {
-        setAuthStep('password');
-      } else if (authStep === 'password' && isPasswordValid) {
-        handleSignup();
-      }
-    } else {
-      if (authStep === 'email' && isEmailValid) {
-        setAuthStep('password');
-      } else if (authStep === 'password' && isPasswordValid) {
-        handleLogin();
-      }
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleProgressStep();
-    }
-  };
-
-  const handleGoBack = () => {
-    setError('');
-    if (mode === 'signup') {
-      if (authStep === 'password') setAuthStep('email');
-      else if (authStep === 'email') setAuthStep('name');
-      else if (authStep === 'name') setAuthStep('userType');
-    } else {
-      if (authStep === 'password') setAuthStep('email');
+    setSubmitted(true);
+    if (isLogin) {
+      if (isEmailValid && isPasswordValid) handleLogin();
+    } else if (userType && isNameValid && isEmailValid && isPasswordValid) {
+      handleSignup();
     }
   };
 
@@ -338,277 +311,189 @@ export const AuthComponent = ({ mode = 'signup' }) => {
     setModalErrorMessage('');
   };
 
-  useEffect(() => {
-    if (authStep === 'password') setTimeout(() => passwordInputRef.current?.focus(), 500);
-    else if (authStep === 'email') setTimeout(() => emailInputRef.current?.focus(), 500);
-    else if (authStep === 'name') setTimeout(() => nameInputRef.current?.focus(), 500);
-  }, [authStep]);
-
-  const Modal = () => (
-    <AnimatePresence>
-      {modalStatus !== 'closed' && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative bg-white/90 backdrop-blur-xl border-2 border-stone-200 rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-4 mx-4 shadow-2xl">
-            {(modalStatus === 'error' || modalStatus === 'success') && (
-              <button onClick={closeModal} className="absolute top-3 right-3 p-1 text-stone-400 hover:text-stone-600 transition-colors">
-                <X className="w-5 h-5" />
-              </button>
-            )}
-            {modalStatus === 'error' && (
-              <>
-                <AlertCircle className="w-12 h-12 text-red-500" />
-                <p className="text-lg font-medium text-stone-800 text-center">{modalErrorMessage}</p>
-                <GlassButton onClick={closeModal} size="sm" className="mt-4">Try Again</GlassButton>
-              </>
-            )}
-            {modalStatus === 'loading' && (
-              <TextLoop interval={TEXT_LOOP_INTERVAL} stopOnEnd={true}>
-                {modalSteps.slice(0, -1).map((step, i) => (
-                  <div key={i} className="flex flex-col items-center gap-4">
-                    {step.icon}
-                    <p className="text-lg font-medium text-stone-800">{step.message}</p>
-                  </div>
-                ))}
-              </TextLoop>
-            )}
-            {modalStatus === 'success' && (
-              <div className="flex flex-col items-center gap-4">
-                {modalSteps[modalSteps.length - 1].icon}
-                <p className="text-lg font-medium text-stone-800">{modalSteps[modalSteps.length - 1].message}</p>
-              </div>
-            )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
+  const panel = PANELS[isLogin ? 'login' : 'signup'];
 
   return (
-    <div className="bg-page min-h-screen w-full flex flex-col">
-      <style>{`
-        @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; }
-        @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
-        .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: clamp(1px, 0.0625em, 4px); position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); }
-        .glass-button-wrap:has(.glass-button:active) { transform: rotateX(25deg); }
-        .glass-button-shadow { --shadow-cutoff-fix: 2em; position: absolute; width: calc(100% + var(--shadow-cutoff-fix)); height: calc(100% + var(--shadow-cutoff-fix)); top: calc(0% - var(--shadow-cutoff-fix) / 2); left: calc(0% - var(--shadow-cutoff-fix) / 2); filter: blur(clamp(2px, 0.125em, 12px)); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; }
-        .glass-button-shadow::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: linear-gradient(180deg, rgba(120,113,108,0.2), rgba(120,113,108,0.1)); width: calc(100% - var(--shadow-cutoff-fix) - 0.25em); height: calc(100% - var(--shadow-cutoff-fix) - 0.25em); top: calc(var(--shadow-cutoff-fix) - 0.5em); left: calc(var(--shadow-cutoff-fix) - 0.875em); padding: 0.125em; box-sizing: border-box; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease); opacity: 1; }
-        .glass-button { -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05)); box-shadow: inset 0 0.125em 0.125em rgba(120,113,108,0.05), inset 0 -0.125em 0.125em rgba(255,255,255,0.5), 0 0.25em 0.125em -0.125em rgba(120,113,108,0.2), 0 0 0.1em 0.25em inset rgba(255,255,255,0.2); }
-        .glass-button:hover { transform: scale(0.975); backdrop-filter: blur(0.01em); }
-        .glass-button-text { color: rgba(68,64,60,0.9); text-shadow: 0em 0.25em 0.05em rgba(68,64,60,0.1); transition: all var(--anim-time) var(--anim-ease); }
-        .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; }
-        .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05)); box-shadow: inset 0 0.125em 0.125em rgba(120,113,108,0.05), inset 0 -0.125em 0.125em rgba(255,255,255,0.5), 0 0.25em 0.125em -0.125em rgba(120,113,108,0.2), 0 0 0.1em 0.25em inset rgba(255,255,255,0.2); }
-        .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, rgba(120,113,108,0.5) 0%, transparent 5% 40%, rgba(120,113,108,0.5) 50%, transparent 60% 95%, rgba(120,113,108,0.5) 100%), linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.5)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; pointer-events: none; }
-        .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; }
-      `}</style>
-
+    <div className="bg-page min-h-[100dvh] w-full lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
       <Confetti ref={confettiRef} manualstart className="fixed top-0 left-0 w-full h-full pointer-events-none z-[999]" />
-      <Modal />
 
-      {/* Header */}
-      <Link to="/" aria-label="Voallen home" className="fixed top-5 left-5 z-20 md:left-1/2 md:-translate-x-1/2">
-        <VoallenLogo size="md" />
-      </Link>
-
-      <div className="flex w-full flex-1 h-full items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 z-0"><GradientBackground /></div>
-        
-        <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-6 w-full max-w-[340px] mx-auto p-4">
-          <AnimatePresence mode="wait">
-            {/* User Type Selection (Signup Only) */}
-            {mode === 'signup' && authStep === 'userType' && (
-              <motion.div key="userType-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
-                <BlurFade delay={0.1} className="w-full text-center">
-                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">Join Voallen</p>
-                  <p className="text-sm text-stone-500 mt-2">Select how you'd like to use Voallen</p>
-                </BlurFade>
-                <BlurFade delay={0.2} className="w-full">
-                  <UserTypeSelection selectedType={userType} onSelect={setUserType} />
-                </BlurFade>
-                <BlurFade delay={0.3} className="w-full">
-                  <GlassButton 
-                    onClick={handleProgressStep} 
-                    disabled={!userType}
-                    className={cn("w-full", !userType && "opacity-50 cursor-not-allowed")}
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      Continue <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </GlassButton>
-                </BlurFade>
-                <BlurFade delay={0.4}>
-                  <p className="text-sm text-stone-500">
-                    Already have an account?{' '}
-                    <Link to="/login" className="text-stone-800 font-medium hover:underline">Sign in</Link>
-                  </p>
-                </BlurFade>
-              </motion.div>
-            )}
-
-            {/* Name Step (Signup Only) */}
-            {mode === 'signup' && authStep === 'name' && (
-              <motion.div key="name-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
-                <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
-                    {userType === 'agency' ? "Your name" : "What's your name?"}
-                  </p>
-                </BlurFade>
-                <BlurFade delay={0.1} className="w-full">
-                  <div className="glass-input-wrap w-full">
-                    <div className="glass-input">
-                      <span className="glass-input-text-area"></span>
-                      <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                        {userType === 'agency' ? <UserRound className="h-5 w-5 text-stone-600" /> : <Heart className="h-5 w-5 text-stone-600" />}
-                      </div>
-                      <input
-                        ref={nameInputRef}
-                        type="text"
-                        placeholder={userType === 'agency' ? "First name and last initial" : "Full name"}
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className="relative z-10 h-full w-0 flex-grow bg-transparent text-stone-800 placeholder:text-stone-400 focus:outline-none py-3"
-                      />
-                      <div className={cn("relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", isNameValid ? "w-10 pr-1" : "w-0")}>
-                        <GlassButton type="button" onClick={handleProgressStep} size="icon" contentClassName="text-stone-600 hover:text-stone-800">
-                          <ArrowRight className="w-5 h-5" />
-                        </GlassButton>
-                      </div>
+      {/* Status dialog while the account is checked or created */}
+      <AnimatePresence>
+        {modalStatus !== 'closed' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-5">
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-live="polite"
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="op-card relative p-8 w-full max-w-sm flex flex-col items-center gap-4 mx-2"
+            >
+              {(modalStatus === 'error' || modalStatus === 'success') && (
+                <button onClick={closeModal} aria-label="Close" className="absolute top-3 right-3 p-1 text-stone-400 hover:text-stone-700 transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+              {modalStatus === 'error' && (
+                <>
+                  <AlertCircle className="w-12 h-12 text-[#ff6b4a]" />
+                  <p className="text-lg font-medium text-stone-900 text-center">{modalErrorMessage}</p>
+                  <button onClick={closeModal} className="btn-primary rounded-full px-6 py-3 mt-2">Try Again</button>
+                </>
+              )}
+              {modalStatus === 'loading' && (
+                <TextLoop interval={TEXT_LOOP_INTERVAL} stopOnEnd={true}>
+                  {modalSteps.slice(0, -1).map((step, i) => (
+                    <div key={i} className="flex flex-col items-center gap-4">
+                      {step.icon}
+                      <p className="text-lg font-medium text-stone-900">{step.message}</p>
                     </div>
-                  </div>
-                </BlurFade>
-                <BlurFade inView delay={0.2}>
-                  <button type="button" onClick={handleGoBack} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-800 transition-colors">
-                    <ArrowLeft className="w-4 h-4" /> Go back
-                  </button>
-                </BlurFade>
-              </motion.div>
-            )}
+                  ))}
+                </TextLoop>
+              )}
+              {modalStatus === 'success' && (
+                <div className="flex flex-col items-center gap-4">
+                  {modalSteps[modalSteps.length - 1].icon}
+                  <p className="text-lg font-medium text-stone-900">{modalSteps[modalSteps.length - 1].message}</p>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            {/* Email Step */}
-            {authStep === 'email' && (
-              <motion.div key="email-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
-                <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
-                    {mode === 'login' ? 'Welcome Back' : 'Enter your email'}
-                  </p>
-                  {mode === 'login' && <p className="text-sm text-stone-500 mt-2">Sign in to your Voallen account</p>}
-                </BlurFade>
-                
-                {mode === 'login' && (
-                  <BlurFade delay={0.1}>
-                    <div className="flex items-center justify-center gap-4 w-full">
-                      <GlassButton contentClassName="flex items-center justify-center gap-2" size="sm">
-                        <GoogleIcon /><span className="font-semibold text-stone-800">Google</span>
-                      </GlassButton>
-                    </div>
-                    <div className="flex items-center w-full gap-2 py-4 mt-4">
-                      <hr className="w-full border-stone-300"/>
-                      <span className="text-xs font-semibold text-stone-400">OR</span>
-                      <hr className="w-full border-stone-300"/>
-                    </div>
-                  </BlurFade>
-                )}
+      <PhotoPanel panel={panel} />
 
-                <BlurFade delay={mode === 'login' ? 0.2 : 0.1} className="w-full">
-                  <div className="glass-input-wrap w-full">
-                    <div className="glass-input">
-                      <span className="glass-input-text-area"></span>
-                      <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                        <Mail className="h-5 w-5 text-stone-600" />
-                      </div>
-                      <input
-                        ref={emailInputRef}
-                        type="email"
-                        placeholder="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onKeyDown={handleKeyDown}
-                        className="relative z-10 h-full w-0 flex-grow bg-transparent text-stone-800 placeholder:text-stone-400 focus:outline-none py-3"
-                      />
-                      <div className={cn("relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", isEmailValid ? "w-10 pr-1" : "w-0")}>
-                        <GlassButton type="button" onClick={handleProgressStep} size="icon" contentClassName="text-stone-600 hover:text-stone-800">
-                          <ArrowRight className="w-5 h-5" />
-                        </GlassButton>
-                      </div>
-                    </div>
-                  </div>
-                </BlurFade>
+      {/* Form column: normal page flow, so it always scrolls */}
+      <main className="flex flex-col min-w-0 lg:min-h-[100dvh]">
+        <div className="flex items-center justify-between gap-4 px-5 sm:px-8 lg:px-12 pt-5 sm:pt-7">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to home
+          </Link>
+          <ThemeToggle className="text-stone-800 hover:bg-stone-100" />
+        </div>
 
-                {mode === 'signup' && (
-                  <BlurFade inView delay={0.2}>
-                    <button type="button" onClick={handleGoBack} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-800 transition-colors">
-                      <ArrowLeft className="w-4 h-4" /> Go back
+        <div className="flex-1 flex items-center px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            className="w-full max-w-[460px] mx-auto"
+          >
+            <p className="eyebrow mb-4">{isLogin ? 'Log in' : 'Sign up'}</p>
+            <h1 className="font-display text-stone-900 text-[2.75rem] sm:text-6xl leading-[0.95]">
+              {isLogin ? 'Welcome Back' : 'Join Voallen'}
+            </h1>
+            <p className="text-stone-500 text-base sm:text-lg mt-4">
+              {isLogin ? 'Sign in to your Voallen account' : "Select how you'd like to use Voallen"}
+            </p>
+
+            <form onSubmit={handleSubmit} noValidate className="mt-8 sm:mt-10">
+              <fieldset disabled={modalStatus !== 'closed'} className="flex flex-col gap-5">
+                {isLogin ? (
+                  <>
+                    <button
+                      type="button"
+                      className="w-full h-14 rounded-full border border-stone-300 hover:border-stone-900 flex items-center justify-center gap-3 font-medium text-stone-900 transition-colors"
+                    >
+                      <GoogleIcon /> Continue with Google
                     </button>
-                  </BlurFade>
+                    <div className="flex items-center gap-3" aria-hidden="true">
+                      <span className="flex-1 rule" />
+                      <span className="text-xs font-semibold tracking-[0.14em] text-stone-400">OR</span>
+                      <span className="flex-1 rule" />
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <UserTypeSelection selectedType={userType} onSelect={setUserType} invalid={!!errors.userType} />
+                    {errors.userType && <p className="text-sm mt-2 text-[#d9432a] dark:text-[#ff8466]">{errors.userType}</p>}
+                  </div>
                 )}
 
-                <BlurFade delay={0.3}>
-                  <p className="text-sm text-stone-500">
-                    {mode === 'login' ? (
-                      <>Don't have an account? <Link to="/signup" className="text-stone-800 font-medium hover:underline">Sign up</Link></>
-                    ) : (
-                      <>Already have an account? <Link to="/login" className="text-stone-800 font-medium hover:underline">Sign in</Link></>
-                    )}
-                  </p>
-                </BlurFade>
-              </motion.div>
-            )}
+                {!isLogin && (
+                  <Field
+                    id="auth-name"
+                    label={userType === 'agency' ? 'Your name' : "What's your name?"}
+                    icon={userType === 'agency' ? UserRound : Heart}
+                    type="text"
+                    autoComplete="name"
+                    placeholder={userType === 'agency' ? 'First name and last initial' : 'Full name'}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    error={errors.name}
+                    data-testid="auth-name-input"
+                  />
+                )}
 
-            {/* Password Step */}
-            {authStep === 'password' && (
-              <motion.div key="password-content" initial={{ y: 6, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }} className="w-full flex flex-col items-center gap-6">
-                <BlurFade delay={0} className="w-full text-center">
-                  <p className="font-semibold text-3xl sm:text-4xl tracking-[-0.04em] text-stone-900">
-                    {mode === 'login' ? 'Enter your password' : 'Create a password'}
-                  </p>
-                  <p className="text-sm text-stone-500 mt-2">
-                    {mode === 'login' ? `Signing in as ${email}` : 'At least 6 characters'}
-                  </p>
-                </BlurFade>
-                
-                <form onSubmit={handleFinalSubmit} className="w-full">
-                  <BlurFade delay={0.1} className="w-full">
-                    <div className="glass-input-wrap w-full">
-                      <div className="glass-input">
-                        <span className="glass-input-text-area"></span>
-                        <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                          {isPasswordValid ? (
-                            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-stone-600 hover:text-stone-800 transition-colors p-1 rounded-full">
-                              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                            </button>
-                          ) : (
-                            <Lock className="h-5 w-5 text-stone-600" />
-                          )}
-                        </div>
-                        <input
-                          ref={passwordInputRef}
-                          type={showPassword ? 'text' : 'password'}
-                          placeholder="Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          className="relative z-10 h-full w-0 flex-grow bg-transparent text-stone-800 placeholder:text-stone-400 focus:outline-none py-3"
-                        />
-                        <div className={cn("relative z-10 flex-shrink-0 overflow-hidden transition-all duration-300 ease-in-out", isPasswordValid ? "w-10 pr-1" : "w-0")}>
-                          <GlassButton type="submit" size="icon" contentClassName="text-stone-600 hover:text-stone-800">
-                            <ArrowRight className="w-5 h-5" />
-                          </GlassButton>
-                        </div>
-                      </div>
-                    </div>
-                  </BlurFade>
-                </form>
+                <Field
+                  id="auth-email"
+                  ref={firstFieldRef}
+                  label="Email address"
+                  icon={Mail}
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  error={errors.email}
+                  data-testid="auth-email-input"
+                />
 
-                <BlurFade inView delay={0.2}>
-                  <button type="button" onClick={handleGoBack} className="flex items-center gap-2 text-sm text-stone-500 hover:text-stone-800 transition-colors">
-                    <ArrowLeft className="w-4 h-4" /> Go back
-                  </button>
-                </BlurFade>
-              </motion.div>
+                <Field
+                  id="auth-password"
+                  label={isLogin ? 'Password' : 'Create a password'}
+                  icon={Lock}
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  error={errors.password}
+                  hint={!isLogin ? 'At least 6 characters' : undefined}
+                  data-testid="auth-password-input"
+                  trailing={
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      className="p-1 -mr-1 rounded-full text-stone-500 hover:text-stone-900 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
+                  }
+                />
+
+                <button
+                  type="submit"
+                  data-testid="auth-submit"
+                  className={cn(
+                    'w-full h-14 rounded-full inline-flex items-center justify-center gap-2 text-base mt-2',
+                    isLogin ? 'btn-primary' : 'btn-coral'
+                  )}
+                >
+                  {isLogin ? 'Sign in' : 'Create account'} <ArrowRight className="w-4 h-4" />
+                </button>
+              </fieldset>
+            </form>
+
+            <p className="text-sm text-stone-500 mt-8">
+              {isLogin ? (
+                <>Don't have an account? <Link to="/signup" className="op-link font-medium">Sign up</Link></>
+              ) : (
+                <>Already have an account? <Link to="/login" className="op-link font-medium">Sign in</Link></>
+              )}
+            </p>
+            {!isLogin && (
+              <p className="text-xs text-stone-400 mt-4 leading-relaxed">
+                By creating an account you agree to our <Link to="/terms" className="underline hover:text-stone-700">Terms</Link> and <Link to="/privacy" className="underline hover:text-stone-700">Privacy Policy</Link>.
+              </p>
             )}
-          </AnimatePresence>
-        </fieldset>
-      </div>
+          </motion.div>
+        </div>
+      </main>
     </div>
   );
 };
