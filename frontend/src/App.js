@@ -16,7 +16,7 @@ import { VisitHero, VisitBenefits, VisitStatBanner, VisitFAQ } from "@/component
 import { CONTACT_PHONE, CONTACT_PHONE_HREF, CONTACT_EMAIL, OurServicesSection, ThoughtfulVisitsSection, StayConnectedSection, QuestionsAnsweredSection, CaregiverJobsSection } from "@/components/voallen-sections";
 import { SiteHeader, ScrollToTop, usePageTitle, PageIntro } from "@/components/site-chrome";
 import { AboutPage, HowItWorksPage, PrivacyPage, TermsPage, NotFoundPage } from "@/components/site-pages";
-import { VisitMomentsBand, HowVoallenWorks, TwoPathsSection, ClosingCTASection, HomeFooter, SiteFooter } from "@/components/voallen-home-extras";
+import { VisitMomentsBand, HowVoallenWorks, TwoPathsSection, HomeFooter, SiteFooter } from "@/components/voallen-home-extras";
 import { CaregiverHero, CaregiverWaysToHelp, CaregiverReasons, CaregiverSteps, CaregiverSafety, CaregiverFAQ, CaregiverCTA } from "@/components/caregiver-page";
 
 // Empty means the API is served from the same site as the app (production build)
@@ -232,7 +232,7 @@ const AgencyCarousel = ({ title, agencies, viewAllLink, large = false }) => {
   return (
     <section className="py-4 sm:py-6">
       <div className="flex items-center justify-between mb-3 sm:mb-4">
-        <h2 className={large ? "font-display text-4xl sm:text-5xl text-stone-900 leading-[1.07] pr-4" : "text-lg sm:text-[22px] font-semibold text-stone-900"}>{title}</h2>
+        <h2 className={large ? "font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 leading-[0.98] pr-4" : "text-lg sm:text-[22px] font-semibold text-stone-900"}>{title}</h2>
         <div className="flex items-center gap-2">
           <Link
             to={viewAllLink}
@@ -379,16 +379,16 @@ const HeroSection = () => {
             className="relative hidden lg:block"
           >
             <div className="grid grid-cols-2 gap-4">
-              <motion.div whileHover={{ y: -8 }} className="rounded-3xl overflow-hidden shadow-2xl">
+              <motion.div whileHover={{ y: -8 }} className="rounded-[20px] overflow-hidden shadow-2xl">
                 <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=500&fit=crop" alt="Caregiver" className="w-full h-72 object-cover" />
               </motion.div>
-              <motion.div whileHover={{ y: -8 }} className="rounded-3xl overflow-hidden shadow-2xl mt-8">
+              <motion.div whileHover={{ y: -8 }} className="rounded-[20px] overflow-hidden shadow-2xl mt-8">
                 <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=400&h=500&fit=crop" alt="Nurse" className="w-full h-72 object-cover" />
               </motion.div>
-              <motion.div whileHover={{ y: -8 }} className="rounded-3xl overflow-hidden shadow-2xl -mt-8">
+              <motion.div whileHover={{ y: -8 }} className="rounded-[20px] overflow-hidden shadow-2xl -mt-8">
                 <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=500&fit=crop" alt="Healthcare worker" className="w-full h-72 object-cover" />
               </motion.div>
-              <motion.div whileHover={{ y: -8 }} className="rounded-3xl overflow-hidden shadow-2xl">
+              <motion.div whileHover={{ y: -8 }} className="rounded-[20px] overflow-hidden shadow-2xl">
                 <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?w=400&h=500&fit=crop" alt="Medical professional" className="w-full h-72 object-cover" />
               </motion.div>
             </div>
@@ -428,10 +428,7 @@ const HomePage = () => {
 
       <TestimonialsSection />
 
-      <div className="max-w-7xl mx-auto px-6">
-        <ClosingCTASection />
-      </div>
-
+      {/* The dark footer carries the closing call to action */}
       <HomeFooter />
     </PageBackground>
   );
@@ -594,7 +591,7 @@ const AgenciesPage = () => {
       <div className="pt-[112px] sm:pt-[124px] pb-16">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-8">
-            <h1 className="font-display text-5xl sm:text-6xl text-stone-900 leading-[1.05] mb-3">Find care in Philadelphia</h1>
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-[5.25rem] text-stone-900 leading-[0.98] mb-3">Find care in Philadelphia</h1>
             <p className="text-stone-500">Meet background-checked, non-medical companions near your loved one</p>
           </div>
 
@@ -758,7 +755,7 @@ const AgencyDetailPage = () => {
               <button type="button" onClick={() => setShowGallery(true)} className="block rounded-2xl overflow-hidden aspect-[4/3] bg-stone-100" aria-label={`Open ${agency.name}'s photo`}>
                 <img src={agency.image_url} alt={agency.name} className="w-full h-full object-cover" />
               </button>
-              <div className="rounded-3xl p-7 sm:p-10 flex flex-col justify-end bg-mist">
+              <div className="rounded-[20px] p-7 sm:p-10 flex flex-col justify-end bg-mist">
                 <p className="eyebrow mb-4">Meet {agency.name?.split(" ")[0]}</p>
                 <p className="font-display text-2xl sm:text-3xl leading-[1.15] text-stone-900">"{agency.bio}"</p>
                 {agency.certifications?.length > 0 && (
@@ -816,7 +813,7 @@ const AgencyDetailPage = () => {
               <motion.div 
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
-                className="op-card rounded-3xl p-6"
+                className="op-card rounded-[20px] p-6"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex items-start gap-4 sm:gap-5 min-w-0">
@@ -833,7 +830,7 @@ const AgencyDetailPage = () => {
                         </span>
                       )}
                     </div>
-                    <h1 className="font-display text-4xl sm:text-5xl leading-[1.07] text-stone-900 mb-2">{agency.name}</h1>
+                    <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.98] text-stone-900 mb-2">{agency.name}</h1>
                     <div className="flex items-center gap-2 text-stone-500">
                       <MapPin className="w-4 h-4 shrink-0" />
                       <span>{agency.location}</span>
@@ -875,7 +872,7 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="op-card rounded-3xl p-6"
+                className="op-card rounded-[20px] p-6"
               >
                 <h2 className="text-xl font-semibold text-stone-800 mb-4 flex items-center gap-2">
                   <Building2 className="w-5 h-5" />
@@ -892,7 +889,7 @@ const AgencyDetailPage = () => {
                 transition={{ delay: 0.2 }}
                 className="grid md:grid-cols-2 gap-6"
               >
-                <div className="op-card rounded-3xl p-6">
+                <div className="op-card rounded-[20px] p-6">
                   <h2 className="text-lg font-semibold text-stone-800 mb-4">How I can help</h2>
                   <div className="flex flex-wrap gap-2">
                     {agency.specialties?.map((s, i) => (
@@ -900,7 +897,7 @@ const AgencyDetailPage = () => {
                     ))}
                   </div>
                 </div>
-                <div className="op-card rounded-3xl p-6">
+                <div className="op-card rounded-[20px] p-6">
                   <h2 className="text-lg font-semibold text-stone-800 mb-4">Certifications</h2>
                   <div className="space-y-2">
                     {agency.certifications?.map((c, i) => (
@@ -918,7 +915,7 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="op-card rounded-3xl p-6"
+                className="op-card rounded-[20px] p-6"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold text-stone-800 flex items-center gap-2">
@@ -979,7 +976,7 @@ const AgencyDetailPage = () => {
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
                 transition={{ delay: 0.2 }} 
-                className="op-card rounded-3xl p-6 sticky top-28"
+                className="op-card rounded-[20px] p-6 sticky top-28"
               >
                 <div className="text-center mb-6 pb-6 border-b border-stone-100">
                   <div className="text-4xl font-semibold text-stone-800">
@@ -1118,7 +1115,7 @@ const StatusBadge = ({ status }) => (
 );
 
 const StatCard = ({ icon: Icon, iconBg, iconColor, label, value }) => (
-  <div className="op-card rounded-3xl p-6">
+  <div className="op-card rounded-[20px] p-6">
     <div className="flex items-center gap-4">
       <div className={`w-12 h-12 ${iconBg} rounded-xl flex items-center justify-center`}><Icon className={`w-6 h-6 ${iconColor}`} /></div>
       <div><p className="text-sm text-stone-500">{label}</p><p className="text-2xl font-semibold text-stone-800">{value}</p></div>
@@ -1201,7 +1198,7 @@ const ClientDashboard = ({ user }) => {
         <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
         <StatCard icon={Clock} iconBg="bg-amber-100" iconColor="text-amber-600" label="Pending" value={bookings.filter(b => b.status === "pending").length} />
       </div>
-      <div className="op-card rounded-3xl">
+      <div className="op-card rounded-[20px]">
         <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-semibold text-stone-800">Your Bookings</h2></div>
         {loading ? (<div className="p-12 text-center"><div className="animate-spin w-8 h-8 border-4 border-stone-700 border-t-transparent rounded-full mx-auto" /></div>) : bookings.length === 0 ? (
           <div className="p-12 text-center"><p className="text-stone-500 mb-4">You haven't made any bookings yet.</p><Link to="/agencies" className="btn-primary rounded-full inline-flex items-center gap-2 px-6 py-3">Find Care<ChevronRight className="w-4 h-4" /></Link></div>
@@ -1262,7 +1259,7 @@ const AgencyProfileForm = ({ onCreated }) => {
 
   const input = "w-full px-4 py-3 bg-white rounded-xl border border-stone-200 focus:border-stone-400 outline-none text-sm";
   return (
-    <form onSubmit={submit} className="op-card rounded-3xl p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
+    <form onSubmit={submit} className="op-card rounded-[20px] p-6 grid md:grid-cols-2 gap-4" data-testid="agency-profile-form">
       <div className="md:col-span-2"><h2 className="text-xl font-semibold text-stone-800">Create your caregiver profile</h2><p className="text-sm text-stone-500 mt-1">Families can find and book you once your profile is live.</p></div>
       <input required placeholder="Your name (first name and last initial)" value={form.name} onChange={set("name")} className={input} />
       <input required placeholder="City, e.g. Philadelphia, PA" value={form.city} onChange={set("city")} className={input} />
@@ -1338,7 +1335,7 @@ const AgencyDashboard = ({ user }) => {
             <StatCard icon={CheckCircle} iconBg="bg-green-100" iconColor="text-green-600" label="Confirmed" value={bookings.filter(b => b.status === "confirmed").length} />
             <StatCard icon={Star} iconBg="bg-stone-100" iconColor="text-stone-800" label="Rating" value={agency.review_count ? `${agency.rating} (${agency.review_count})` : "No reviews yet"} />
           </div>
-          <div className="op-card rounded-3xl">
+          <div className="op-card rounded-[20px]">
             <div className="p-6 border-b border-stone-100"><h2 className="text-xl font-semibold text-stone-800">Consultation requests</h2></div>
             {bookings.length === 0 ? <div className="p-12 text-center text-stone-500">No requests yet.</div> : (
               <div className="divide-y divide-stone-100">{bookings.map((booking) => (
@@ -1433,7 +1430,7 @@ const BookingSuccessPage = () => {
   useEffect(() => { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); }, []);
   return (
     <PageBackground className="flex items-center justify-center p-6">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="op-card rounded-3xl shadow-2xl p-12 text-center max-w-md">
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="op-card rounded-[20px] shadow-2xl p-12 text-center max-w-md">
         <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"><CheckCircle className="w-10 h-10 text-green-500" /></div>
         <h1 className="text-3xl font-semibold text-stone-800 mb-4">Request Sent!</h1>
         <p className="text-stone-500 mb-8">We sent your visit request to the caregiver and emailed you a copy. You'll get an email as soon as they accept it.</p>
@@ -1474,14 +1471,14 @@ const ContactPage = () => {
         <div className="max-w-3xl mx-auto px-6">
           <PageIntro center eyebrow="Contact" title="We'd love to hear from you" lead="Questions about visits, a loved one, or working with us? Send a note or give us a call." />
           {success ? (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="op-card rounded-3xl p-12 text-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="op-card rounded-[20px] p-12 text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><CheckCircle className="w-8 h-8 text-green-500" /></div>
               <h2 className="text-2xl font-semibold text-stone-800 mb-2">Message Sent!</h2>
               <p className="text-stone-500 mb-6">We'll get back to you within 24 hours.</p>
               <button onClick={() => setSuccess(false)} className="btn-primary rounded-full px-6 py-3">Send Another Message</button>
             </motion.div>
           ) : (
-            <div className="op-card rounded-3xl p-8">
+            <div className="op-card rounded-[20px] p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div><label className="block text-sm font-medium text-stone-700 mb-2">Name</label><input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-stone-400 focus:ring-4 focus:ring-stone-100 outline-none transition" required data-testid="contact-name" /></div>
@@ -1494,9 +1491,9 @@ const ContactPage = () => {
             </div>
           )}
           <div className="grid md:grid-cols-3 gap-6 mt-12">
-            <a href={CONTACT_PHONE_HREF} className="op-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">{CONTACT_PHONE}</p></a>
-            <a href={`mailto:${CONTACT_EMAIL}`} className="op-card rounded-3xl p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500 text-sm [overflow-wrap:anywhere]">{CONTACT_EMAIL}</p></a>
-            <div className="op-card rounded-3xl p-6 text-center"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><MapPin className="w-6 h-6 text-[#0071e3]" /></div><h3 className="font-semibold text-stone-800 mb-1">Service area</h3><p className="text-stone-500">Philadelphia, PA</p></div>
+            <a href={CONTACT_PHONE_HREF} className="op-card rounded-[20px] p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Phone className="w-6 h-6 text-[#1f4fff]" /></div><h3 className="font-semibold text-stone-800 mb-1">Phone</h3><p className="text-stone-500">{CONTACT_PHONE}</p></a>
+            <a href={`mailto:${CONTACT_EMAIL}`} className="op-card rounded-[20px] p-6 text-center transition"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><Mail className="w-6 h-6 text-[#1f4fff]" /></div><h3 className="font-semibold text-stone-800 mb-1">Email</h3><p className="text-stone-500 text-sm [overflow-wrap:anywhere]">{CONTACT_EMAIL}</p></a>
+            <div className="op-card rounded-[20px] p-6 text-center"><div className="w-12 h-12 bg-mist rounded-2xl flex items-center justify-center mx-auto mb-4"><MapPin className="w-6 h-6 text-[#1f4fff]" /></div><h3 className="font-semibold text-stone-800 mb-1">Service area</h3><p className="text-stone-500">Philadelphia, PA</p></div>
           </div>
         </div>
       </div>
@@ -1528,7 +1525,7 @@ const FAQPage = () => {
           <PageIntro center eyebrow="FAQ" title="Questions, answered" lead="Everything families usually ask before their first visit." />
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="op-card rounded-3xl overflow-hidden">
+              <motion.div key={index} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="op-card rounded-[20px] overflow-hidden">
                 <button onClick={() => setOpenIndex(openIndex === index ? null : index)} className="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-stone-50 transition" data-testid={`faq-${index}`}>
                   <span className="font-semibold text-stone-800 pr-4">{faq.question}</span>
                   <motion.div animate={{ rotate: openIndex === index ? 180 : 0 }} transition={{ duration: 0.2 }}><ChevronRight className="w-5 h-5 text-stone-500 rotate-90" /></motion.div>
@@ -1543,8 +1540,8 @@ const FAQPage = () => {
               </motion.div>
             ))}
           </div>
-          <div className="mt-12 rounded-[28px] p-8 sm:p-12 text-center bg-mist">
-            <h2 className="font-display text-4xl sm:text-5xl text-stone-900 mb-4">Still have questions?</h2>
+          <div className="mt-12 rounded-[20px] p-8 sm:p-12 text-center bg-mist">
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl text-stone-900 mb-4">Still have questions?</h2>
             <p className="mb-6 text-stone-600">We're happy to talk it through, no pressure.</p>
             <Link to="/contact" className="btn-primary inline-flex items-center px-8 py-4 rounded-full text-lg">Contact us</Link>
           </div>

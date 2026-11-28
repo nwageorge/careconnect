@@ -35,7 +35,7 @@ const reveal = {
 const SectionHeading = ({ eyebrow, title, intro, center = false }) => (
   <motion.div {...reveal} className={`max-w-3xl mb-10 sm:mb-14 ${center ? "mx-auto text-center" : ""}`}>
     {eyebrow && <p className="text-sm font-semibold tracking-wide uppercase text-stone-500 mb-3">{eyebrow}</p>}
-    <h2 className="font-display text-4xl sm:text-6xl text-stone-900 leading-[1.05] mb-4">{title}</h2>
+    <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl text-stone-900 leading-[0.98] mb-4">{title}</h2>
     {intro && <p className="text-lg sm:text-xl text-stone-500 leading-relaxed">{intro}</p>}
   </motion.div>
 );
@@ -63,7 +63,7 @@ const SecondaryButton = ({ href, children, className = "" }) => (
 
 export const CaregiverHero = () => (
   <section className="pt-24 sm:pt-28" data-testid="caregiver-hero">
-    <div className="relative rounded-3xl overflow-hidden bg-stone-100 min-h-[560px] lg:min-h-[600px] flex items-end lg:items-center">
+    <div className="relative rounded-[20px] overflow-hidden bg-stone-100 min-h-[560px] lg:min-h-[600px] flex items-end lg:items-center">
       <img
         src="/voallen/stairs.jpg"
         alt="A young man walking an older woman up the stairs, carrying her groceries."
@@ -77,7 +77,7 @@ export const CaregiverHero = () => (
         className="relative m-4 sm:m-8 lg:m-12 w-full sm:max-w-md op-card bg-white/80 dark:bg-[#1c1a2e]/80 shadow-2xl p-7 sm:p-10"
       >
         <p className="eyebrow mb-3">For caregivers</p>
-        <h1 className="font-display text-4xl sm:text-6xl leading-[1.05] mb-4 text-stone-900">
+        <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.98] mb-4 text-stone-900">
           Find caregiving work you'll love
         </h1>
         <p className="text-lg leading-relaxed mb-8 text-stone-600">
@@ -146,7 +146,7 @@ const reasons = [
 export const CaregiverReasons = () => (
   <section className="py-16 sm:py-24" data-testid="caregiver-reasons">
     <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      <motion.div {...reveal} className="rounded-3xl overflow-hidden bg-stone-100 aspect-[4/5] max-h-[600px] shadow-lg">
+      <motion.div {...reveal} className="rounded-[20px] overflow-hidden bg-stone-100 aspect-[4/5] max-h-[600px] shadow-lg">
         <img
           src="/voallen/breakfast.jpg"
           alt="An older woman and a younger woman sharing breakfast at the kitchen table."
@@ -183,7 +183,7 @@ const startSteps = [
 
 export const CaregiverSteps = () => (
   <section className="py-16 sm:py-24" data-testid="caregiver-steps">
-    <div className="rounded-3xl bg-mist p-6 sm:p-12 lg:p-16 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
+    <div className="rounded-[20px] bg-mist p-6 sm:p-12 lg:p-16 grid lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-center">
       <div>
         <SectionHeading title="Getting started is simple" />
         <ol className="space-y-7">
@@ -201,7 +201,7 @@ export const CaregiverSteps = () => (
         </ol>
         <PrimaryButton href={CAREGIVER_APPLY_HREF} className="mt-10">Apply now</PrimaryButton>
       </div>
-      <motion.div {...reveal} className="hidden lg:block w-[380px] rounded-3xl overflow-hidden shadow-lg aspect-[4/5]">
+      <motion.div {...reveal} className="hidden lg:block w-[380px] rounded-[20px] overflow-hidden shadow-lg aspect-[4/5]">
         <img
           src="/voallen/groceries.jpg"
           alt="A young man and an older woman smiling at each other as he hands her a grocery bag."
@@ -226,7 +226,7 @@ export const CaregiverSafety = () => (
     <SectionHeading center title="Safety and support, every visit" intro="Caring for others is easier when someone has your back." />
     <div className="grid md:grid-cols-3 gap-5">
       {safety.map(({ icon: Icon, title, body }) => (
-        <motion.div {...reveal} key={title} className="rounded-3xl border border-stone-200 bg-stone-50 p-7 sm:p-8">
+        <motion.div {...reveal} key={title} className="rounded-[20px] border border-stone-200 bg-stone-50 p-7 sm:p-8">
           <Icon className="w-8 h-8 text-stone-700 mb-5" />
           <h3 className="text-xl font-semibold text-stone-800 mb-2">{title}</h3>
           <p className="text-lg text-stone-600 leading-relaxed">{body}</p>
@@ -316,14 +316,14 @@ export const CaregiverFAQ = () => {
 
 export const CaregiverCTA = () => (
   <section className="pb-20 sm:pb-28" data-testid="caregiver-cta">
-    <motion.div {...reveal} className="rounded-[28px] bg-mist px-6 py-14 sm:px-12 sm:py-20 text-center">
-      <h2 className="font-display text-4xl sm:text-6xl leading-[1.05] mb-5 text-stone-900">Ready to start caring?</h2>
+    <motion.div {...reveal} className="rounded-[20px] bg-mist px-6 py-14 sm:px-12 sm:py-20 text-center">
+      <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.98] mb-5 text-stone-900">Ready to start caring?</h2>
       <p className="text-lg sm:text-xl mb-8 max-w-2xl mx-auto text-stone-600">
         Join Voallen and bring a little more company to seniors near you.
       </p>
       <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-10 text-stone-800">
         {["Flexible hours", "Visits near home", "Your own profile"].map((t) => (
-          <li key={t} className="flex items-center gap-2 text-base"><Check className="w-5 h-5 text-[#0071e3]" strokeWidth={2.5} /> {t}</li>
+          <li key={t} className="flex items-center gap-2 text-base"><Check className="w-5 h-5 text-[#1f4fff]" strokeWidth={2.5} /> {t}</li>
         ))}
       </ul>
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
